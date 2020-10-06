@@ -9,8 +9,11 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "parcel serve example/index.html --open",
-    "prebuild": "rm -f dist/*",
-    "build": "parcel build src/index.ts",
+    "prebuild": "rm -rf dist/*",
+    "build": "npm run build:css && npm run build:lib",
+    "postbuild": "mv .styles dist/styles",
+    "build:lib": "parcel build src/index.ts",
+    "build:css": "parcel build src/styles/index.ts && mkdir -p .styles && mv dist/index.css* .styles && rm -rf dist",
     "lint": "gts check",
     "lint:fix": "gts fix"
   },
@@ -52,5 +55,8 @@
       "gts fix",
       "git add"
     ]
+  },
+  "dependencies": {
+    "axios": "^0.20.0"
   }
 }
