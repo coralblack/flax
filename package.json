@@ -1,0 +1,64 @@
+{
+  "name": "flax",
+  "version": "1.0.0",
+  "description": "API Req-Res Guard for React",
+  "main": "dist/index.js",
+  "module": "dist/index.module.js",
+  "browser": "dist/index.browser.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "parcel serve example/index.html --open",
+    "prebuild": "rm -rf dist/*",
+    "build": "npm run build:css && npm run build:lib",
+    "postbuild": "mv .styles dist/styles",
+    "build:lib": "parcel build src/index.ts",
+    "build:css": "parcel build src/styles/index.ts && mkdir -p .styles && mv dist/index.css* .styles && rm -rf dist",
+    "lint": "gts check",
+    "lint:fix": "gts fix"
+  },
+  "devDependencies": {
+    "@types/node": "^13.11.1",
+    "@types/react": "^16.9.51",
+    "@types/react-dom": "^16.9.8",
+    "eslint-plugin-react": "^7.21.3",
+    "gts": "^2.0.2",
+    "husky": "^4.3.0",
+    "lint-staged": "^10.4.0",
+    "parcel": "^2.0.0-nightly.416",
+    "react": "^16.13.1",
+    "react-dom": "^16.13.1",
+    "sass": "^1.26.12",
+    "typescript": "^4.0.3"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/coralblack/flax.git"
+  },
+  "author": "CORAL.BLACK",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/coralblack/flax/issues"
+  },
+  "homepage": "https://github.com/coralblack/flax#readme",
+  "browserslist": [
+    "> 0.2%",
+    "not dead"
+  ],
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "*.{js,ts,tsx}": [
+      "gts fix",
+      "git add"
+    ]
+  },
+  "dependencies": {
+    "axios": "^0.20.0",
+    "lru-cache": "^6.0.0",
+    "react-spinkit": "^3.0.0"
+  }
+}
