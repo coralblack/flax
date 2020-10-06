@@ -1,4 +1,4 @@
-import './styles/index.scss'
+import './styles/index.scss';
 
-export * from "./components/FxButton";
-export * from "./components/FxGuard";
+export * from './components/FxButton';
+export * from './components/FxGuard';

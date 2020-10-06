@@ -1,0 +1,15 @@
+{
+  "extends": ["./node_modules/gts/", "plugin:react/recommended"],
+  "env": {
+    "browser": true
+  },
+  "rules": {
+    "@typescript-eslint/no-empty-interface": 0,
+    "node/no-unpublished-import": 0
+  },
+  "settings": {
+    "react": {
+      "version": "detect"
+    }
+  }
+}

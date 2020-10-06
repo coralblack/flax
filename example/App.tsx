@@ -1,7 +1,7 @@
-import React from 'react'
+import React from 'react';
 
-import {FxButton} from '../src/components/FxButton'
-import {FxGuard} from "../src/components/FxGuard"
+import {FxButton} from '../src/components/FxButton';
+import {FxGuard} from '../src/components/FxGuard';
 
 export function App() {
   return (
@@ -12,5 +12,5 @@ export function App() {
         <FxGuard />
       </div>
     </>
-  )
+  );
 }
