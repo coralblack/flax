@@ -1,15 +1,18 @@
-import { ParsedUrlQueryInput } from "querystring";
 import React, { Component } from "react";
 interface FxButtonProps {
 }
 export function FxButton(_props: FxButtonProps): JSX.Element;
+type QueryType = string | number | boolean;
+type Query = {
+    [key: string]: QueryType | QueryType[];
+};
 interface FxApiRequest {
     method: 'GET' | 'POST' | 'DELETE' | 'PATCH' | 'PUT';
     url: string;
     cacheMaxAge?: number;
     throttle?: boolean;
     delay?: number;
-    query?: ParsedUrlQueryInput;
+    query?: Query;
 }
 type Renderer<T> = (data: T) => React.ReactNode;
 interface FxGuardProps<T> {

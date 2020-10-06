@@ -1,16 +1,18 @@
 import axios, {AxiosResponse} from 'axios';
 import LRU from 'lru-cache';
-import querystring, {ParsedUrlQueryInput} from 'querystring';
+import queryString from 'query-string';
 
 const cache = new LRU({max: 100, maxAge: 1000 * 60 * 10});
 
+type QueryType = string | number | boolean;
+type Query = {[key: string]: QueryType | QueryType[]};
 export interface FxApiRequest {
   method: 'GET' | 'POST' | 'DELETE' | 'PATCH' | 'PUT';
   url: string;
   cacheMaxAge?: number;
   throttle?: boolean;
   delay?: number;
-  query?: ParsedUrlQueryInput;
+  query?: Query;
 }
 
 interface RequestProps extends FxApiRequest {
@@ -56,7 +58,7 @@ export function request<T>(props: RequestProps): Promise<FxResp<T>> {
   return new Promise<FxResp<T>>((resolve, reject) => {
     setTimeout(() => {
       const url = ((u, query) => {
-        const qs = querystring.stringify(query);
+        const qs = queryString.stringify(query);
         return u + (qs ? (u.includes('?') ? '&' : '?') + qs : '');
       })(props.url, props.query || {});
 
