@@ -6,22 +6,35 @@ type Renderer<T> = (data: T) => React.ReactNode;
 type LazyStatus = 'PENDING' | 'SUCCESS' | 'ERROR';
 interface Lazy<T> {
   status: LazyStatus;
-  error: Error;
-  result: T;
+  error: Error | null;
+  result: T | null;
 }
-const lazy = function <T>(release: () => void, p: Promise<FxResp<T>>) {
+
+function lazyResponse<T>(
+  res: FxResp<T> | null,
+  error: Error | null
+): () => {status: LazyStatus; result: T | null; error: Error | null} {
+  return () => ({
+    status: error ? 'ERROR' : 'SUCCESS',
+    result: res?.data || null,
+    error: error,
+  });
+}
+
+const lazy = function <T>(
+  release: ReleaseDelegateInternal,
+  p: Promise<FxResp<T>>
+) {
   let status: LazyStatus = 'PENDING';
-  let error: Error;
-  let result: T;
+  let error: Error | null;
+  let result: T | null;
 
   p.then(res => {
-    result = res.data;
-    status = 'SUCCESS';
-    release();
+    ({result, status, error} = lazyResponse<T>(res, null)());
+    release(true);
   }).catch(err => {
-    error = err;
-    status = 'ERROR';
-    release();
+    ({result, status, error} = lazyResponse<T>(null, err)());
+    release(false);
   });
 
   return (): Lazy<T> => {
@@ -36,30 +49,43 @@ const lazy = function <T>(release: () => void, p: Promise<FxResp<T>>) {
 };
 
 interface FxGuardInnerProps<T> extends FxGuardProps<T> {
-  releaseBusy: () => void;
-  count: number;
+  releaseBusy: ReleaseDelegateInternal;
+  refreshId: number;
+  reloadId: number;
 }
 
 function FxGuardInner<T>(props: FxGuardInnerProps<T>) {
   const [prepared, setPrepared] = useState<Function>();
-  const {api, count} = props;
-
-  useEffect(() => {
-    setPrepared(() =>
-      lazy<T>(
-        props.releaseBusy,
-        request<T>(
-          Object.assign(
-            {
-              throttle: api.throttle === false ? false : true,
-              count,
-            },
-            props.api
-          )
-        )
+  const {api, refreshId, reloadId} = props;
+  const req = () => {
+    return request<T>(
+      Object.assign(
+        {
+          throttle: api.throttle === false ? false : true,
+          refreshId,
+        },
+        props.api
       )
     );
-  }, [api.method, api.url, count]);
+  };
+
+  useEffect(() => {
+    if (reloadId > 0) {
+      req()
+        .then(res => {
+          setPrepared(() => lazyResponse<T>(res, null));
+          props.releaseBusy(true);
+        })
+        .catch(err => {
+          setPrepared(() => lazyResponse<T>(null, err));
+          props.releaseBusy(false);
+        });
+    }
+  }, [reloadId]);
+
+  useEffect(() => {
+    setPrepared(() => lazy<T>(props.releaseBusy, req()));
+  }, [api.method, api.url, refreshId]);
 
   if (!prepared) return <></>;
 
@@ -79,10 +105,14 @@ function FxGuardInner<T>(props: FxGuardInnerProps<T>) {
 interface FxGuardProps<T> {
   api: FxApiRequest;
   render: Renderer<T>;
+  done?: ReleaseDelegate;
 }
 
+type ReleaseDelegate = (succeed?: boolean) => void;
+type ReleaseDelegateInternal = (succeed: boolean) => void;
 interface FxGuardStates {
-  count: number;
+  refreshId: number;
+  reloadId: number;
   busy: boolean;
 }
 
@@ -93,22 +123,38 @@ export class FxGuard<T = any> extends Component<
 > {
   constructor(props: FxGuardProps<T>) {
     super(props);
+
     this.state = {
-      count: 0,
+      refreshId: 0,
+      reloadId: 0,
       busy: false,
     };
   }
 
-  reload() {
+  reload(silent?: boolean) {
     if (this.state.busy) return;
 
+    if (silent) {
+      this.setState({
+        ...this.state,
+        reloadId: this.state.reloadId + 1,
+        busy: true,
+      });
+      return;
+    }
+
     this.setState({
-      count: this.state.count + 1,
+      ...this.state,
+      refreshId: this.state.refreshId + 1,
       busy: true,
     });
   }
 
-  releaseBusy() {
+  releaseBusy(succeed: boolean) {
+    if (this.props.done) {
+      this.props.done(succeed);
+    }
+
     this.setState({
       ...this.state,
       busy: false,
@@ -120,8 +166,9 @@ export class FxGuard<T = any> extends Component<
       <div className="fx-guard">
         <Suspense fallback={<div className="fx-guard-loader">Loading ..</div>}>
           <FxGuardInner<T>
-            releaseBusy={() => this.releaseBusy()}
-            count={this.state.count}
+            releaseBusy={succeed => this.releaseBusy(succeed)}
+            refreshId={this.state.refreshId}
+            reloadId={this.state.reloadId}
             api={this.props.api}
             render={this.props.render}
           />
