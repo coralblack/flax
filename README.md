@@ -56,3 +56,11 @@ A component that makes it super simple to HTTP API invoke requests.
   error=((err) => Message.show(`An error has occurred. (${err.message})`))
 />
 ```
+
+## Author
+
+- [GONZO](https://github.com/why2pac)
+
+## License
+
+MIT. Copyright &copy; 2020 CORAL.BLACK.
