@@ -97,7 +97,28 @@ export function App() {
         <hr />
         <SampleReloadable />
         <hr />
-        Valid Request (Continuous Request):
+        Valid Request (Continuous Request 1):
+        <FxGuard<JsonPlaceHolderTodo>
+          api={{
+            method: 'GET',
+            url: 'https://jsonplaceholder.typicode.com/todos/1',
+          }}
+          render={data => (
+            <>
+              <div>
+                <label>userId:</label> {data.userId}
+                <br />
+                <label>id:</label> {data.id}
+                <br />
+                <label>title:</label> {data.title}
+                <br />
+                <label>completed:</label> {data.completed}
+              </div>
+            </>
+          )}
+        />
+        <hr />
+        Valid Request (Continuous Request 2):
         <FxGuard<JsonPlaceHolderTodo>
           api={{
             method: 'GET',
