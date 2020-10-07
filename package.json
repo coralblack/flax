@@ -12,8 +12,8 @@
     "prebuild": "rm -rf dist/*",
     "build": "npm run build:css && npm run build:lib",
     "postbuild": "mv .styles dist/styles",
-    "build:lib": "parcel build src/index.ts",
-    "build:css": "parcel build src/styles/index.ts && mkdir -p .styles && mv dist/index.css* .styles && rm -rf dist",
+    "build:lib": "parcel build src/index.ts --no-cache",
+    "build:css": "parcel build src/styles/index.ts --no-cache && mkdir -p .styles && mv dist/index.css* .styles && rm -rf dist",
     "lint": "gts check",
     "lint:fix": "gts fix"
   },

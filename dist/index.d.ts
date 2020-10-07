@@ -18,15 +18,18 @@ type Renderer<T> = (data: T) => React.ReactNode;
 interface FxGuardProps<T> {
     api: FxApiRequest;
     render: Renderer<T>;
+    done?: ReleaseDelegate;
 }
+type ReleaseDelegate = (succeed?: boolean) => void;
 interface FxGuardStates {
-    count: number;
+    refreshId: number;
+    reloadId: number;
     busy: boolean;
 }
 export class FxGuard<T = any> extends Component<FxGuardProps<T>, FxGuardStates> {
     constructor(props: FxGuardProps<T>);
-    reload(): void;
-    releaseBusy(): void;
+    reload(silent?: boolean): void;
+    releaseBusy(succeed: boolean): void;
     render(): JSX.Element;
 }
 
