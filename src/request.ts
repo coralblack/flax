@@ -1,18 +1,30 @@
-import axios, {AxiosResponse} from 'axios';
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import axios, {AxiosResponse, ResponseType} from 'axios';
 import LRU from 'lru-cache';
 import queryString from 'query-string';
+import {MutableRefObject} from 'react';
 
 const cache = new LRU({max: 100, maxAge: 1000 * 60 * 10});
 
 type QueryType = string | number | boolean;
-type Query = {[key: string]: QueryType | QueryType[]};
+type Queries = {[key: string]: QueryType | QueryType[]};
+type Headers = {[key: string]: string};
+type DataTypeValues = string | number | boolean | null;
+type DataType = {
+  [key: string]: DataTypeValues | MutableRefObject<HTMLElement> | DataType;
+};
+type Data = DataType | (() => DataType) | string;
+
 export interface FxApiRequest {
   method: 'GET' | 'POST' | 'DELETE' | 'PATCH' | 'PUT';
   url: string;
   cacheMaxAge?: number;
   throttle?: boolean;
   delay?: number;
-  query?: Query;
+  responseType?: ResponseType;
+  query?: Queries;
+  headers?: Headers;
+  data?: Data;
 }
 
 interface RequestProps extends FxApiRequest {
@@ -52,6 +64,24 @@ const resolver = (
   });
 };
 
+const dataMapper = (data: DataType | string | null | undefined) => {
+  if (!data) return data;
+  if (typeof data !== 'object') return data;
+
+  return Object.keys(data).reduce<{[key: string]: any}>((p, c) => {
+    if (typeof data[c] === 'object') {
+      if ((data[c] as any).current instanceof HTMLElement) {
+        p[c] = (data[c] as any).current.value;
+      } else {
+        p[c] = dataMapper(data[c] as any);
+      }
+    } else {
+      p[c] = data[c];
+    }
+    return p;
+  }, {});
+};
+
 export type FxResp<T> = {data: T; response: AxiosResponse};
 
 export function request<T>(props: RequestProps): Promise<FxResp<T>> {
@@ -87,19 +117,28 @@ export function request<T>(props: RequestProps): Promise<FxResp<T>> {
         return;
       }
 
-      setTimeout(() => {
-        axios
-          .request<T>({
-            method: props.method,
-            url,
-          })
-          .then(resp => {
+      const start = new Date().getTime();
+
+      axios
+        .request<T>({
+          method: props.method,
+          url,
+          headers: props.headers,
+          responseType: props.responseType,
+          data: dataMapper(
+            typeof props.data === 'function' ? props.data() : props.data
+          ),
+        })
+        .then(resp => {
+          const delay = (props.delay || 0) - (new Date().getTime() - start);
+
+          setTimeout(() => {
             resolver({resolve, reject}, lazyGroup, resp, null);
-          })
-          .catch(err => {
-            resolver({resolve, reject}, lazyGroup, null, err);
-          });
-      }, 25);
-    }, props.delay || 0);
+          }, Math.max(0, delay));
+        })
+        .catch(err => {
+          resolver({resolve, reject}, lazyGroup, null, err);
+        });
+    }, 25);
   });
 }
