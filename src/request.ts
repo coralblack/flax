@@ -11,7 +11,10 @@ type Queries = {[key: string]: QueryType | QueryType[]};
 type Headers = {[key: string]: string};
 type DataTypeValues = string | number | boolean | null;
 type DataType = {
-  [key: string]: DataTypeValues | MutableRefObject<HTMLElement> | DataType;
+  [key: string]:
+    | DataTypeValues
+    | MutableRefObject<HTMLElement | null>
+    | DataType;
 };
 type Data = DataType | (() => DataType) | string;
 

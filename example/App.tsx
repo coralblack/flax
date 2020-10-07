@@ -22,7 +22,7 @@ function SamplePost() {
   const [postId, setPostId] = useState(0);
   const [titleValue, setTitleValue] = useState('');
   const titleRef = useRef();
-  const title2Ref = useRef();
+  const title2Ref = useRef(null);
 
   return (
     <>

@@ -9,7 +9,7 @@ type Headers = {
 };
 type DataTypeValues = string | number | boolean | null;
 type DataType = {
-    [key: string]: DataTypeValues | MutableRefObject<HTMLElement> | DataType;
+    [key: string]: DataTypeValues | MutableRefObject<HTMLElement | null> | DataType;
 };
 type Data = DataType | (() => DataType) | string;
 interface FxApiRequest {
