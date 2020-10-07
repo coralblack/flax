@@ -16,7 +16,7 @@ export interface FxApiRequest {
 }
 
 interface RequestProps extends FxApiRequest {
-  refreshId: number;
+  refreshId?: number;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any

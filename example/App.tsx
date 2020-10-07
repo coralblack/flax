@@ -14,6 +14,41 @@ interface JsonPlaceHolderTodo {
   createdAt: Date;
 }
 
+interface JsonPlaceHolderPostTodo {
+  id: number;
+}
+
+function SamplePost() {
+  const [postId, setPostId] = useState(0);
+
+  return (
+    <>
+      <FxButton<JsonPlaceHolderPostTodo>
+        label="Click Me"
+        api={{
+          method: 'POST',
+          url: 'https://jsonplaceholder.typicode.com/posts',
+        }}
+        success={res => setPostId(res.id)}
+      />
+      <hr />
+      <FxButton<JsonPlaceHolderPostTodo>
+        api={{
+          method: 'POST',
+          url: 'https://jsonplaceholder.typicode.com/posts',
+        }}
+        done={(res, err) => {
+          err ? setPostId(-1) : setPostId(res.id);
+        }}
+      >
+        Click Me!
+      </FxButton>
+      <hr />
+      {postId}
+    </>
+  );
+}
+
 function SampleReloadable() {
   const validSilentRef = useRef<FxGuard>();
   const [isBusy, setBusy] = useState(true);
@@ -67,7 +102,7 @@ export function App() {
   return (
     <>
       <div id="App">
-        <FxButton />
+        <SamplePost />
         <hr />
         Valid Request (Delay: 1.5s):
         <button onClick={() => validFirstRef.current.reload()}>reload</button>
