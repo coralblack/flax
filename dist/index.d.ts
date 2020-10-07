@@ -1,7 +1,5 @@
-import React, { Component } from "react";
-interface FxButtonProps {
-}
-export function FxButton(_props: FxButtonProps): JSX.Element;
+import { AxiosResponse } from "axios";
+import React, { Component, ReactNode } from "react";
 type QueryType = string | number | boolean;
 type Query = {
     [key: string]: QueryType | QueryType[];
@@ -13,6 +11,26 @@ interface FxApiRequest {
     throttle?: boolean;
     delay?: number;
     query?: Query;
+}
+type DoneDelegate<T> = (res: T | null, error: Error | null, resp?: AxiosResponse | null) => void;
+type SucceedDelegate<T> = (res: T, resp: AxiosResponse) => void;
+type ErrorDelegate = (error: Error) => void;
+interface FxButtonProps<T> {
+    children?: ReactNode;
+    className?: string;
+    label?: string;
+    api: FxApiRequest;
+    done?: DoneDelegate<T>;
+    success?: SucceedDelegate<T>;
+    error?: ErrorDelegate;
+}
+interface FxButtonStates {
+    busy: boolean;
+}
+export class FxButton<T = any> extends Component<FxButtonProps<T>, FxButtonStates> {
+    constructor(props: FxButtonProps<T>);
+    handleClick(): void;
+    render(): JSX.Element;
 }
 type Renderer<T> = (data: T) => React.ReactNode;
 interface FxGuardProps<T> {
