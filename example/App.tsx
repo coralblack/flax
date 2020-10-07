@@ -20,9 +20,19 @@ interface JsonPlaceHolderPostTodo {
 
 function SamplePost() {
   const [postId, setPostId] = useState(0);
+  const [titleValue, setTitleValue] = useState('');
+  const titleRef = useRef();
+  const title2Ref = useRef();
 
   return (
     <>
+      Title: <input ref={titleRef} />
+      <br />
+      Title2: <input ref={title2Ref} defaultValue="1234" />
+      <br />
+      Title3:{' '}
+      <input value={titleValue} onChange={e => setTitleValue(e.target.value)} />
+      <hr />
       <FxButton<JsonPlaceHolderPostTodo>
         label="Click Me"
         api={{
@@ -36,8 +46,18 @@ function SamplePost() {
         api={{
           method: 'POST',
           url: 'https://jsonplaceholder.typicode.com/posts',
+          headers: {
+            foo: 'bar',
+          },
+          data: {
+            postId,
+            title: titleRef,
+            title2: title2Ref,
+            titleValue,
+          },
         }}
         done={(res, err) => {
+          err && console.log('>>', err);
           err ? setPostId(-1) : setPostId(res.id);
         }}
       >

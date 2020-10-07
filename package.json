@@ -1,5 +1,5 @@
 {
-  "name": "flax",
+  "name": "@coralblack/flax",
   "version": "1.0.0",
   "description": "API Req-Res Guard for React",
   "main": "dist/index.js",

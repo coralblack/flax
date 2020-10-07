@@ -1,16 +1,27 @@
-import { AxiosResponse } from "axios";
-import React, { Component, ReactNode } from "react";
+import { ResponseType, AxiosResponse } from "axios";
+import React, { MutableRefObject, Component, ReactNode } from "react";
 type QueryType = string | number | boolean;
-type Query = {
+type Queries = {
     [key: string]: QueryType | QueryType[];
 };
+type Headers = {
+    [key: string]: string;
+};
+type DataTypeValues = string | number | boolean | null;
+type DataType = {
+    [key: string]: DataTypeValues | MutableRefObject<HTMLElement> | DataType;
+};
+type Data = DataType | (() => DataType) | string;
 interface FxApiRequest {
     method: 'GET' | 'POST' | 'DELETE' | 'PATCH' | 'PUT';
     url: string;
     cacheMaxAge?: number;
     throttle?: boolean;
     delay?: number;
-    query?: Query;
+    responseType?: ResponseType;
+    query?: Queries;
+    headers?: Headers;
+    data?: Data;
 }
 type DoneDelegate<T> = (res: T | null, error: Error | null, resp?: AxiosResponse | null) => void;
 type SucceedDelegate<T> = (res: T, resp: AxiosResponse) => void;
