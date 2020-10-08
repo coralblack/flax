@@ -1,3 +1,122 @@
+.flax.fx-notification-container {
+  background: transparent;
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 100%;
+  max-width: 370px;
+  height: auto;
+  pointer-events: none;
+  z-index: 1;
+
+  @keyframes expand {
+    0% {
+      transform: translateX(300px);
+      opacity: 0;
+    }
+
+    60% {
+      transform: translateX(-30px);
+    }
+  }
+
+  @keyframes slideUp {
+    100% {
+      transform: translateX(300px);
+      max-height: 0;
+      opacity: 0;
+    }
+
+    40% {
+      transform: translateX(-30px);
+    }
+  }
+
+  .fx-notification-wrapper {
+    position: relative;
+    overflow: hidden;
+    max-height: 600px;
+
+    &.--hide {
+      animation: slideUp .45s ease-in-out;
+      animation-fill-mode: forwards;
+    }
+  }
+
+  .fx-notification {
+    box-shadow: 0 0.15rem 0.4rem #CCC;
+    margin: 1rem;
+    padding: 1.2rem;
+    box-sizing: border-box;
+    border-radius: 0.15rem;
+    position: relative;
+    overflow: hidden;
+    background: #fff;
+    font-size: 0.95em;
+    animation: expand .32s ease-in-out;
+
+    strong {
+      display: block;
+      font-size: 1.1em;
+      margin-bottom: 0.4rem;
+    }
+
+    .--icon {
+      position: absolute;
+      top: 1.2rem;
+      left: 1.2rem;
+      width: 1.3em;
+      height: 1.3em;
+    }
+
+    &:before {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 5px;
+      height: 100%;
+      content: '';
+      background: #2D91FF;
+    }
+
+    &.--succ,
+    &.--warn,
+    &.--error {
+      padding-left: 3rem;
+    }
+
+    &.--succ {
+      &:before {
+        background: #0FC670;
+      }
+
+      .--icon {
+        color: #0FC670;
+      }
+    }
+
+    &.--warn {
+      &:before {
+        background: #FFA200;
+      }
+
+      .--icon {
+        color: #FFA200;
+      }
+    }
+
+    &.--error {
+      &:before {
+        background: #FF0000;
+      }
+
+      .--icon {
+        color: #FF0000;
+      }
+    }
+  }
+}
+
 .flax.fx-guard {
   position: relative;
   transition: opacity ease-in-out 0.15s;
