@@ -43,25 +43,46 @@ function SamplePost() {
       />
       <hr />
       <FxButton<JsonPlaceHolderPostTodo>
+        label="Click Me (Toast on Success)"
         api={{
           method: 'POST',
           url: 'https://jsonplaceholder.typicode.com/posts',
-          headers: {
-            foo: 'bar',
-          },
-          data: {
-            postId,
-            title: titleRef,
-            title2: title2Ref,
-            titleValue,
-          },
         }}
-        done={(res, err) => {
-          err && console.log('>>', err);
-          err ? setPostId(-1) : setPostId(res.id);
+        success={res => `Post created (ID: ${res.id})`}
+        done={() => 'Done!'}
+      />
+      <hr />
+      <FxButton<JsonPlaceHolderPostTodo>
+        label="Click Me (Toast on Success)"
+        api={{
+          method: 'POST',
+          url: 'https://jsonplaceholder.typicode.com/posts',
         }}
+        success={res => `Post created (ID: ${res.id})`}
+        done={() => 'Done!'}
+      />
+      <hr />
+      <FxButton<JsonPlaceHolderPostTodo, {code: string; message: string}>
+        api={{
+          method: 'GET',
+          url: 'http://127.0.0.1:3009/error/400',
+        }}
+        error={err => `400 Error! (${err.code}: ${err.message}`}
       >
-        Click Me!
+        Click Me 400!
+      </FxButton>
+      <hr />
+      <FxButton<JsonPlaceHolderPostTodo, {code: string; message: string}>
+        api={{
+          method: 'GET',
+          url: 'http://127.0.0.1:3009/error/500',
+        }}
+        error={err => ({
+          title: 'ERROR!',
+          message: `500 Error! (${err.code}: ${err.message}`,
+        })}
+      >
+        Click Me 500!
       </FxButton>
       <hr />
       {postId}

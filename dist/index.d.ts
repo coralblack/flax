@@ -1,5 +1,12 @@
 import { ResponseType, AxiosResponse, AxiosError } from "axios";
 import React, { MutableRefObject, Component, ReactNode } from "react";
+type FxNotificationType = 'SUCC' | 'WARN' | 'ERROR' | 'INFO';
+interface FxNotificationPayload {
+    type?: FxNotificationType;
+    title?: string;
+    message: string;
+}
+type FxNotificationToast = string | FxNotificationPayload;
 type QueryType = string | number | boolean;
 type Queries = {
     [key: string]: QueryType | QueryType[];
@@ -23,23 +30,24 @@ interface FxApiRequest {
     headers?: Headers;
     data?: Data;
 }
-type DoneDelegate<T> = (res: T | null, error: Error | null, resp?: AxiosResponse | null) => void;
-type SucceedDelegate<T> = (res: T, resp: AxiosResponse) => void;
-type ErrorDelegate = (error: Error) => void;
-interface FxButtonProps<T> {
+export type Notifiable = FxNotificationToast | null | undefined | void;
+export type DoneDelegate<T> = (res: T | null, error: Error | null, resp?: AxiosResponse | null) => Notifiable;
+export type SucceedDelegate<T> = (data: T, resp: AxiosResponse) => Notifiable;
+export type ErrorDelegate<T> = (data: T, error: AxiosResponse<T>) => Notifiable;
+interface FxButtonProps<TR, TE> {
     children?: ReactNode;
     className?: string;
     label?: string;
     api: FxApiRequest;
-    done?: DoneDelegate<T>;
-    success?: SucceedDelegate<T>;
-    error?: ErrorDelegate;
+    done?: DoneDelegate<TR>;
+    success?: SucceedDelegate<TR>;
+    error?: ErrorDelegate<TE>;
 }
 interface FxButtonStates {
     busy: boolean;
 }
-export class FxButton<T = any> extends Component<FxButtonProps<T>, FxButtonStates> {
-    constructor(props: FxButtonProps<T>);
+export class FxButton<TR = any, TE = any> extends Component<FxButtonProps<TR, TE>, FxButtonStates> {
+    constructor(props: FxButtonProps<TR, TE>);
     handleClick(): void;
     render(): JSX.Element;
 }

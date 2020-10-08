@@ -22,6 +22,13 @@ app.get('/error/400', (req, res) => {
   });
 });
 
+app.get('/error/500', (req, res) => {
+  res.status(500).send({
+    code: 'ERROR-500',
+    message: 'An error has occurred.',
+  });
+});
+
 app.listen(port, () => {
   console.log(`Example app listening at http://localhost:${port}`);
 });

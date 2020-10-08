@@ -1,24 +1,30 @@
 import {AxiosResponse} from 'axios';
 import React, {Component, ReactNode} from 'react';
+import {
+  FxNotificationType,
+  FxNotificationToast,
+  useNotification,
+} from './FxNotification';
 import {FxApiRequest, request} from '../request';
 
-type DoneDelegate<T> = (
+export type Notifiable = FxNotificationToast | null | undefined | void;
+export type DoneDelegate<T> = (
   res: T | null,
   error: Error | null,
   resp?: AxiosResponse | null
-) => void;
-type SucceedDelegate<T> = (res: T, resp: AxiosResponse) => void;
-type ErrorDelegate = (error: Error) => void;
+) => Notifiable;
+export type SucceedDelegate<T> = (data: T, resp: AxiosResponse) => Notifiable;
+export type ErrorDelegate<T> = (data: T, error: AxiosResponse<T>) => Notifiable;
 
-interface FxButtonProps<T> {
+interface FxButtonProps<TR, TE> {
   children?: ReactNode;
   className?: string;
   label?: string;
 
   api: FxApiRequest;
-  done?: DoneDelegate<T>;
-  success?: SucceedDelegate<T>;
-  error?: ErrorDelegate;
+  done?: DoneDelegate<TR>;
+  success?: SucceedDelegate<TR>;
+  error?: ErrorDelegate<TE>;
 }
 
 interface FxButtonStates {
@@ -26,11 +32,11 @@ interface FxButtonStates {
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export class FxButton<T = any> extends Component<
-  FxButtonProps<T>,
+export class FxButton<TR = any, TE = any> extends Component<
+  FxButtonProps<TR, TE>,
   FxButtonStates
 > {
-  constructor(props: FxButtonProps<T>) {
+  constructor(props: FxButtonProps<TR, TE>) {
     super(props);
 
     this.state = {
@@ -38,20 +44,40 @@ export class FxButton<T = any> extends Component<
     };
   }
 
+  private noti(payload: Notifiable, type: FxNotificationType) {
+    if (!payload) return;
+    if (typeof payload === 'string') {
+      payload = {
+        message: payload,
+      };
+    }
+
+    payload.type = payload.type || type;
+
+    const {alert: notiAlert} = useNotification({});
+    notiAlert(payload);
+  }
+
   handleClick() {
     if (this.state.busy) return;
 
     this.setState({...this.state, busy: true});
 
-    request<T>({...this.props.api})
+    const {success, error, done} = this.props;
+
+    request<TR>({...this.props.api})
       .then(res => {
-        this.props.success && this.props.success(res.data, res.response);
-        this.props.done && this.props.done(res.data, null, res.response);
+        this.noti(success && success(res.data, res.response), 'SUCC');
+        this.noti(done && done(res.data, null, res.response), 'INFO');
         this.setState({...this.state, busy: false});
       })
       .catch(err => {
-        this.props.error && this.props.error(err);
-        this.props.done && this.props.done(null, err, null);
+        const type =
+          typeof err.response?.status === 'number' && err.response?.status < 500
+            ? 'WARN'
+            : 'ERROR';
+        this.noti(error && error(err.response?.data, err), type);
+        this.noti(done && done(err.response?.data, err, err.response), type);
         this.setState({...this.state, busy: false});
       });
   }
