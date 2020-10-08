@@ -59,7 +59,7 @@ export class FxButton<T = any> extends Component<
   render() {
     return (
       <button
-        className="fx-button"
+        className="flax fx-button"
         onClick={() => this.handleClick()}
         disabled={this.state.busy}
       >

@@ -1,11 +1,44 @@
 {
   "extends": ["./node_modules/gts/", "plugin:react/recommended"],
+  "plugins": ["node", "prettier", "eslint-plugin-import"],
   "env": {
     "browser": true
   },
   "rules": {
     "@typescript-eslint/no-empty-interface": 0,
-    "node/no-unpublished-import": 0
+    "node/no-unpublished-import": 0,
+
+    "import/no-duplicates": "error",
+    "import/no-unused-modules": "error",
+    "import/no-cycle": "error",
+    "import/no-absolute-path": "error",
+    "import/no-self-import": "error",
+    "import/order": [
+      "error",
+      {
+        "groups": [
+          "builtin",
+          "internal",
+          "external",
+          "sibling",
+          "parent",
+          "object",
+          "index"
+        ],
+        "pathGroups": [
+          {
+            "pattern": "@alias/**",
+            "group": "external",
+            "position": "after"
+          }
+        ],
+        "pathGroupsExcludedImportTypes": [],
+        "alphabetize": {
+          "order": "asc",
+          "caseInsensitive": true
+        }
+      }
+    ]
   },
   "settings": {
     "react": {
