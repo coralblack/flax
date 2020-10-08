@@ -1,9 +1,9 @@
-const express = require('express')
-const cors = require('cors')
-const app = express()
-const port = 3009
+const cors = require('cors');
+const express = require('express');
+const app = express();
+const port = 3009;
 
-app.use(cors())
+app.use(cors());
 
 app.get('/mock', (req, res) => {
   res.send({
@@ -11,11 +11,17 @@ app.get('/mock', (req, res) => {
     id: Math.ceil(Math.random() * 9000 + 1000),
     title: 'Title',
     completed: Math.random() > 0.5 ? true : false,
-    createdAt: new Date()
-  })
-})
+    createdAt: new Date(),
+  });
+});
+
+app.get('/error/400', (req, res) => {
+  res.status(400).send({
+    code: 'ERROR-400',
+    message: 'An error has occurred.',
+  });
+});
 
 app.listen(port, () => {
-  console.log(`Example app listening at http://localhost:${port}`)
-})
-
+  console.log(`Example app listening at http://localhost:${port}`);
+});

@@ -1,4 +1,4 @@
-import { ResponseType, AxiosResponse } from "axios";
+import { ResponseType, AxiosResponse, AxiosError } from "axios";
 import React, { MutableRefObject, Component, ReactNode } from "react";
 type QueryType = string | number | boolean;
 type Queries = {
@@ -44,10 +44,15 @@ export class FxButton<T = any> extends Component<FxButtonProps<T>, FxButtonState
     render(): JSX.Element;
 }
 type Renderer<T> = (data: T) => React.ReactNode;
-interface FxGuardProps<T> {
+type ErrorRenderer<T> = (data: T, error: AxiosError<T>) => React.ReactNode;
+type LoadingRenderer = () => React.ReactNode;
+interface FxGuardProps<TR, TE = AxiosError> {
     api: FxApiRequest;
-    render: Renderer<T>;
+    render: Renderer<TR>;
+    error?: ErrorRenderer<TE>;
     done?: ReleaseDelegate;
+    loading?: LoadingRenderer;
+    naked?: boolean;
 }
 type ReleaseDelegate = (succeed?: boolean) => void;
 interface FxGuardStates {
@@ -55,8 +60,8 @@ interface FxGuardStates {
     reloadId: number;
     busy: boolean;
 }
-export class FxGuard<T = any> extends Component<FxGuardProps<T>, FxGuardStates> {
-    constructor(props: FxGuardProps<T>);
+export class FxGuard<TR = any, TE = any> extends Component<FxGuardProps<TR, TE>, FxGuardStates> {
+    constructor(props: FxGuardProps<TR, TE>);
     reload(silent?: boolean): void;
     releaseBusy(succeed: boolean): void;
     render(): JSX.Element;

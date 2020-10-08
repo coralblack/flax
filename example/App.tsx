@@ -242,10 +242,17 @@ export function App() {
         />
         <hr />
         Invalid Request:
-        <FxGuard<JsonPlaceHolderTodo>
+        <FxGuard<JsonPlaceHolderTodo, {code: string; message: string}>
           api={{
             method: 'GET',
-            url: 'https://jsonplaceholder.typicode.com/not-valid-uri/1',
+            url: 'http://127.0.0.1:3009/error/400',
+          }}
+          error={(data, error) => {
+            return (
+              <>
+                {data.message} ({data.code}), {error.message}
+              </>
+            );
           }}
           render={data => (
             <>
@@ -260,6 +267,43 @@ export function App() {
               </div>
             </>
           )}
+        />
+        <hr />
+        Custom Loading:
+        <FxGuard<JsonPlaceHolderTodo>
+          api={{
+            method: 'GET',
+            url: mockApiUrl,
+            delay: 30000,
+          }}
+          loading={() => <>Loading ...</>}
+          render={data => <>{data.title}</>}
+        />
+        <hr />
+        Naked (Success):
+        <FxGuard<JsonPlaceHolderTodo>
+          api={{
+            method: 'GET',
+            url: mockApiUrl,
+            delay: 10000,
+          }}
+          loading={() => <>Loading ...</>}
+          error={() => <>An error has occurred</>}
+          render={data => <>{data.title}</>}
+          naked={true}
+        />
+        <hr />
+        Naked (Error):
+        <FxGuard<JsonPlaceHolderTodo>
+          api={{
+            method: 'GET',
+            url: mockApiUrl + '/invalid-suffix',
+            delay: 5000,
+          }}
+          loading={() => <>Loading ...</>}
+          error={() => <>An error has occurred</>}
+          render={data => <>{data.title}</>}
+          naked={true}
         />
         <hr />
       </div>

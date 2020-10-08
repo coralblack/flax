@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import axios, {AxiosResponse, ResponseType} from 'axios';
+import axios, {AxiosError, AxiosResponse, ResponseType} from 'axios';
 import LRU from 'lru-cache';
 import queryString from 'query-string';
 import {MutableRefObject} from 'react';
@@ -45,7 +45,7 @@ const resolver = (
   resolver: {resolve: Resolver; reject: Rejector},
   key: string | null,
   resp: AxiosResponse | null,
-  error: Error | null
+  error: AxiosError | null
 ) => {
   if (!key) {
     if (error) {
@@ -87,8 +87,8 @@ const dataMapper = (data: DataType | string | null | undefined) => {
 
 export type FxResp<T> = {data: T; response: AxiosResponse};
 
-export function request<T>(props: RequestProps): Promise<FxResp<T>> {
-  return new Promise<FxResp<T>>((resolve, reject) => {
+export function request<TR>(props: RequestProps): Promise<FxResp<TR>> {
+  return new Promise<FxResp<TR>>((resolve, reject) => {
     setTimeout(() => {
       const url = ((u, query) => {
         const qs = queryString.stringify(query);
@@ -102,7 +102,7 @@ export function request<T>(props: RequestProps): Promise<FxResp<T>> {
       const cached = cacheKey && cache.get(cacheKey);
       const lazyGroup =
         props.method === 'GET' && props.throttle
-          ? `${props.method} ${url}`
+          ? `${props.method} ${url} ${props.delay || 0}`
           : null;
 
       if (lazyGroup) {
@@ -123,7 +123,7 @@ export function request<T>(props: RequestProps): Promise<FxResp<T>> {
       const start = new Date().getTime();
 
       axios
-        .request<T>({
+        .request<TR>({
           method: props.method,
           url,
           headers: props.headers,
@@ -140,7 +140,11 @@ export function request<T>(props: RequestProps): Promise<FxResp<T>> {
           }, Math.max(0, delay));
         })
         .catch(err => {
-          resolver({resolve, reject}, lazyGroup, null, err);
+          const delay = (props.delay || 0) - (new Date().getTime() - start);
+
+          setTimeout(() => {
+            resolver({resolve, reject}, lazyGroup, null, err);
+          }, Math.max(0, delay));
         });
     }, 25);
   });

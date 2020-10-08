@@ -1,5 +1,10 @@
-.fx-guard {
+.flax.fx-guard {
   position: relative;
+  transition: opacity ease-in-out 0.15s;
+
+  &.--loading {
+    opacity: 0.6;
+  }
 
   .fx-guard-loader {
     position: relative;
