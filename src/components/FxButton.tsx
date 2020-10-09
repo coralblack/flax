@@ -7,7 +7,8 @@ import {
 } from './FxNotification';
 import {FxApiRequest, request} from '../request';
 
-export type Notifiable = FxNotificationToast | null | undefined | void;
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export type Notifiable = FxNotificationToast | any;
 export type DoneDelegate<T> = (
   res: T | null,
   error: Error | null,
@@ -52,6 +53,7 @@ export class FxButton<TR = any, TE = any, TRR = TR, TER = TE> extends Component<
       };
     }
 
+    if (!payload.message) return;
     payload.type = payload.type || type;
 
     const {alert: notiAlert} = useNotification({});

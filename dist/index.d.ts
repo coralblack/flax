@@ -38,7 +38,7 @@ interface FxApiRequest<TR = any, TE = any, TRR = TR, TER = TE> {
     reducer?: (data: TR) => TRR;
     errReducer?: (data: TE, error: AxiosError<TE>) => TER;
 }
-export type Notifiable = FxNotificationToast | null | undefined | void;
+export type Notifiable = FxNotificationToast | any;
 export type DoneDelegate<T> = (res: T | null, error: Error | null, resp?: AxiosResponse | null) => Notifiable;
 export type SucceedDelegate<T> = (data: T, resp: AxiosResponse) => Notifiable;
 export type ErrorDelegate<T> = (data: T, error: AxiosResponse<T>) => Notifiable;
