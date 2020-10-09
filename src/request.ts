@@ -28,7 +28,7 @@ export interface FxError<T, TR> extends AxiosError<T> {
   response?: FxErrorResponse<T, TR>;
 }
 
-export interface FxApiRequest<TR, TE, TRR, TER> {
+export interface FxApiRequest<TR = any, TE = any, TRR = TR, TER = TE> {
   method: 'GET' | 'POST' | 'DELETE' | 'PATCH' | 'PUT';
   url: string;
   cacheMaxAge?: number;
