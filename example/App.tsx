@@ -85,6 +85,39 @@ function SamplePost() {
         Click Me 500!
       </FxButton>
       <hr />
+      <FxButton
+        api={{
+          method: 'POST',
+          url: 'https://jsonplaceholder.typicode.com/posts',
+          reducer: (res: JsonPlaceHolderPostTodo): {manipulated: number} => {
+            return {
+              manipulated: res.id,
+            };
+          },
+        }}
+        success={res => {
+          return `Post created (ID: ${res.manipulated})`;
+        }}
+      >
+        Type Hinting
+      </FxButton>
+      <hr />
+      <FxButton
+        api={{
+          method: 'GET',
+          url: 'http://127.0.0.1:3009/error/400',
+          errReducer: (res: {
+            code: string;
+            message: string;
+          }): {manipulated: string} => ({
+            manipulated: `${res.code} | ${res.message}`,
+          }),
+        }}
+        error={err => `400 Error! (${err.manipulated})`}
+      >
+        Type Hinting
+      </FxButton>
+      <hr />
       {postId}
     </>
   );
@@ -139,6 +172,7 @@ function SampleReloadable() {
 
 export function App() {
   const validFirstRef = useRef<FxGuard>();
+  const validFirstCacheRef = useRef<FxGuard>();
 
   return (
     <>
@@ -171,6 +205,27 @@ export function App() {
           )}
         />
         <hr />
+        Valid Request (Delay: .5s, Cache: 15s):
+        <button onClick={() => validFirstCacheRef.current.reload()}>
+          reload
+        </button>
+        <FxGuard<JsonPlaceHolderTodo>
+          ref={validFirstCacheRef}
+          api={{
+            method: 'GET',
+            url: mockApiUrl,
+            delay: 500,
+            cacheMaxAge: 10000,
+          }}
+          render={data => (
+            <>
+              <div>
+                <label>title:</label> {data.title}
+              </div>
+            </>
+          )}
+        />
+        <hr />
         <SampleReloadable />
         <hr />
         Valid Request (Continuous Request 1):
@@ -195,6 +250,24 @@ export function App() {
         />
         <hr />
         Valid Request (Continuous Request 2):
+        <FxGuard
+          api={{
+            method: 'GET',
+            url: 'https://jsonplaceholder.typicode.com/todos/1',
+            reducer: (data: JsonPlaceHolderTodo): {manipulated: string} => ({
+              manipulated: `${data.id} (${data.title})`,
+            }),
+          }}
+          render={data => (
+            <>
+              <div>
+                <label>manipulated:</label> {data.manipulated}
+              </div>
+            </>
+          )}
+        />
+        <hr />
+        Valid Request (Continuous Request 3):
         <FxGuard<JsonPlaceHolderTodo>
           api={{
             method: 'GET',
@@ -204,34 +277,25 @@ export function App() {
             <>
               <div>
                 <label>userId:</label> {data.userId}
-                <br />
-                <label>id:</label> {data.id}
-                <br />
-                <label>title:</label> {data.title}
-                <br />
-                <label>completed:</label> {data.completed}
               </div>
             </>
           )}
         />
         <hr />
         Valid Request (Continuous Request, Throttle = false):
-        <FxGuard<JsonPlaceHolderTodo>
+        <FxGuard<JsonPlaceHolderTodo, unknown, {manipulated: string}>
           api={{
             method: 'GET',
             url: 'https://jsonplaceholder.typicode.com/todos/1',
             throttle: false,
+            reducer: data => ({
+              manipulated: `${data.id}, ${data.title}`,
+            }),
           }}
           render={data => (
             <>
               <div>
-                <label>userId:</label> {data.userId}
-                <br />
-                <label>id:</label> {data.id}
-                <br />
-                <label>title:</label> {data.title}
-                <br />
-                <label>completed:</label> {data.completed}
+                <label>id, title:</label> {data.manipulated}
               </div>
             </>
           )}
@@ -277,15 +341,29 @@ export function App() {
           }}
           render={data => (
             <>
-              <div>
-                <label>userId:</label> {data.userId}
-                <br />
-                <label>id:</label> {data.id}
-                <br />
-                <label>title:</label> {data.title}
-                <br />
-                <label>completed:</label> {data.completed}
-              </div>
+              <div>?</div>
+            </>
+          )}
+        />
+        <hr />
+        Invalid Request (errReducer):
+        <FxGuard<
+          JsonPlaceHolderTodo,
+          {code: string; message: string},
+          unknown,
+          string
+        >
+          api={{
+            method: 'GET',
+            url: 'http://127.0.0.1:3009/error/400',
+            errReducer: data => `${data.code} | ${data.message}`,
+          }}
+          error={data => {
+            return <>({data})</>;
+          }}
+          render={data => (
+            <>
+              <div>?</div>
             </>
           )}
         />
@@ -295,7 +373,7 @@ export function App() {
           api={{
             method: 'GET',
             url: mockApiUrl,
-            delay: 30000,
+            delay: 10000,
           }}
           loading={() => <>Loading ...</>}
           render={data => <>{data.title}</>}
