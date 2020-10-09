@@ -18,7 +18,17 @@ type DataType = {
 };
 type Data = DataType | (() => DataType) | string;
 
-export interface FxApiRequest {
+export type FxResp<T, TR> = {data: T; reduced: TR; response: AxiosResponse<T>};
+
+interface FxErrorResponse<T, TR> extends AxiosResponse<T> {
+  reduced: TR;
+}
+
+export interface FxError<T, TR> extends AxiosError<T> {
+  response?: FxErrorResponse<T, TR>;
+}
+
+export interface FxApiRequest<TR, TE, TRR, TER> {
   method: 'GET' | 'POST' | 'DELETE' | 'PATCH' | 'PUT';
   url: string;
   cacheMaxAge?: number;
@@ -28,9 +38,12 @@ export interface FxApiRequest {
   query?: Queries;
   headers?: Headers;
   data?: Data;
+  reducer?: (data: TR) => TRR;
+  errReducer?: (data: TE, error: AxiosError<TE>) => TER;
 }
 
-interface RequestProps extends FxApiRequest {
+interface RequestProps<TR, TE, TRR, TER>
+  extends FxApiRequest<TR, TE, TRR, TER> {
   refreshId?: number;
 }
 
@@ -38,32 +51,75 @@ interface RequestProps extends FxApiRequest {
 type Resolver = (data: any) => void;
 type Rejector = (reason: Error) => void;
 
+const resolving = (
+  resolve: Resolver,
+  reject: Rejector,
+  props: RequestProps<any, any, any, any>,
+  resp: AxiosResponse | null,
+  error: FxError<any, any> | null
+) => {
+  if (error) {
+    if (error.response?.data) {
+      if (props.errReducer) {
+        error.response.reduced = props.errReducer(error.response?.data, error);
+      } else {
+        error.response.reduced = error.response?.data;
+      }
+    }
+
+    reject(error);
+  } else {
+    resolve({
+      data: resp?.data,
+      reduced: props.reducer ? props.reducer(resp?.data) : resp?.data,
+      response: resp,
+    });
+  }
+};
+
 const resolvers: {
-  [key: string]: Array<{resolve: Resolver; reject: Rejector}>;
+  [key: string]: Array<{
+    resolve: Resolver;
+    reject: Rejector;
+    props: RequestProps<any, any, any, any>;
+  }>;
 } = {};
+
 const resolver = (
-  resolver: {resolve: Resolver; reject: Rejector},
+  resolver: {
+    resolve: Resolver;
+    reject: Rejector;
+    props: RequestProps<any, any, any, any>;
+  },
   key: string | null,
   resp: AxiosResponse | null,
-  error: AxiosError | null
+  error: FxError<any, any> | null,
+  startAt: Date,
+  cacheKey: string | null
 ) => {
+  if (cacheKey && resolver.props.cacheMaxAge) {
+    cache.set(cacheKey, {data: resp?.data}, resolver.props.cacheMaxAge);
+  }
+
   if (!key) {
-    if (error) {
-      resolver.reject(error);
-    } else {
-      resolver.resolve({data: resp?.data, response: resp});
-    }
+    const delay =
+      (resolver.props.delay || 0) - (new Date().getTime() - startAt.getTime());
+
+    setTimeout(() => {
+      resolving(resolver.resolve, resolver.reject, resolver.props, resp, error);
+    }, Math.max(delay, 0));
     return;
   }
 
   const res = resolvers[key].splice(0, resolvers[key].length);
 
-  res.forEach(({resolve, reject}) => {
-    if (error) {
-      reject(error);
-    } else {
-      resolve({data: resp?.data, response: resp});
-    }
+  res.forEach(({resolve, reject, props}) => {
+    const delay =
+      (props.delay || 0) - (new Date().getTime() - startAt.getTime());
+
+    setTimeout(() => {
+      resolving(resolve, reject, props, resp, error);
+    }, Math.max(delay, 0));
   });
 };
 
@@ -85,10 +141,10 @@ const dataMapper = (data: DataType | string | null | undefined) => {
   }, {});
 };
 
-export type FxResp<T> = {data: T; response: AxiosResponse};
-
-export function request<TR>(props: RequestProps): Promise<FxResp<TR>> {
-  return new Promise<FxResp<TR>>((resolve, reject) => {
+export function request<TR, TE, TRR, TER>(
+  props: RequestProps<TR, TE, TRR, TER>
+): Promise<FxResp<TR, TRR>> {
+  return new Promise<FxResp<TR, TRR>>((resolve, reject) => {
     setTimeout(() => {
       const url = ((u, query) => {
         const qs = queryString.stringify(query);
@@ -97,9 +153,22 @@ export function request<TR>(props: RequestProps): Promise<FxResp<TR>> {
 
       const cacheKey =
         props.method === 'GET' && props.cacheMaxAge && props.cacheMaxAge > 0
-          ? ''
+          ? `${props.method} ${props.url} ${props.cacheMaxAge}`
           : null;
       const cached = cacheKey && cache.get(cacheKey);
+
+      if (cached) {
+        resolver(
+          {resolve, reject, props},
+          null,
+          cached as AxiosResponse,
+          null,
+          new Date(),
+          null
+        );
+        return;
+      }
+
       const lazyGroup =
         props.method === 'GET' && props.throttle
           ? `${props.method} ${url} ${props.delay || 0}`
@@ -107,7 +176,7 @@ export function request<TR>(props: RequestProps): Promise<FxResp<TR>> {
 
       if (lazyGroup) {
         resolvers[lazyGroup] = resolvers[lazyGroup] || [];
-        resolvers[lazyGroup].push({resolve, reject});
+        resolvers[lazyGroup].push({resolve, reject, props});
 
         // Duplicated `GET` request,
         if (resolvers[lazyGroup].length > 1) {
@@ -115,12 +184,7 @@ export function request<TR>(props: RequestProps): Promise<FxResp<TR>> {
         }
       }
 
-      if (cached) {
-        resolve(cached);
-        return;
-      }
-
-      const start = new Date().getTime();
+      const start = new Date();
 
       axios
         .request<TR>({
@@ -133,18 +197,17 @@ export function request<TR>(props: RequestProps): Promise<FxResp<TR>> {
           ),
         })
         .then(resp => {
-          const delay = (props.delay || 0) - (new Date().getTime() - start);
-
-          setTimeout(() => {
-            resolver({resolve, reject}, lazyGroup, resp, null);
-          }, Math.max(0, delay));
+          resolver(
+            {resolve, reject, props},
+            lazyGroup,
+            resp,
+            null,
+            start,
+            cacheKey
+          );
         })
         .catch(err => {
-          const delay = (props.delay || 0) - (new Date().getTime() - start);
-
-          setTimeout(() => {
-            resolver({resolve, reject}, lazyGroup, null, err);
-          }, Math.max(0, delay));
+          resolver({resolve, reject, props}, lazyGroup, null, err, start, null);
         });
     }, 25);
   });
