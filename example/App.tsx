@@ -413,7 +413,7 @@ export function App() {
             url: mockApiUrl,
             delay: 5000,
           }}
-          loading={null}
+          disableLoading={true}
           render={data => <>{!data ? 'Nullable Loading...' : data.title}</>}
         />
         <hr />

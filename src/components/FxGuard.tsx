@@ -151,6 +151,7 @@ interface FxGuardProps<TR, TE, TRR, TER> {
   error?: ErrorRenderer<TE, TER>;
   done?: ReleaseDelegate;
   loading?: LoadingRenderer;
+  disableLoading?: boolean;
   naked?: boolean;
 }
 
@@ -211,9 +212,9 @@ export class FxGuard<TR = any, TE = any, TRR = TR, TER = TE> extends Component<
     const r = () => {
       const rl = () => (
         <>
-          {this.props.loading === null && <>{this.props.render(null)}</>}
+          {this.props.disableLoading && <>{this.props.render(null)}</>}
           {this.props.loading && this.props.loading()}
-          {!this.props.loading && this.props.loading !== null && (
+          {!this.props.loading && !this.props.disableLoading && (
             <div className="flax fx-guard-loader">Loading ..</div>
           )}
         </>

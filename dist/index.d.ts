@@ -68,6 +68,7 @@ interface FxGuardProps<TR, TE, TRR, TER> {
     error?: ErrorRenderer<TE, TER>;
     done?: ReleaseDelegate;
     loading?: LoadingRenderer;
+    disableLoading?: boolean;
     naked?: boolean;
 }
 type ReleaseDelegate = (succeed?: boolean) => void;
