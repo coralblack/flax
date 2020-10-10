@@ -406,6 +406,17 @@ export function App() {
           naked={true}
         />
         <hr />
+        Nullable Loading:
+        <FxGuard<JsonPlaceHolderTodo>
+          api={{
+            method: 'GET',
+            url: mockApiUrl,
+            delay: 5000,
+          }}
+          loading={null}
+          render={data => <>{!data ? 'Nullable Loading...' : data.title}</>}
+        />
+        <hr />
       </div>
     </>
   );

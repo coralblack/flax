@@ -211,8 +211,9 @@ export class FxGuard<TR = any, TE = any, TRR = TR, TER = TE> extends Component<
     const r = () => {
       const rl = () => (
         <>
+          {this.props.loading === null && <>{this.props.render(null)}</>}
           {this.props.loading && this.props.loading()}
-          {!this.props.loading && (
+          {!this.props.loading && this.props.loading !== null && (
             <div className="flax fx-guard-loader">Loading ..</div>
           )}
         </>
