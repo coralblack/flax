@@ -2,7 +2,7 @@ import React, {Component, Suspense, useEffect, useState} from 'react';
 import {request, FxApiRequest, FxResp, FxError} from '../request';
 import {classNames} from '../utils';
 
-type Renderer<T> = (data: T | null) => React.ReactNode;
+type Renderer<T> = (data: T | null, reloaded?: boolean) => React.ReactNode;
 type ErrorRenderer<T, TR> = (
   data: TR | null,
   error: FxError<T, TR>
@@ -142,7 +142,7 @@ function FxGuardInner<TR, TE, TRR, TER>(
       : resp.result?.data;
   };
 
-  return <>{props.render(rr() as TRR)}</>;
+  return <>{props.render(rr() as TRR, props.refreshId > 0)}</>;
 }
 
 interface FxGuardProps<TR, TE, TRR, TER> {
@@ -212,7 +212,9 @@ export class FxGuard<TR = any, TE = any, TRR = TR, TER = TE> extends Component<
     const r = () => {
       const rl = () => (
         <>
-          {this.props.disableLoading && <>{this.props.render(null)}</>}
+          {this.props.disableLoading && (
+            <>{this.props.render(null, this.state.refreshId > 0)}</>
+          )}
           {this.props.loading && this.props.loading()}
           {!this.props.loading && !this.props.disableLoading && (
             <div className="flax fx-guard-loader">Loading ..</div>

@@ -59,7 +59,7 @@ export class FxButton<TR = any, TE = any, TRR = TR, TER = TE> extends Component<
     handleClick(): void;
     render(): JSX.Element;
 }
-type Renderer<T> = (data: T | null) => React.ReactNode;
+type Renderer<T> = (data: T | null, reloaded?: boolean) => React.ReactNode;
 type ErrorRenderer<T, TR> = (data: TR | null, error: FxError<T, TR>) => React.ReactNode;
 type LoadingRenderer = () => React.ReactNode;
 interface FxGuardProps<TR, TE, TRR, TER> {

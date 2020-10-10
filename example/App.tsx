@@ -174,6 +174,8 @@ function SampleReloadable() {
 export function App() {
   const validFirstRef = useRef<FxGuard>();
   const validFirstCacheRef = useRef<FxGuard>();
+  const reloadFxGuardRef = useRef<FxGuard>();
+  const [foo, setFoo] = useState(0);
 
   return (
     <>
@@ -415,6 +417,33 @@ export function App() {
           }}
           disableLoading={true}
           render={data => <>{!data ? 'Nullable Loading...' : data.title}</>}
+        />
+        <hr />
+        ReLoading:{' '}
+        <button
+          onClick={() => {
+            setFoo(Math.random() * 1000);
+            reloadFxGuardRef.current.reload();
+          }}
+        >
+          reload
+        </button>
+        <FxGuard<JsonPlaceHolderTodo>
+          ref={reloadFxGuardRef}
+          api={{
+            method: 'GET',
+            url: mockApiUrl,
+            query: {
+              foo,
+            },
+            delay: 3000,
+          }}
+          disableLoading={true}
+          render={(data, reloaded) => (
+            <>
+              {data ? data.title : '...'} / {reloaded ? 'T' : 'F'}
+            </>
+          )}
         />
         <hr />
       </div>
