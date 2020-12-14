@@ -3,8 +3,18 @@ import axios, {AxiosError, AxiosResponse, ResponseType} from 'axios';
 import LRU from 'lru-cache';
 import queryString from 'query-string';
 import {MutableRefObject} from 'react';
+import {FxNotificationToast} from './components/FxNotification';
 
 const cache = new LRU({max: 100, maxAge: 1000 * 60 * 10});
+
+export type Notifiable = FxNotificationToast | any;
+export type DoneDelegate<T> = (
+  res: T | null,
+  error: Error | null,
+  resp?: AxiosResponse | null
+) => Notifiable;
+export type SucceedDelegate<T> = (data: T, resp: AxiosResponse) => Notifiable;
+export type ErrorDelegate<T> = (data: T, error: AxiosResponse<T>) => Notifiable;
 
 type QueryType = string | number | boolean;
 type Queries = {[key: string]: QueryType | QueryType[]};
@@ -142,7 +152,10 @@ const dataMapper = (data: DataType | string | null | undefined) => {
 };
 
 export function setDefaultHeaders(headers: {[key: string]: string}) {
-  axios.defaults.headers.common = Object.assign(axios.defaults.headers.common, headers)
+  axios.defaults.headers.common = Object.assign(
+    axios.defaults.headers.common,
+    headers
+  );
 }
 
 export function request<TR, TE, TRR, TER>(

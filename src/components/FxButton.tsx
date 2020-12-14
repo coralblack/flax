@@ -1,23 +1,19 @@
-import {AxiosResponse} from 'axios';
 import React, {Component, ReactNode} from 'react';
+import {FxNotificationType, useNotification} from './FxNotification';
+import {notify} from '../hooks/useRequest';
 import {
-  FxNotificationType,
-  FxNotificationToast,
-  useNotification,
-} from './FxNotification';
-import {FxApiRequest, request} from '../request';
+  DoneDelegate,
+  ErrorDelegate,
+  FxApiRequest,
+  Notifiable,
+  request,
+  SucceedDelegate,
+} from '../request';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export type Notifiable = FxNotificationToast | any;
-export type DoneDelegate<T> = (
-  res: T | null,
-  error: Error | null,
-  resp?: AxiosResponse | null
-) => Notifiable;
-export type SucceedDelegate<T> = (data: T, resp: AxiosResponse) => Notifiable;
-export type ErrorDelegate<T> = (data: T, error: AxiosResponse<T>) => Notifiable;
 
 interface FxButtonProps<TR, TE, TRR, TER> {
+  tag?: string;
   children?: ReactNode;
   className?: string;
   label?: string;
@@ -46,18 +42,7 @@ export class FxButton<TR = any, TE = any, TRR = TR, TER = TE> extends Component<
   }
 
   private noti(payload: Notifiable, type: FxNotificationType) {
-    if (!payload) return;
-    if (typeof payload === 'string') {
-      payload = {
-        message: payload,
-      };
-    }
-
-    if (!payload.message) return;
-    payload.type = payload.type || type;
-
-    const {alert: notiAlert} = useNotification({});
-    notiAlert(payload);
+    notify(payload, type);
   }
 
   handleClick() {
@@ -85,14 +70,20 @@ export class FxButton<TR = any, TE = any, TRR = TR, TER = TE> extends Component<
   }
 
   render() {
+    const ButtonTag = `${
+      this.props.tag || 'button'
+    }` as keyof JSX.IntrinsicElements;
+
     return (
-      <button
-        className="flax fx-button"
+      <ButtonTag
+        className={`flax fx-button ${this.state.busy ? '--busy' : ''} ${
+          this.props.className || ''
+        }`}
         onClick={() => this.handleClick()}
         disabled={this.state.busy}
       >
         {this.props.children || this.props.label}
-      </button>
+      </ButtonTag>
     );
   }
 }
