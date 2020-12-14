@@ -141,17 +141,16 @@ const dataMapper = (data: DataType | string | null | undefined) => {
   }, {});
 };
 
-function setDefaultHeader(headerParam: {key: string, val: string}) {
-  const {key, val} = headerParam;
+function setDefaultHeader(key: string, val: string) {
   axios.defaults.headers.common[key] = val;
 }
 
-export function setDefaultHeaders(headers: Array<any>) {
+export function setDefaultHeaders(headers: Array<{[key: string]: string}>) {
   headers.forEach(e => {
     const key = e.key;
     const val = e.val;
 
-    setDefaultHeader({key, val});
+    setDefaultHeader(key, val);
   })
 }
 

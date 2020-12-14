@@ -38,7 +38,9 @@ interface FxApiRequest<TR = any, TE = any, TRR = TR, TER = TE> {
     reducer?: (data: TR) => TRR;
     errReducer?: (data: TE, error: AxiosError<TE>) => TER;
 }
-export function setDefaultHeaders(headers: Array<any>): void;
+export function setDefaultHeaders(headers: Array<{
+    [key: string]: string;
+}>): void;
 export type Notifiable = FxNotificationToast | any;
 export type DoneDelegate<T> = (res: T | null, error: Error | null, resp?: AxiosResponse | null) => Notifiable;
 export type SucceedDelegate<T> = (data: T, resp: AxiosResponse) => Notifiable;
