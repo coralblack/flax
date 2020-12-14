@@ -7,6 +7,10 @@ interface FxNotificationPayload {
     message: string;
 }
 type FxNotificationToast = string | FxNotificationPayload;
+type Notifiable = FxNotificationToast | any;
+type DoneDelegate<T> = (res: T | null, error: Error | null, resp?: AxiosResponse | null) => Notifiable;
+type SucceedDelegate<T> = (data: T, resp: AxiosResponse) => Notifiable;
+type ErrorDelegate<T> = (data: T, error: AxiosResponse<T>) => Notifiable;
 type QueryType = string | number | boolean;
 type Queries = {
     [key: string]: QueryType | QueryType[];
@@ -41,11 +45,22 @@ interface FxApiRequest<TR = any, TE = any, TRR = TR, TER = TE> {
 export function setDefaultHeaders(headers: {
     [key: string]: string;
 }): void;
-export type Notifiable = FxNotificationToast | any;
-export type DoneDelegate<T> = (res: T | null, error: Error | null, resp?: AxiosResponse | null) => Notifiable;
-export type SucceedDelegate<T> = (data: T, resp: AxiosResponse) => Notifiable;
-export type ErrorDelegate<T> = (data: T, error: AxiosResponse<T>) => Notifiable;
+export interface UseRequestProps<TR, TE, TRR, TER> {
+    done?: DoneDelegate<TR>;
+    success?: SucceedDelegate<TRR>;
+    error?: ErrorDelegate<TER>;
+}
+export const notify: (payload: Notifiable, type: FxNotificationType) => void;
+export function useRequest<TR = any, TE = any, TRR = TR, TER = TE>(api: FxApiRequest<TR, TE, TRR, TER>, props?: UseRequestProps<TR, TE, TRR, TER>): {
+    request: () => boolean;
+    response: {
+        busy: boolean;
+        response: TRR | undefined;
+        errorResponse: TER | undefined;
+    };
+};
 interface FxButtonProps<TR, TE, TRR, TER> {
+    tag?: string;
     children?: ReactNode;
     className?: string;
     label?: string;

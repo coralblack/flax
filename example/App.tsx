@@ -2,6 +2,7 @@ import React, {useRef, useState} from 'react';
 
 import {FxButton} from '../src/components/FxButton';
 import {FxGuard} from '../src/components/FxGuard';
+import {useRequest} from '../src/hooks/useRequest';
 import {setDefaultHeaders} from '../src/request';
 
 //const mockApiUrl = 'http://127.0.0.1:3009/mock';
@@ -25,8 +26,8 @@ function SamplePost() {
   const titleRef = useRef();
   const title2Ref = useRef(null);
   setDefaultHeaders({
-    'Authorization': 'dinoAuthToken1',
-    'CustomHeader': 'customHeaderValue2'
+    Authorization: 'Bearer Token',
+    CustomHeader: 'CustomHeaderValue',
   });
 
   return (
@@ -176,6 +177,72 @@ function SampleReloadable() {
   );
 }
 
+function SampleHook() {
+  const {request, response} = useRequest<JsonPlaceHolderTodo>(
+    {
+      method: 'GET',
+      url: mockApiUrl,
+      delay: 500,
+    },
+    {success: data => data.title}
+  );
+
+  return (
+    <>
+      <button onClick={() => request()} disabled={response.busy}>
+        Request
+      </button>
+      <br />
+      response: {JSON.stringify(response, null, 2)}
+    </>
+  );
+}
+
+function SampleHook2() {
+  const {request, response} = useRequest(
+    {
+      method: 'GET',
+      url: mockApiUrl,
+      delay: 500,
+    },
+    {done: () => 'Done!!!'}
+  );
+
+  return (
+    <>
+      <button onClick={() => request()} disabled={response.busy}>
+        Request
+      </button>
+      <br />
+      response: {JSON.stringify(response, null, 2)}
+    </>
+  );
+}
+
+function SampleHook3() {
+  const {request, response} = useRequest<
+    JsonPlaceHolderTodo,
+    {code: string; message: string}
+  >(
+    {
+      method: 'GET',
+      url: 'http://127.0.0.1:3009/error/400',
+      delay: 500,
+    },
+    {error: data => `${data.message} ~`}
+  );
+
+  return (
+    <>
+      <button onClick={() => request()} disabled={response.busy}>
+        Request
+      </button>
+      <br />
+      response: {JSON.stringify(response, null, 2)}
+    </>
+  );
+}
+
 export function App() {
   const validFirstRef = useRef<FxGuard>();
   const validFirstCacheRef = useRef<FxGuard>();
@@ -185,6 +252,12 @@ export function App() {
   return (
     <>
       <div id="App">
+        <SampleHook />
+        <hr />
+        <SampleHook2 />
+        <hr />
+        <SampleHook3 />
+        <hr />
         <SamplePost />
         <hr />
         Valid Request (Delay: 1.5s):
