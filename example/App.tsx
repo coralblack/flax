@@ -24,7 +24,10 @@ function SamplePost() {
   const [titleValue, setTitleValue] = useState('');
   const titleRef = useRef();
   const title2Ref = useRef(null);
-  setDefaultHeaders([{key: 'Authorization', val: 'dinoAuthToken2'}, {key: 'CustomHeader', val: 'customHeaderValue'}]);
+  setDefaultHeaders({
+    'Authorization': 'dinoAuthToken1',
+    'CustomHeader': 'customHeaderValue2'
+  });
 
   return (
     <>
