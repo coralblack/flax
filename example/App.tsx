@@ -2,6 +2,7 @@ import React, {useRef, useState} from 'react';
 
 import {FxButton} from '../src/components/FxButton';
 import {FxGuard} from '../src/components/FxGuard';
+import {setDefaultHeaders} from '../src/request';
 
 //const mockApiUrl = 'http://127.0.0.1:3009/mock';
 const mockApiUrl = 'https://jsonplaceholder.typicode.com/todos/1';
@@ -23,6 +24,10 @@ function SamplePost() {
   const [titleValue, setTitleValue] = useState('');
   const titleRef = useRef();
   const title2Ref = useRef(null);
+  setDefaultHeaders({
+    'Authorization': 'dinoAuthToken1',
+    'CustomHeader': 'customHeaderValue2'
+  });
 
   return (
     <>

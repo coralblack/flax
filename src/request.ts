@@ -141,6 +141,10 @@ const dataMapper = (data: DataType | string | null | undefined) => {
   }, {});
 };
 
+export function setDefaultHeaders(headers: {[key: string]: string}) {
+  axios.defaults.headers.common = Object.assign(axios.defaults.headers.common, headers)
+}
+
 export function request<TR, TE, TRR, TER>(
   props: RequestProps<TR, TE, TRR, TER>
 ): Promise<FxResp<TR, TRR>> {
