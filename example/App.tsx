@@ -282,6 +282,8 @@ export function App() {
         <hr />
         <SampleHook3 />
         <hr />
+        <SampleHook4 />
+        <hr />
         <SamplePost />
         <hr />
         Valid Request (Delay: 1.5s):

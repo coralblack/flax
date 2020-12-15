@@ -19,7 +19,12 @@ export type ErrorDelegate<T> = (data: T, error: AxiosResponse<T>) => Notifiable;
 type QueryType = string | number | boolean;
 type Queries = {[key: string]: QueryType | QueryType[]};
 type Headers = {[key: string]: string};
-type DataTypeValues = string | number | boolean | Array<string | number> | null;
+type DataPrimTypes = string | number | boolean | null;
+type DataObjTypes = Array<DataPrimTypes> | {[key: string]: DataPrimTypes};
+type DataTypeValues =
+  | DataPrimTypes
+  | DataObjTypes
+  | {[key: string]: DataObjTypes};
 type DataType = {
   [key: string]:
     | DataTypeValues
