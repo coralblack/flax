@@ -243,6 +243,30 @@ function SampleHook3() {
   );
 }
 
+function SampleHook4() {
+  const {request, response} = useRequest<JsonPlaceHolderTodo>(
+    {
+      method: 'POST',
+      url: mockApiUrl,
+      delay: 500,
+      data: () => ({
+        arrayParam: [1, 2, 3],
+      }),
+    },
+    {error: data => `${data.message} ~`}
+  );
+
+  return (
+    <>
+      <button onClick={() => request()} disabled={response.busy}>
+        Request
+      </button>
+      <br />
+      response: {JSON.stringify(response, null, 2)}
+    </>
+  );
+}
+
 export function App() {
   const validFirstRef = useRef<FxGuard>();
   const validFirstCacheRef = useRef<FxGuard>();
