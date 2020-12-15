@@ -19,7 +19,12 @@ export type ErrorDelegate<T> = (data: T, error: AxiosResponse<T>) => Notifiable;
 type QueryType = string | number | boolean;
 type Queries = {[key: string]: QueryType | QueryType[]};
 type Headers = {[key: string]: string};
-type DataTypeValues = string | number | boolean | null;
+type DataPrimTypes = string | number | boolean | null;
+type DataObjTypes = Array<DataPrimTypes> | {[key: string]: DataPrimTypes};
+type DataTypeValues =
+  | DataPrimTypes
+  | DataObjTypes
+  | {[key: string]: DataObjTypes};
 type DataType = {
   [key: string]:
     | DataTypeValues
@@ -136,6 +141,7 @@ const resolver = (
 const dataMapper = (data: DataType | string | null | undefined) => {
   if (!data) return data;
   if (typeof data !== 'object') return data;
+  if (Array.isArray(data)) return data;
 
   return Object.keys(data).reduce<{[key: string]: any}>((p, c) => {
     if (typeof data[c] === 'object') {

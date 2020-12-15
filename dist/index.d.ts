@@ -18,7 +18,13 @@ type Queries = {
 type Headers = {
     [key: string]: string;
 };
-type DataTypeValues = string | number | boolean | null;
+type DataPrimTypes = string | number | boolean | null;
+type DataObjTypes = Array<DataPrimTypes> | {
+    [key: string]: DataPrimTypes;
+};
+type DataTypeValues = DataPrimTypes | DataObjTypes | {
+    [key: string]: DataObjTypes;
+};
 type DataType = {
     [key: string]: DataTypeValues | MutableRefObject<HTMLElement | null> | DataType;
 };
