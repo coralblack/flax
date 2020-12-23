@@ -51,6 +51,7 @@ interface FxApiRequest<TR = any, TE = any, TRR = TR, TER = TE> {
 export function setDefaultHeaders(headers: {
     [key: string]: string;
 }): void;
+export function setBaseUrl(url: string): void;
 export interface UseRequestProps<TR, TE, TRR, TER> {
     done?: DoneDelegate<TR>;
     success?: SucceedDelegate<TRR>;

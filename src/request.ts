@@ -164,6 +164,10 @@ export function setDefaultHeaders(headers: {[key: string]: string}) {
   );
 }
 
+export function setBaseUrl(url: string) {
+  axios.defaults.baseURL = url;
+}
+
 export function request<TR, TE, TRR, TER>(
   props: RequestProps<TR, TE, TRR, TER>
 ): Promise<FxResp<TR, TRR>> {
