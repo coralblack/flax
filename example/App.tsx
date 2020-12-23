@@ -3,7 +3,7 @@ import React, {useRef, useState} from 'react';
 import {FxButton} from '../src/components/FxButton';
 import {FxGuard} from '../src/components/FxGuard';
 import {useRequest} from '../src/hooks/useRequest';
-import {setDefaultHeaders} from '../src/request';
+import {setBaseUrl, setDefaultHeaders} from '../src/request';
 
 //const mockApiUrl = 'http://127.0.0.1:3009/mock';
 const mockApiUrl = 'https://jsonplaceholder.typicode.com/todos/1';
@@ -25,10 +25,13 @@ function SamplePost() {
   const [titleValue, setTitleValue] = useState('');
   const titleRef = useRef();
   const title2Ref = useRef(null);
+
   setDefaultHeaders({
     Authorization: 'Bearer Token',
     CustomHeader: 'CustomHeaderValue',
   });
+
+  setBaseUrl('https://jsonplaceholder.typicode.com');
 
   return (
     <>
@@ -40,10 +43,10 @@ function SamplePost() {
       <input value={titleValue} onChange={e => setTitleValue(e.target.value)} />
       <hr />
       <FxButton<JsonPlaceHolderPostTodo>
-        label="Click Me"
+        label="Click Me !"
         api={{
           method: 'POST',
-          url: 'https://jsonplaceholder.typicode.com/posts',
+          url: '/posts',
         }}
         success={res => setPostId(res.id)}
       />
@@ -446,7 +449,7 @@ export function App() {
               </>
             );
           }}
-          render={data => (
+          render={() => (
             <>
               <div>?</div>
             </>
@@ -468,7 +471,7 @@ export function App() {
           error={data => {
             return <>({data})</>;
           }}
-          render={data => (
+          render={() => (
             <>
               <div>?</div>
             </>

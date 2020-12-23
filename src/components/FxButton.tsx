@@ -1,5 +1,5 @@
 import React, {Component, ReactNode} from 'react';
-import {FxNotificationType, useNotification} from './FxNotification';
+import {FxNotificationType} from './FxNotification';
 import {notify} from '../hooks/useRequest';
 import {
   DoneDelegate,
