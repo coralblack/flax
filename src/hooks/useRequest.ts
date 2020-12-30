@@ -14,7 +14,7 @@ import {
   SucceedDelegate,
 } from '../request';
 
-export interface UseRequestProps<TR, TE, TRR, TER> {
+export interface UseRequestProps<TR, TE, TRR = TR, TER = TE> {
   done?: DoneDelegate<TR>;
   success?: SucceedDelegate<TRR>;
   error?: ErrorDelegate<TER>;

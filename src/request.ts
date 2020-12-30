@@ -107,7 +107,7 @@ const resolver = (
   resolver: {
     resolve: Resolver;
     reject: Rejector;
-    cancel: Canceller;
+    cancelled: boolean;
     props: RequestProps<any, any, any, any>;
   },
   key: string | null,
@@ -176,20 +176,29 @@ export function request<TR, TE, TRR, TER>(
   props: RequestProps<TR, TE, TRR, TER>
 ): PCancelable<FxResp<TR, TRR>> {
   const cp = new PCancelable<FxResp<TR, TRR>>((resolve, reject, onCancel) => {
-    const cancel = () => cp.cancel();
+    const cancel = () => {
+      cp.cancel();
+    };
     const ct = axios.CancelToken.source();
+
+    const url = ((u, query) => {
+      const qs = queryString.stringify(query);
+      return u + (qs ? (u.includes('?') ? '&' : '?') + qs : '');
+    })(props.url, props.query || {});
+
+    const lazyGroup =
+      props.method === 'GET' && props.throttle
+        ? `${props.method} ${url} ${props.delay || 0}`
+        : null;
 
     onCancel.shouldReject = false;
     onCancel(() => {
-      ct.cancel();
+      if (!lazyGroup || resolvers[lazyGroup].length === 1) {
+        ct.cancel();
+      }
     });
 
     setTimeout(() => {
-      const url = ((u, query) => {
-        const qs = queryString.stringify(query);
-        return u + (qs ? (u.includes('?') ? '&' : '?') + qs : '');
-      })(props.url, props.query || {});
-
       const cacheKey =
         props.method === 'GET' && props.cacheMaxAge && props.cacheMaxAge > 0
           ? `${props.method} ${props.url} ${props.cacheMaxAge}`
@@ -198,7 +207,7 @@ export function request<TR, TE, TRR, TER>(
 
       if (cached) {
         resolver(
-          {resolve, reject, cancel, props},
+          {resolve, reject, cancelled: false, props},
           null,
           cached as AxiosResponse,
           null,
@@ -207,11 +216,6 @@ export function request<TR, TE, TRR, TER>(
         );
         return;
       }
-
-      const lazyGroup =
-        props.method === 'GET' && props.throttle
-          ? `${props.method} ${url} ${props.delay || 0}`
-          : null;
 
       if (lazyGroup) {
         resolvers[lazyGroup] = resolvers[lazyGroup] || [];
@@ -237,10 +241,8 @@ export function request<TR, TE, TRR, TER>(
           ),
         })
         .then(resp => {
-          if (cp.isCanceled) return;
-
           resolver(
-            {resolve, reject, cancel, props},
+            {resolve, reject, cancelled: cp.isCanceled, props},
             lazyGroup,
             resp,
             null,
@@ -249,10 +251,8 @@ export function request<TR, TE, TRR, TER>(
           );
         })
         .catch(err => {
-          if (cp.isCanceled) return;
-
           resolver(
-            {resolve, reject, cancel, props},
+            {resolve, reject, cancelled: cp.isCanceled, props},
             lazyGroup,
             null,
             err,

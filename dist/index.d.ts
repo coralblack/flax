@@ -52,7 +52,7 @@ export function setDefaultHeaders(headers: {
     [key: string]: string;
 }): void;
 export function setBaseUrl(url: string): void;
-export interface UseRequestProps<TR, TE, TRR, TER> {
+export interface UseRequestProps<TR, TE, TRR = TR, TER = TE> {
     done?: DoneDelegate<TR>;
     success?: SucceedDelegate<TRR>;
     error?: ErrorDelegate<TER>;
