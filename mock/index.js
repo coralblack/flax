@@ -22,6 +22,15 @@ app.get('/error/400', (req, res) => {
   });
 });
 
+app.get('/error/400/delay', (req, res) => {
+  setTimeout(() => {
+    res.status(400).send({
+      code: 'ERROR-400',
+      message: 'An error has occurred.',
+    });
+  }, 800);
+});
+
 app.get('/error/500', (req, res) => {
   res.status(500).send({
     code: 'ERROR-500',

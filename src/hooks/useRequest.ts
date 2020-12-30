@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import PCancelable from 'p-cancelable';
 import {useState} from 'react';
 import {
   FxNotificationType,
@@ -38,6 +39,7 @@ export function useRequest<TR = any, TE = any, TRR = TR, TER = TE>(
   api: FxApiRequest<TR, TE, TRR, TER>,
   props?: UseRequestProps<TR, TE, TRR, TER>
 ) {
+  const [reqId, setReqId] = useState(0);
   const [resp, setResp] = useState<{
     busy: boolean;
     response: TRR | undefined;
@@ -45,6 +47,7 @@ export function useRequest<TR = any, TE = any, TRR = TR, TER = TE>(
   }>({busy: false, response: undefined, errorResponse: undefined});
 
   const {success, done, error} = props || {};
+  const queues: Array<PCancelable<any>> = [];
 
   const requestWrapper = (): boolean => {
     if (resp.busy) return false;
@@ -55,37 +58,51 @@ export function useRequest<TR = any, TE = any, TRR = TR, TER = TE>(
       errorResponse: undefined,
     });
 
-    request<TR, TE, TRR, TER>({...api})
-      .then(res => {
-        notify(success && success(res.reduced, res.response), 'SUCC');
-        notify(done && done(res.data, null, res.response), 'INFO');
+    const rp = request<TR, TE, TRR, TER>({...api});
 
-        setResp({
-          busy: false,
-          response: res.reduced,
-          errorResponse: undefined,
-        });
-      })
-      .catch(err => {
-        const type =
-          typeof err.response?.status === 'number' && err.response?.status < 500
-            ? 'WARN'
-            : 'ERROR';
-        notify(error && error(err.response?.reduced, err), type);
-        notify(done && done(err.response?.data, err, err.response), type);
+    rp.then(res => {
+      notify(success && success(res.reduced, res.response), 'SUCC');
+      notify(done && done(res.data, null, res.response), 'INFO');
 
-        setResp({
-          busy: false,
-          response: err.response?.reduced,
-          errorResponse: undefined,
-        });
+      setReqId(reqId + 1);
+      setResp({
+        busy: false,
+        response: res.reduced,
+        errorResponse: undefined,
       });
+    }).catch(err => {
+      const type =
+        typeof err.response?.status === 'number' && err.response?.status < 500
+          ? 'WARN'
+          : 'ERROR';
+      notify(error && error(err.response?.reduced || err, err), type);
+      notify(done && done(err.response?.data, err, err.response), type);
+
+      setReqId(reqId + 1);
+      setResp({
+        busy: false,
+        response: err.response?.reduced,
+        errorResponse: undefined,
+      });
+    });
+
+    queues.push(rp);
 
     return true;
   };
 
+  const cancel = () => {
+    let rp;
+
+    while ((rp = queues.pop())) {
+      rp.cancel();
+    }
+  };
+
   return {
+    reqId,
     request: requestWrapper,
     response: resp,
+    cancel,
   };
 }
