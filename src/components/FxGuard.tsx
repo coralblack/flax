@@ -1,3 +1,4 @@
+import PCancelable from 'p-cancelable';
 import React, {Component, Suspense, useEffect, useState} from 'react';
 import {request, FxApiRequest, FxResp, FxError} from '../request';
 import {classNames} from '../utils';
@@ -35,16 +36,18 @@ function lazyResponse<TR, TE, TRR, TER>(
 
 const lazy = function <TR, TE, TRR = TR, TER = TE>(
   release: ReleaseDelegateInternal,
-  p: Promise<FxResp<TR, TRR>>
+  p: PCancelable<FxResp<TR, TRR>>
 ) {
   let status: LazyStatus = 'PENDING';
   let error: FxError<TE, TER> | null;
   let result: FxResp<TR, TRR> | null;
 
   p.then(res => {
+    if (p.isCanceled) return;
     ({result, status, error} = lazyResponse<TR, TE, TRR, TER>(res, null)());
     release(true);
   }).catch(err => {
+    if (p.isCanceled) return;
     ({result, status, error} = lazyResponse<TR, TE, TRR, TER>(null, err)());
     release(false);
   });
@@ -91,21 +94,47 @@ function FxGuardInner<TR, TE, TRR, TER>(
   };
 
   useEffect(() => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    let rp: PCancelable<any> | undefined = undefined;
+
     if (reloadId > 0) {
-      req()
-        .then(res => {
-          setPrepared(() => lazyResponse<TR, TE, TRR, TER>(res, null));
-          props.releaseBusy(true);
-        })
-        .catch(err => {
-          setPrepared(() => lazyResponse<TR, TE, TRR, TER>(null, err));
-          props.releaseBusy(false);
-        });
+      rp = req();
+
+      rp.then(res => {
+        if (rp?.isCanceled) return;
+
+        setPrepared(() => lazyResponse<TR, TE, TRR, TER>(res, null));
+        props.releaseBusy(true);
+      }).catch(err => {
+        if (rp?.isCanceled) return;
+
+        setPrepared(() => lazyResponse<TR, TE, TRR, TER>(null, err));
+        props.releaseBusy(false);
+      });
     }
+
+    return () => {
+      if (rp) {
+        rp.cancel();
+      }
+    };
   }, [reloadId]);
 
   useEffect(() => {
-    setPrepared(() => lazy<TR, TE, TRR, TER>(props.releaseBusy, req()));
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    let rp: PCancelable<any> | undefined = undefined;
+
+    setPrepared(() => {
+      rp = req();
+
+      return lazy<TR, TE, TRR, TER>(props.releaseBusy, rp);
+    });
+
+    return () => {
+      if (rp) {
+        rp.cancel();
+      }
+    };
   }, [api.method, api.url, refreshId]);
 
   if (!prepared) return <></>;
@@ -174,7 +203,7 @@ export class FxGuard<TR = any, TE = any, TRR = TR, TER = TE> extends Component<
     this.state = {
       refreshId: 0,
       reloadId: 0,
-      busy: false,
+      busy: true,
     };
   }
 

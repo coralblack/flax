@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import axios, {AxiosError, AxiosResponse, ResponseType} from 'axios';
 import LRU from 'lru-cache';
+import PCancelable from 'p-cancelable';
 import queryString from 'query-string';
 import {MutableRefObject} from 'react';
 import {FxNotificationToast} from './components/FxNotification';
@@ -65,6 +66,7 @@ interface RequestProps<TR, TE, TRR, TER>
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type Resolver = (data: any) => void;
 type Rejector = (reason: Error) => void;
+type Canceller = () => void;
 
 const resolving = (
   resolve: Resolver,
@@ -96,6 +98,7 @@ const resolvers: {
   [key: string]: Array<{
     resolve: Resolver;
     reject: Rejector;
+    cancel: Canceller;
     props: RequestProps<any, any, any, any>;
   }>;
 } = {};
@@ -104,6 +107,7 @@ const resolver = (
   resolver: {
     resolve: Resolver;
     reject: Rejector;
+    cancelled: boolean;
     props: RequestProps<any, any, any, any>;
   },
   key: string | null,
@@ -170,14 +174,31 @@ export function setBaseUrl(url: string) {
 
 export function request<TR, TE, TRR, TER>(
   props: RequestProps<TR, TE, TRR, TER>
-): Promise<FxResp<TR, TRR>> {
-  return new Promise<FxResp<TR, TRR>>((resolve, reject) => {
-    setTimeout(() => {
-      const url = ((u, query) => {
-        const qs = queryString.stringify(query);
-        return u + (qs ? (u.includes('?') ? '&' : '?') + qs : '');
-      })(props.url, props.query || {});
+): PCancelable<FxResp<TR, TRR>> {
+  const cp = new PCancelable<FxResp<TR, TRR>>((resolve, reject, onCancel) => {
+    const cancel = () => {
+      cp.cancel();
+    };
+    const ct = axios.CancelToken.source();
 
+    const url = ((u, query) => {
+      const qs = queryString.stringify(query);
+      return u + (qs ? (u.includes('?') ? '&' : '?') + qs : '');
+    })(props.url, props.query || {});
+
+    const lazyGroup =
+      props.method === 'GET' && props.throttle
+        ? `${props.method} ${url} ${props.delay || 0}`
+        : null;
+
+    onCancel.shouldReject = false;
+    onCancel(() => {
+      if (!lazyGroup || resolvers[lazyGroup].length === 1) {
+        ct.cancel();
+      }
+    });
+
+    setTimeout(() => {
       const cacheKey =
         props.method === 'GET' && props.cacheMaxAge && props.cacheMaxAge > 0
           ? `${props.method} ${props.url} ${props.cacheMaxAge}`
@@ -186,7 +207,7 @@ export function request<TR, TE, TRR, TER>(
 
       if (cached) {
         resolver(
-          {resolve, reject, props},
+          {resolve, reject, cancelled: false, props},
           null,
           cached as AxiosResponse,
           null,
@@ -196,14 +217,9 @@ export function request<TR, TE, TRR, TER>(
         return;
       }
 
-      const lazyGroup =
-        props.method === 'GET' && props.throttle
-          ? `${props.method} ${url} ${props.delay || 0}`
-          : null;
-
       if (lazyGroup) {
         resolvers[lazyGroup] = resolvers[lazyGroup] || [];
-        resolvers[lazyGroup].push({resolve, reject, props});
+        resolvers[lazyGroup].push({resolve, reject, cancel, props});
 
         // Duplicated `GET` request,
         if (resolvers[lazyGroup].length > 1) {
@@ -215,6 +231,7 @@ export function request<TR, TE, TRR, TER>(
 
       axios
         .request<TR>({
+          cancelToken: ct.token,
           method: props.method,
           url,
           headers: props.headers,
@@ -225,7 +242,7 @@ export function request<TR, TE, TRR, TER>(
         })
         .then(resp => {
           resolver(
-            {resolve, reject, props},
+            {resolve, reject, cancelled: cp.isCanceled, props},
             lazyGroup,
             resp,
             null,
@@ -234,8 +251,17 @@ export function request<TR, TE, TRR, TER>(
           );
         })
         .catch(err => {
-          resolver({resolve, reject, props}, lazyGroup, null, err, start, null);
+          resolver(
+            {resolve, reject, cancelled: cp.isCanceled, props},
+            lazyGroup,
+            null,
+            err,
+            start,
+            null
+          );
         });
     }, 25);
   });
+
+  return cp;
 }
