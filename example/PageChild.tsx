@@ -7,7 +7,7 @@ export function PageChild() {
 
   return (
     <>
-      Valid Request (Delay: 1.5s):
+      Valid Request:
       <button onClick={() => validFirstRef.current.reload()}>reload</button>
       <FxGuard
         ref={validFirstRef}

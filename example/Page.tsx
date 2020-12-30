@@ -17,7 +17,7 @@ interface JsonPlaceHolderTodo {
 export const PageApi: FxApiRequest<JsonPlaceHolderTodo> = {
   method: 'GET',
   url: mockApiUrl,
-  delay: 1500,
+  cacheMaxAge: 5500,
 };
 
 export function Page() {
@@ -29,7 +29,7 @@ export function Page() {
       <button onClick={() => validFirstRef.current.reload()}>reload</button>
       <FxGuard<JsonPlaceHolderTodo>
         ref={validFirstRef}
-        api={PageApi}
+        api={{...PageApi, delay: 1500}}
         render={data => (
           <>
             <div>

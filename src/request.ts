@@ -191,6 +191,24 @@ export function request<TR, TE, TRR, TER>(
         ? `${props.method} ${url} ${props.delay || 0}`
         : null;
 
+    const cacheKey =
+      props.method === 'GET' && props.cacheMaxAge && props.cacheMaxAge > 0
+        ? `${props.method} ${props.url} ${props.cacheMaxAge}`
+        : null;
+    const cached = cacheKey && cache.get(cacheKey);
+
+    if (cached) {
+      resolver(
+        {resolve, reject, cancelled: false, props},
+        null,
+        cached as AxiosResponse,
+        null,
+        new Date(),
+        null
+      );
+      return;
+    }
+
     onCancel.shouldReject = false;
     onCancel(() => {
       if (!lazyGroup || resolvers[lazyGroup].length === 1) {
@@ -199,24 +217,6 @@ export function request<TR, TE, TRR, TER>(
     });
 
     setTimeout(() => {
-      const cacheKey =
-        props.method === 'GET' && props.cacheMaxAge && props.cacheMaxAge > 0
-          ? `${props.method} ${props.url} ${props.cacheMaxAge}`
-          : null;
-      const cached = cacheKey && cache.get(cacheKey);
-
-      if (cached) {
-        resolver(
-          {resolve, reject, cancelled: false, props},
-          null,
-          cached as AxiosResponse,
-          null,
-          new Date(),
-          null
-        );
-        return;
-      }
-
       if (lazyGroup) {
         resolvers[lazyGroup] = resolvers[lazyGroup] || [];
         resolvers[lazyGroup].push({resolve, reject, cancel, props});
