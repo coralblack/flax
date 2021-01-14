@@ -148,7 +148,7 @@ const dataMapper = (data: DataType | string | null | undefined) => {
   if (Array.isArray(data)) return data;
 
   return Object.keys(data).reduce<{[key: string]: any}>((p, c) => {
-    if (typeof data[c] === 'object') {
+    if (typeof data[c] === 'object' && data[c] !== null) {
       if ((data[c] as any).current instanceof HTMLElement) {
         p[c] = (data[c] as any).current.value;
       } else {
