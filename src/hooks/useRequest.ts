@@ -6,6 +6,7 @@ import {
   useNotification,
 } from '../components/FxNotification';
 import {
+  Data,
   DoneDelegate,
   ErrorDelegate,
   FxApiRequest,
@@ -49,7 +50,7 @@ export function useRequest<TR = any, TE = any, TRR = TR, TER = TE>(
   const {success, done, error} = props || {};
   const queues: Array<PCancelable<any>> = [];
 
-  const requestWrapper = (): boolean => {
+  const requestWrapper = (data?: Data): boolean => {
     if (resp.busy) return false;
 
     setResp({
@@ -58,7 +59,13 @@ export function useRequest<TR = any, TE = any, TRR = TR, TER = TE>(
       errorResponse: undefined,
     });
 
-    const rp = request<TR, TE, TRR, TER>({...api});
+    let rp;
+
+    if (data) {
+      rp = request<TR, TE, TRR, TER>({...api, data});
+    } else {
+      rp = request<TR, TE, TRR, TER>({...api});
+    }
 
     rp.then(res => {
       notify(success && success(res.reduced, res.response), 'SUCC');
