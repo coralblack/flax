@@ -294,6 +294,41 @@ function SampleHook4() {
   );
 }
 
+function SampleHook5() {
+  const {reqId, request, response, cancel} = useRequest<JsonPlaceHolderTodo>(
+    {
+      method: 'POST',
+      url: mockApiUrl,
+      delay: 500,
+      data: () => ({
+        arrayParam: [1, 2, 3],
+      }),
+    },
+    {error: data => `${data?.message} ~`}
+  );
+
+  useEffect(() => {
+    return () => {
+      cancel();
+    };
+  }, [reqId]);
+
+  return (
+    <>
+      <button
+        onClick={() => {
+          const data = () => ({param: new Date().toISOString().toString()});
+          request(data);
+        }}
+        disabled={response.busy}
+      >
+        Request
+      </button>
+      response: {JSON.stringify(response, null, 2)}
+    </>
+  );
+}
+
 export function Main() {
   const validFirstRef = useRef<FxGuard>();
   const validFirstCacheRef = useRef<FxGuard>();
@@ -309,6 +344,8 @@ export function Main() {
       <SampleHook3 />
       <hr />
       <SampleHook4 />
+      <hr />
+      <SampleHook5 />
       <hr />
       <SamplePost />
       <hr />

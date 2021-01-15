@@ -26,13 +26,13 @@ type DataTypeValues =
   | DataPrimTypes
   | DataObjTypes
   | {[key: string]: DataObjTypes};
-type DataType = {
+export type DataType = {
   [key: string]:
     | DataTypeValues
     | MutableRefObject<HTMLElement | null>
     | DataType;
 };
-type Data = DataType | (() => DataType) | string;
+export type Data = DataType | (() => DataType) | string;
 
 export type FxResp<T, TR> = {data: T; reduced: TR; response: AxiosResponse<T>};
 
