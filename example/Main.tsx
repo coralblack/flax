@@ -317,7 +317,7 @@ function SampleHook5() {
     <>
       <button
         onClick={() => {
-          const data = () => ({parma: new Date().toISOString().toString()});
+          const data = () => ({param: new Date().toISOString().toString()});
           request(data);
         }}
         disabled={response.busy}
