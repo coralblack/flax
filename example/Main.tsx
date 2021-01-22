@@ -319,7 +319,8 @@ function SampleHook5() {
         onClick={() => {
           const data = () => ({param: new Date().toISOString().toString()});
           const query = {query: 'query-string'};
-          request(data, query);
+          const headers = {'CUSTOM-HEADER': 'Custom-Header-Val'};
+          request({data, query, headers});
         }}
         disabled={response.busy}
       >

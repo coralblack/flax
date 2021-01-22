@@ -60,7 +60,11 @@ export interface UseRequestProps<TR, TE, TRR = TR, TER = TE> {
 export const notify: (payload: Notifiable, type: FxNotificationType) => void;
 export function useRequest<TR = any, TE = any, TRR = TR, TER = TE>(api: FxApiRequest<TR, TE, TRR, TER>, props?: UseRequestProps<TR, TE, TRR, TER>): {
     reqId: number;
-    request: (data?: string | import("src/request").DataType | (() => import("src/request").DataType) | undefined, query?: Queries | undefined) => boolean;
+    request: (wrapperParams?: {
+        data?: string | import("src/request").DataType | (() => import("src/request").DataType) | undefined;
+        query?: Queries | undefined;
+        headers?: Headers | undefined;
+    } | undefined) => boolean;
     response: {
         busy: boolean;
         response: TRR | undefined;
