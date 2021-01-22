@@ -17,9 +17,9 @@ export type DoneDelegate<T> = (
 export type SucceedDelegate<T> = (data: T, resp: AxiosResponse) => Notifiable;
 export type ErrorDelegate<T> = (data: T, error: AxiosResponse<T>) => Notifiable;
 
-type QueryType = string | number | boolean;
-type Queries = {[key: string]: QueryType | QueryType[]};
-type Headers = {[key: string]: string};
+export type QueryType = string | number | boolean;
+export type Queries = {[key: string]: QueryType | QueryType[]};
+export type Headers = {[key: string]: string};
 type DataPrimTypes = string | number | boolean | null;
 type DataObjTypes = Array<DataPrimTypes> | {[key: string]: DataPrimTypes};
 type DataTypeValues =
