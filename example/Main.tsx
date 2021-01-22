@@ -318,7 +318,8 @@ function SampleHook5() {
       <button
         onClick={() => {
           const data = () => ({param: new Date().toISOString().toString()});
-          request(data);
+          const query = {query: 'query-string'};
+          request(data, query);
         }}
         disabled={response.busy}
       >

@@ -11,6 +11,7 @@ import {
   ErrorDelegate,
   FxApiRequest,
   Notifiable,
+  Queries,
   request,
   SucceedDelegate,
 } from '../request';
@@ -50,7 +51,7 @@ export function useRequest<TR = any, TE = any, TRR = TR, TER = TE>(
   const {success, done, error} = props || {};
   const queues: Array<PCancelable<any>> = [];
 
-  const requestWrapper = (data?: Data): boolean => {
+  const requestWrapper = (data?: Data, query?: Queries): boolean => {
     if (resp.busy) return false;
 
     setResp({
@@ -59,13 +60,16 @@ export function useRequest<TR = any, TE = any, TRR = TR, TER = TE>(
       errorResponse: undefined,
     });
 
-    let rp;
+    const reqParams = {...api};
 
     if (data) {
-      rp = request<TR, TE, TRR, TER>({...api, data});
-    } else {
-      rp = request<TR, TE, TRR, TER>({...api});
+      reqParams.data = data;
     }
+    if (query) {
+      reqParams.query = query;
+    }
+
+    const rp = request<TR, TE, TRR, TER>(reqParams);
 
     rp.then(res => {
       notify(success && success(res.reduced, res.response), 'SUCC');
