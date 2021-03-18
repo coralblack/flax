@@ -1,6 +1,6 @@
 {
   "name": "@coralblack/flax",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "description": "API Req-Res Guard for React",
   "main": "dist/index.js",
   "module": "dist/index.module.js",
@@ -20,26 +20,26 @@
   "dependencies": {
     "axios": "^0.21.1",
     "lru-cache": "^6.0.0",
-    "p-cancelable": "^2.0.0",
-    "query-string": "^6.13.7"
+    "p-cancelable": "^2.1.0",
+    "query-string": "^6.14.1"
   },
   "devDependencies": {
     "@types/lru-cache": "^5.1.0",
     "@types/node": "^14.14.16",
-    "@types/react": "^17.0.0",
-    "@types/react-dom": "^17.0.0",
+    "@types/react": "^17.0.3",
+    "@types/react-dom": "^17.0.2",
     "@types/react-router-dom": "^5.1.6",
     "eslint-plugin-import": "^2.22.1",
     "eslint-plugin-react": "^7.22.0",
-    "gts": "^3.0.3",
-    "husky": "^4.3.6",
-    "lint-staged": "^10.5.3",
+    "gts": "^3.1.0",
+    "husky": "^5.1.3",
+    "lint-staged": "^10.5.4",
     "parcel": "^2.0.0-nightly.416",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
     "react-router-dom": "^5.2.0",
-    "sass": "^1.32.0",
-    "typescript": "^4.1.3"
+    "sass": "^1.32.8",
+    "typescript": "^4.2.3"
   },
   "repository": {
     "type": "git",
