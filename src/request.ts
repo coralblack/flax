@@ -174,6 +174,10 @@ export function setBaseUrl(url: string) {
   axios.defaults.baseURL = url;
 }
 
+export function setDefaultTransformResponse(trs: Array<(data: any) => any>) {
+  axios.defaults.transformResponse = trs;
+}
+
 export function request<TR, TE, TRR, TER>(
   props: RequestProps<TR, TE, TRR, TER>
 ): PCancelable<FxResp<TR, TRR>> {
