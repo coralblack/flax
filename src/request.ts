@@ -17,10 +17,10 @@ export type DoneDelegate<T> = (
 export type SucceedDelegate<T> = (data: T, resp: AxiosResponse) => Notifiable;
 export type ErrorDelegate<T> = (data: T, error: AxiosResponse<T>) => Notifiable;
 
-export type QueryType = string | number | boolean;
+export type QueryType = string | number | bigint | boolean;
 export type Queries = {[key: string]: QueryType | QueryType[]};
 export type Headers = {[key: string]: string};
-type DataPrimTypes = string | number | boolean | null;
+type DataPrimTypes = string | number | bigint | boolean | null;
 type DataObjTypes = Array<DataPrimTypes> | {[key: string]: DataPrimTypes};
 type DataTypeValues =
   | DataPrimTypes
@@ -154,6 +154,8 @@ const dataMapper = (data: DataType | string | null | undefined) => {
       } else {
         p[c] = dataMapper(data[c] as any);
       }
+    } else if (typeof data[c] === 'bigint') {
+      p[c] = String(data[c]);
     } else {
       p[c] = data[c];
     }
