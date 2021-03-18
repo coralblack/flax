@@ -1,6 +1,6 @@
 {
   "name": "@coralblack/flax",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "API Req-Res Guard for React",
   "main": "dist/index.js",
   "module": "dist/index.module.js",
