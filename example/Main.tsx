@@ -298,13 +298,17 @@ function SampleHook5() {
   const {reqId, request, response, cancel} = useRequest<JsonPlaceHolderTodo>(
     {
       method: 'POST',
-      url: mockApiUrl,
+      url: 'http://127.0.0.1:3009/error/400',
       delay: 500,
       data: () => ({
         arrayParam: [1, 2, 3],
       }),
     },
-    {error: data => `${data?.message} ~`}
+    {
+      error: data => {
+        return `${data?.message} ${data?.bigInt} ~!`;
+      },
+    }
   );
 
   useEffect(() => {
@@ -317,7 +321,11 @@ function SampleHook5() {
     <>
       <button
         onClick={() => {
-          const data = () => ({param: new Date().toISOString().toString()});
+          const data = () => ({
+            param: new Date().toISOString().toString(),
+            // eslint-disable-next-line node/no-unsupported-features/es-builtins
+            bigintParam: BigInt('123456789012345678901234567899123'),
+          });
           const query = {query: 'query-string'};
           const headers = {'CUSTOM-HEADER': 'Custom-Header-Val'};
           request({data, query, headers});

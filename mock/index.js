@@ -1,9 +1,11 @@
+const bodyParser = require('body-parser');
 const cors = require('cors');
 const express = require('express');
 const app = express();
 const port = 3009;
 
 app.use(cors());
+app.use(bodyParser.json());
 
 app.get('/mock', (req, res) => {
   res.send({
@@ -35,6 +37,15 @@ app.get('/error/500', (req, res) => {
   res.status(500).send({
     code: 'ERROR-500',
     message: 'An error has occurred.',
+  });
+});
+
+app.post('/error/400', (req, res) => {
+  console.log(req);
+  res.status(500).send({
+    code: 'ERROR-POST-400',
+    message: 'POST 400',
+    bigInt: req.body.bigintParam || 'INVALID',
   });
 });
 

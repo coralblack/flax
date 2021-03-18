@@ -11,14 +11,14 @@ type Notifiable = FxNotificationToast | any;
 type DoneDelegate<T> = (res: T | null, error: Error | null, resp?: AxiosResponse | null) => Notifiable;
 type SucceedDelegate<T> = (data: T, resp: AxiosResponse) => Notifiable;
 type ErrorDelegate<T> = (data: T, error: AxiosResponse<T>) => Notifiable;
-type QueryType = string | number | boolean;
+type QueryType = string | number | bigint | boolean;
 type Queries = {
     [key: string]: QueryType | QueryType[];
 };
 type Headers = {
     [key: string]: string;
 };
-type DataPrimTypes = string | number | boolean | null;
+type DataPrimTypes = string | number | bigint | boolean | null;
 type DataObjTypes = Array<DataPrimTypes> | {
     [key: string]: DataPrimTypes;
 };
