@@ -52,6 +52,7 @@ export function setDefaultHeaders(headers: {
     [key: string]: string;
 }): void;
 export function setBaseUrl(url: string): void;
+export function setDefaultTransformResponse(trs: Array<(data: any) => any>): void;
 export interface UseRequestProps<TR, TE, TRR = TR, TER = TE> {
     done?: DoneDelegate<TR>;
     success?: SucceedDelegate<TRR>;
