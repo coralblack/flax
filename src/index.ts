@@ -4,3 +4,4 @@ export * from './hooks/useRequest';
 
 export {setDefaultHeaders} from './request';
 export {setBaseUrl} from './request';
+export {setDefaultTransformResponse} from './request';
