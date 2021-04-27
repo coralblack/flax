@@ -143,7 +143,7 @@ function SampleReloadable() {
       <button
         onClick={() => {
           setBusy(true);
-          validSilentRef.current.reload(true);
+          validSilentRef.current.reload(true, '--cls-name');
         }}
         disabled={isBusy}
       >

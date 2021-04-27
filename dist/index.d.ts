@@ -108,10 +108,12 @@ interface FxGuardStates {
     refreshId: number;
     reloadId: number;
     busy: boolean;
+    silent: boolean;
+    className: string | undefined;
 }
 export class FxGuard<TR = any, TE = any, TRR = TR, TER = TE> extends Component<FxGuardProps<TR, TE, TRR, TER>, FxGuardStates> {
     constructor(props: FxGuardProps<TR, TE, TRR, TER>);
-    reload(silent?: boolean): void;
+    reload(silent?: boolean, className?: string): void;
     releaseBusy(succeed: boolean): void;
     render(): JSX.Element;
 }
