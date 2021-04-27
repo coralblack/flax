@@ -190,6 +190,8 @@ interface FxGuardStates {
   refreshId: number;
   reloadId: number;
   busy: boolean;
+  silent: boolean;
+  className: string | undefined;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -204,10 +206,12 @@ export class FxGuard<TR = any, TE = any, TRR = TR, TER = TE> extends Component<
       refreshId: 0,
       reloadId: 0,
       busy: true,
+      silent: false,
+      className: undefined,
     };
   }
 
-  reload(silent?: boolean) {
+  reload(silent?: boolean, className?: string) {
     if (this.state.busy) return;
 
     if (silent) {
@@ -215,6 +219,8 @@ export class FxGuard<TR = any, TE = any, TRR = TR, TER = TE> extends Component<
         ...this.state,
         reloadId: this.state.reloadId + 1,
         busy: true,
+        silent: true,
+        className,
       });
       return;
     }
@@ -223,6 +229,8 @@ export class FxGuard<TR = any, TE = any, TRR = TR, TER = TE> extends Component<
       ...this.state,
       refreshId: this.state.refreshId + 1,
       busy: true,
+      silent: false,
+      className: undefined,
     });
   }
 
@@ -234,6 +242,8 @@ export class FxGuard<TR = any, TE = any, TRR = TR, TER = TE> extends Component<
     this.setState({
       ...this.state,
       busy: false,
+      silent: false,
+      className: undefined,
     });
   }
 
@@ -284,6 +294,8 @@ export class FxGuard<TR = any, TE = any, TRR = TR, TER = TE> extends Component<
           <div
             className={classNames('flax fx-guard', {
               '--loading': this.state.busy,
+              '--silent': this.state.silent,
+              [this.state.className || '--noname']: !!this.state.className,
             })}
           >
             {r()}
