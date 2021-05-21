@@ -25,7 +25,8 @@ type DataObjTypes = Array<DataPrimTypes> | {[key: string]: DataPrimTypes};
 type DataTypeValues =
   | DataPrimTypes
   | DataObjTypes
-  | {[key: string]: DataObjTypes};
+  | {[key: string]: DataObjTypes}
+  | Array<DataObjTypes>;
 export type DataType = {
   [key: string]:
     | DataTypeValues
