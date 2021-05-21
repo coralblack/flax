@@ -47,6 +47,13 @@ function SamplePost() {
         api={{
           method: 'POST',
           url: '/posts',
+          data: {
+            key: [
+              {k: 'val', l: 'v1'},
+              {k: 'val2', l: 'v2'},
+              {k: 'val3', l: 'v3'},
+            ],
+          },
         }}
         success={res => setPostId(res.id)}
       />

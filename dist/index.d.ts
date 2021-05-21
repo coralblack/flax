@@ -24,7 +24,7 @@ type DataObjTypes = Array<DataPrimTypes> | {
 };
 type DataTypeValues = DataPrimTypes | DataObjTypes | {
     [key: string]: DataObjTypes;
-};
+} | Array<DataObjTypes>;
 type DataType = {
     [key: string]: DataTypeValues | MutableRefObject<HTMLElement | null> | DataType;
 };
