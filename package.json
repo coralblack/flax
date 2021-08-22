@@ -1,11 +1,15 @@
 {
   "name": "@coralblack/flax",
-  "version": "0.1.7",
+  "version": "0.1.8",
   "description": "API Req-Res Guard for React",
   "main": "dist/index.js",
   "module": "dist/index.module.js",
   "browser": "dist/index.browser.js",
   "types": "dist/index.d.ts",
+  "engines": {
+    "node": ">=10",
+    "npm": ">=7.20.3 <8"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "parcel serve example/index.html --open",
@@ -19,19 +23,18 @@
   },
   "dependencies": {
     "axios": "^0.21.1",
-    "lru-cache": "^6.0.0",
+    "eslint-config-prettier": "^8.3.0",
+    "node-cache": "^5.1.2",
     "p-cancelable": "^3.0.0",
     "query-string": "^7.0.1"
   },
   "devDependencies": {
-    "@types/lru-cache": "^5.1.1",
-    "@types/node": "^14.17.11",
+    "@types/node": "^14.14.16",
     "@types/react": "^17.0.19",
     "@types/react-dom": "^17.0.9",
     "@types/react-router-dom": "^5.1.8",
     "eslint-plugin-import": "^2.24.1",
     "eslint-plugin-react": "^7.24.0",
-    "eslint-config-prettier": "^8.3.0",
     "gts": "^3.1.0",
     "husky": "^7.0.1",
     "lint-staged": "^11.1.2",
@@ -41,11 +44,6 @@
     "react-router-dom": "^5.2.0",
     "sass": "^1.38.0",
     "typescript": "^4.3.5"
-  },
-  "peerDependencies": {
-    "react": "^17.x",
-    "react-dom": "^17.x",
-    "react-router-dom": "^5.x"
   },
   "repository": {
     "type": "git",

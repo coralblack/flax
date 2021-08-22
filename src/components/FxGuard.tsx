@@ -274,7 +274,13 @@ export class FxGuard<TR = any, TE = any, TRR = TR, TER = TE> extends Component<
               <>
                 {this.props.naked && rl()}
                 {!this.props.naked && (
-                  <div className="flax fx-guard-loading">{rl()}</div>
+                  <div
+                    className={classNames('flax fx-guard-loading', {
+                      '--silent': this.props.disableLoading,
+                    })}
+                  >
+                    {rl()}
+                  </div>
                 )}
               </>
             }
