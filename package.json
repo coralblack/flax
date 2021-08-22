@@ -6,6 +6,10 @@
   "module": "dist/index.module.js",
   "browser": "dist/index.browser.js",
   "types": "dist/index.d.ts",
+  "engines": {
+    "node": ">=10",
+    "npm": ">=7.20.3 <8"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "parcel serve example/index.html --open",
