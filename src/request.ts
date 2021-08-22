@@ -1,12 +1,12 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import axios, {AxiosError, AxiosResponse, ResponseType} from 'axios';
-import LRU from 'lru-cache';
+import NodeCache from 'node-cache';
 import PCancelable from 'p-cancelable';
 import queryString from 'query-string';
 import {MutableRefObject} from 'react';
 import {FxNotificationToast} from './components/FxNotification';
 
-const cache = new LRU({max: 100, maxAge: 1000 * 60 * 10});
+const cache = new NodeCache({maxKeys: 100});
 
 export type Notifiable = FxNotificationToast | any;
 export type DoneDelegate<T> = (

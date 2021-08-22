@@ -1,6 +1,6 @@
 /* eslint-disable */
 require('axios');
-require('lru-cache');
+require('node-cache');
 require('p-cancelable');
 require('husky');
 require('lint-staged');
