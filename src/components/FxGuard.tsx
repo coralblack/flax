@@ -256,13 +256,7 @@ export class FxGuard<TR = any, TE = any, TRR = TR, TER = TE> extends Component<
           )}
           {this.props.loading && this.props.loading()}
           {!this.props.loading && !this.props.disableLoading && (
-            <div
-              className={classNames('flax fx-guard-loader', {
-                '--silent': this.props.disableLoading,
-              })}
-            >
-              Loading ..
-            </div>
+            <div className="flax fx-guard-loader">Loading ..</div>
           )}
         </>
       );
@@ -274,7 +268,13 @@ export class FxGuard<TR = any, TE = any, TRR = TR, TER = TE> extends Component<
               <>
                 {this.props.naked && rl()}
                 {!this.props.naked && (
-                  <div className="flax fx-guard-loading">{rl()}</div>
+                  <div
+                    className={classNames('flax fx-guard-loading', {
+                      '--silent': this.props.disableLoading,
+                    })}
+                  >
+                    {rl()}
+                  </div>
                 )}
               </>
             }
