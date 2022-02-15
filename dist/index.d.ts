@@ -1,4 +1,5 @@
 import { AxiosError, AxiosResponse, ResponseType } from "axios";
+import PCancelable from "p-cancelable";
 import React, { MutableRefObject, Component, ReactNode } from "react";
 type FxNotificationType = 'SUCC' | 'WARN' | 'ERROR' | 'INFO';
 interface FxNotificationPayload {
@@ -29,6 +30,11 @@ type DataType = {
     [key: string]: DataTypeValues | MutableRefObject<HTMLElement | null> | DataType;
 };
 type Data = DataType | (() => DataType) | string;
+type FxResp<T, TR> = {
+    data: T;
+    reduced: TR;
+    response: AxiosResponse<T>;
+};
 interface FxErrorResponse<T, TR> extends AxiosResponse<T> {
     reduced: TR;
 }
@@ -48,11 +54,15 @@ interface FxApiRequest<TR = any, TE = any, TRR = TR, TER = TE> {
     reducer?: (data: TR) => TRR;
     errReducer?: (data: TE, error: AxiosError<TE>) => TER;
 }
+interface RequestProps<TR, TE, TRR, TER> extends FxApiRequest<TR, TE, TRR, TER> {
+    refreshId?: number;
+}
 export function setDefaultHeaders(headers: {
     [key: string]: string;
 }): void;
 export function setBaseUrl(url: string): void;
 export function setDefaultTransformResponse(trs: Array<(data: any) => any>): void;
+export function request<TR, TE, TRR, TER>(props: RequestProps<TR, TE, TRR, TER>): PCancelable<FxResp<TR, TRR>>;
 export interface UseRequestProps<TR, TE, TRR = TR, TER = TE> {
     done?: DoneDelegate<TR>;
     success?: SucceedDelegate<TRR>;
