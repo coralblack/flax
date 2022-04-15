@@ -39,7 +39,7 @@ export function useNotification(props: UseNotificationProps): UseNotification {
           ReactDOM.unmountComponentAtNode(wrapper);
           wrapper.remove();
         }, 450);
-      }, delay || 10000);
+      }, delay || 5000);
     },
   };
 }

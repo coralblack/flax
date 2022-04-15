@@ -34,6 +34,10 @@ export const notify = (payload: Notifiable, type: FxNotificationType) => {
   if (!payload.message) return;
   payload.type = payload.type || type;
 
+  if (type === 'WARN' || type === 'ERROR') {
+    payload.delay = 10000;
+  }
+
   const {alert: notiAlert} = useNotification({});
   notiAlert(payload);
 };
