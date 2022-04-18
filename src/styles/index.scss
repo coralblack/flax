@@ -6,7 +6,7 @@
   width: 100%;
   max-width: 370px;
   height: auto;
-  pointer-events: none;
+
   z-index: 1;
 
   @keyframes expand {
@@ -38,13 +38,13 @@
     max-height: 600px;
 
     &.--hide {
-      animation: slideUp .45s ease-in-out;
+      animation: slideUp 0.45s ease-in-out;
       animation-fill-mode: forwards;
     }
   }
 
   .fx-notification {
-    box-shadow: 0 0.15rem 0.4rem #CCC;
+    box-shadow: 0 0.15rem 0.4rem #ccc;
     margin: 1rem;
     padding: 1.2rem;
     box-sizing: border-box;
@@ -53,7 +53,7 @@
     overflow: hidden;
     background: #fff;
     font-size: 0.95em;
-    animation: expand .32s ease-in-out;
+    animation: expand 0.32s ease-in-out;
 
     strong {
       display: block;
@@ -76,7 +76,7 @@
       width: 5px;
       height: 100%;
       content: '';
-      background: #2D91FF;
+      background: #2d91ff;
     }
 
     &.--succ,
@@ -87,32 +87,47 @@
 
     &.--succ {
       &:before {
-        background: #0FC670;
+        background: #0fc670;
       }
 
       .--icon {
-        color: #0FC670;
+        color: #0fc670;
       }
     }
 
     &.--warn {
       &:before {
-        background: #FFA200;
+        background: #ffa200;
       }
 
       .--icon {
-        color: #FFA200;
+        color: #ffa200;
+        margin-top: -1.1rem;
       }
     }
 
     &.--error {
       &:before {
-        background: #FF0000;
+        background: #ff0000;
       }
 
       .--icon {
-        color: #FF0000;
+        color: #ff0000;
+        margin-top: -1.1rem;
       }
+    }
+
+    .--closed {
+      color: #333;
+      margin-top: -1rem;
+      margin-left: 18.8rem;
+      font-size: 1.1rem;
+      cursor: pointer;
+    }
+
+    &.--hide {
+      animation: slideUp 0.45s ease-in-out;
+      animation-fill-mode: forwards;
     }
   }
 }
@@ -146,14 +161,14 @@
       border-top-color: transparent;
       border-radius: 50%;
       box-sizing: border-box;
-      animation: rotateOpacity 1s ease-in-out infinite .1s;
+      animation: rotateOpacity 1s ease-in-out infinite 0.1s;
     }
 
     &:before {
-      border-color: #AB1500;
+      border-color: #ab1500;
       border-left-color: transparent;
       border-top-color: transparent;
-      animation-delay: .3s;
+      animation-delay: 0.3s;
     }
 
     @keyframes rotateOpacity {
