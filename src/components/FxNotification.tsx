@@ -20,8 +20,7 @@ interface UseNotification {
   alert: (attrs: FxNotificationPayload) => void;
 }
 
-/* eslint-disable @typescript-eslint/no-explicit-any */
-function PauseableTimeout(callback: any, delay: number) {
+function PauseableTimeout(callback: () => void, delay: number) {
   let timerId = setTimeout(callback, delay);
   let remaining = delay;
   let start = new Date().getTime();
@@ -53,7 +52,7 @@ export function useNotification(props: UseNotificationProps): UseNotification {
       container.appendChild(wrapper);
       render(<FxNotification {...props} />, wrapper);
 
-      const closed = wrapper.children[0];
+      const closeButton = wrapper.children[0];
 
       const cb = () => {
         wrapper.classList.add('--hide');
@@ -64,11 +63,10 @@ export function useNotification(props: UseNotificationProps): UseNotification {
       };
 
       attrs.type === ('WARN' || 'ERROR') &&
-        closed &&
-        closed.addEventListener('click', () => {
+        closeButton &&
+        closeButton.addEventListener('click', () => {
           wrapper.classList.add('--hide');
           setTimeout(() => {
-            ReactDOM.unmountComponentAtNode(closed);
             ReactDOM.unmountComponentAtNode(wrapper);
             wrapper.remove();
           }, 450);
