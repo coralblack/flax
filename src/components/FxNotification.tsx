@@ -20,6 +20,26 @@ interface UseNotification {
   alert: (attrs: FxNotificationPayload) => void;
 }
 
+/* eslint-disable @typescript-eslint/no-explicit-any */
+function PauseableTimeout(callback: any, delay: number) {
+  let timerId = setTimeout(callback, delay);
+  let remaining = delay;
+  let start = new Date().getTime();
+
+  return {
+    pause() {
+      clearTimeout(timerId);
+      remaining -= new Date().getTime() - start;
+    },
+
+    resume() {
+      start = new Date().getTime();
+      clearTimeout(timerId);
+      timerId = setTimeout(callback, remaining);
+    },
+  };
+}
+
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export function useNotification(props: UseNotificationProps): UseNotification {
   const {container} = useNotificationContainer();
@@ -33,13 +53,38 @@ export function useNotification(props: UseNotificationProps): UseNotification {
       container.appendChild(wrapper);
       render(<FxNotification {...props} />, wrapper);
 
-      setTimeout(() => {
+      const closed = wrapper.children[0];
+
+      const cb = () => {
         wrapper.classList.add('--hide');
         setTimeout(() => {
           ReactDOM.unmountComponentAtNode(wrapper);
           wrapper.remove();
         }, 450);
-      }, delay || 5000);
+      };
+
+      attrs.type === ('WARN' || 'ERROR') &&
+        closed &&
+        closed.addEventListener('click', () => {
+          wrapper.classList.add('--hide');
+          setTimeout(() => {
+            ReactDOM.unmountComponentAtNode(closed);
+            ReactDOM.unmountComponentAtNode(wrapper);
+            wrapper.remove();
+          }, 450);
+        });
+
+      const timer = PauseableTimeout(cb, delay || 5000);
+
+      wrapper.addEventListener('mouseover', () => {
+        <div className={'pause'}></div>;
+
+        timer.pause();
+      });
+
+      wrapper.addEventListener('mouseout', () => {
+        timer.resume();
+      });
     },
   };
 }
@@ -65,34 +110,60 @@ function Type(type: FxNotificationType) {
         </svg>
       )}
       {type === 'WARN' && (
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={2}
-            d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
-          />
-        </svg>
+        <>
+          <div className="--closed">
+            <div className="line-box">
+              <span className="line-01"></span>
+              <span className="line-02"></span>
+            </div>
+          </div>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
+            />
+          </svg>
+          <div className="meter">
+            <span>
+              <span className="progress"></span>
+            </span>
+          </div>
+        </>
       )}
       {type === 'ERROR' && (
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={2}
-            d="M6 18L18 6M6 6l12 12"
-          />
-        </svg>
+        <>
+          <div className="--closed">
+            <div className="line-box">
+              <span className="line-01"></span>
+              <span className="line-02"></span>
+            </div>
+          </div>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M6 18L18 6M6 6l12 12"
+            />
+          </svg>
+          <div className="meter">
+            <span>
+              <span className="progress"></span>
+            </span>
+          </div>
+        </>
       )}
     </div>
   );

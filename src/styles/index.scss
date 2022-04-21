@@ -6,7 +6,7 @@
   width: 100%;
   max-width: 370px;
   height: auto;
-  pointer-events: none;
+
   z-index: 1;
 
   @keyframes expand {
@@ -38,13 +38,13 @@
     max-height: 600px;
 
     &.--hide {
-      animation: slideUp .45s ease-in-out;
+      animation: slideUp 0.45s ease-in-out;
       animation-fill-mode: forwards;
     }
   }
 
   .fx-notification {
-    box-shadow: 0 0.15rem 0.4rem #CCC;
+    box-shadow: 0 0.15rem 0.4rem #ccc;
     margin: 1rem;
     padding: 1.2rem;
     box-sizing: border-box;
@@ -53,7 +53,8 @@
     overflow: hidden;
     background: #fff;
     font-size: 0.95em;
-    animation: expand .32s ease-in-out;
+    animation: expand 0.32s ease-in-out;
+    margin-bottom: 0%;
 
     strong {
       display: block;
@@ -76,7 +77,7 @@
       width: 5px;
       height: 100%;
       content: '';
-      background: #2D91FF;
+      background: #2d91ff;
     }
 
     &.--succ,
@@ -87,33 +88,103 @@
 
     &.--succ {
       &:before {
-        background: #0FC670;
+        background: #0fc670;
       }
 
       .--icon {
-        color: #0FC670;
+        color: #0fc670;
       }
     }
 
     &.--warn {
       &:before {
-        background: #FFA200;
+        background: #ffa200;
       }
 
       .--icon {
-        color: #FFA200;
+        color: #ffa200;
       }
     }
 
     &.--error {
       &:before {
-        background: #FF0000;
+        background: #ff0000;
       }
 
       .--icon {
-        color: #FF0000;
+        color: #ff0000;
       }
     }
+
+    &.--hide {
+      animation: slideUp 0.45s ease-in-out;
+      animation-fill-mode: forwards;
+    }
+
+    &:hover {
+      .--closed .line-box {
+        position: absolute;
+        top: -0.5rem;
+        left: 19rem;
+        transform: translate(-50%, -50%);
+        width: 80%;
+        height: 100%;
+        cursor: pointer;
+      }
+
+      .--closed .line-box > span {
+        position: absolute;
+        top: 50%;
+        width: 100%;
+        height: 2px;
+        background-color: #000;
+      }
+
+      .--closed .line-01 {
+        transform: rotate(135deg) translateX(0%);
+      }
+
+      .--closed .line-02 {
+        transform: rotate(45deg) translateX(0%);
+      }
+    }
+  }
+
+  .meter {
+    top: 1.5rem;
+    left: -0.9rem;
+    height: 5px;
+    position: relative;
+    background: #f3efe6;
+    overflow: hidden;
+    width: 20.9rem;
+  }
+
+  .meter span {
+    display: block;
+    height: 100%;
+    width: 100%;
+  }
+
+  .progress {
+    background-color: #e4c465;
+    animation: progressBar 10s ease-in-out;
+    animation-fill-mode: both;
+  }
+
+  @keyframes progressBar {
+    0% {
+      width: 0;
+    }
+    100% {
+      width: 100%;
+    }
+  }
+}
+
+.fx-notification:hover {
+  .meter .progress {
+    animation-play-state: paused;
   }
 }
 
@@ -146,14 +217,14 @@
       border-top-color: transparent;
       border-radius: 50%;
       box-sizing: border-box;
-      animation: rotateOpacity 1s ease-in-out infinite .1s;
+      animation: rotateOpacity 1s ease-in-out infinite 0.1s;
     }
 
     &:before {
-      border-color: #AB1500;
+      border-color: #ab1500;
       border-left-color: transparent;
       border-top-color: transparent;
-      animation-delay: .3s;
+      animation-delay: 0.3s;
     }
 
     @keyframes rotateOpacity {
