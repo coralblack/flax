@@ -65,11 +65,7 @@ export function useNotification(props: UseNotificationProps): UseNotification {
       attrs.type === ('WARN' || 'ERROR') &&
         closeButton &&
         closeButton.addEventListener('click', () => {
-          wrapper.classList.add('--hide');
-          setTimeout(() => {
-            ReactDOM.unmountComponentAtNode(wrapper);
-            wrapper.remove();
-          }, 450);
+          cb;
         });
 
       const timer = PauseableTimeout(cb, delay || 5000);
