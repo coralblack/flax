@@ -65,7 +65,7 @@ export function useNotification(props: UseNotificationProps): UseNotification {
       attrs.type === ('WARN' || 'ERROR') &&
         closeButton &&
         closeButton.addEventListener('click', () => {
-          cb;
+          cb();
         });
 
       const timer = PauseableTimeout(cb, delay || 5000);
