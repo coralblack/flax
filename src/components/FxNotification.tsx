@@ -77,8 +77,6 @@ export function useNotification(props: UseNotificationProps): UseNotification {
       const timer = PauseableTimeout(cb, delay || 5000);
 
       wrapper.addEventListener('mouseover', () => {
-        <div className={'pause'}></div>;
-
         timer.pause();
       });
 
