@@ -41,7 +41,6 @@ app.get('/error/500', (req, res) => {
 });
 
 app.post('/error/400', (req, res) => {
-  console.log(req);
   res.status(500).send({
     code: 'ERROR-POST-400',
     message: 'POST 400',
