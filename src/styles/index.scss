@@ -115,7 +115,7 @@
         color: #ff0000;
       }
     }
-    
+
     button.close {
       position: absolute;
       top: 0;
@@ -125,12 +125,13 @@
       height: 28px;
       border: none;
       background: transparent;
-      opacity: 0.0;
+      opacity: 0;
       transition: opacity ease-in-out 0.1s;
       cursor: pointer;
 
-      &:before, &:after {
-        content: "";
+      &:before,
+      &:after {
+        content: '';
         width: 12px;
         height: 2px;
         border-radius: 2px;
@@ -139,16 +140,20 @@
         top: 50%;
         left: 50%;
         margin-left: -6px;
-        margin-top: -1px; 
+        margin-top: -1px;
       }
 
-      &:before { transform: rotate(45deg); }
-      &:after { transform: rotate(-45deg); }
+      &:before {
+        transform: rotate(45deg);
+      }
+      &:after {
+        transform: rotate(-45deg);
+      }
     }
 
     &:hover {
       button.close {
-        opacity: 1.0;
+        opacity: 1;
       }
     }
   }
@@ -159,16 +164,15 @@
     left: 5px;
     right: 0;
     height: 5px;
-    background: #F6F6F6;
+    background: #f6f6f6;
     overflow: hidden;
 
     span {
       position: absolute;
-      background: #E0E0E0;
+      background: #e0e0e0;
       top: 0;
       left: 0;
       bottom: 0;
-      width: 5%;
     }
   }
 }

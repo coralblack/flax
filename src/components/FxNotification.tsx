@@ -37,10 +37,13 @@ function Progress(
 
   const anim = () => {
     const prev = ((delay - remaining) / delay) * 100;
-    elem.style.width =
-      String(
-        prev + ((new Date().getTime() - start) / remaining) * (100 - prev)
-      ) + '%';
+
+    if (elem) {
+      elem.style.width =
+        String(
+          prev + ((new Date().getTime() - start) / remaining) * (100 - prev)
+        ) + '%';
+    }
   };
 
   let animInterval = setInterval(anim, 5);
@@ -94,7 +97,7 @@ export function useNotification(props: UseNotificationProps): UseNotification {
         }, 450);
       };
 
-      closeButton[0].addEventListener('click', () => {
+      closeButton[0]?.addEventListener('click', () => {
         cb();
       });
 
