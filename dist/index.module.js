@@ -1,2 +1,689 @@
-import e from"query-string";import t from"p-cancelable";import r from"node-cache";import s from"axios";import n,{render as o}from"react-dom";import a,{Component as l,useState as i,useEffect as d,Suspense as c}from"react";function u(...e){return e.reduce(((e,t)=>("string"==typeof t&&t?e.push(t):Array.isArray(t)?e.push(u(t)):t&&"object"==typeof t&&Object.keys(t).forEach((r=>{t[r]&&e.push(r)})),e)),[]).join(" ")}function p(e){const{container:t}={container:document.getElementById("fx-notification-container")||(()=>{const e=document.createElement("div");return e.id="fx-notification-container",e.classList.add("flax"),e.classList.add("fx-notification-container"),document.body.appendChild(e),e})()};return{container:t,alert:e=>{const{delay:r,...s}=e,l=document.createElement("div");l.classList.add("fx-notification-wrapper"),t.appendChild(l),o(a.createElement(m,s),l,(()=>{var e;const t=l.getElementsByTagName("button"),s=l.getElementsByTagName("span");let o;const a=()=>{l.classList.add("--hide"),o&&o.done(),setTimeout((()=>{n.unmountComponentAtNode(l),l.remove()}),450)};null===(e=t[0])||void 0===e||e.addEventListener("click",(()=>{a()})),o=function(e,t,r){let s=setTimeout(e,r),n=r,o=(new Date).getTime();const a=()=>{const e=(r-n)/r*100;t&&(t.style.width=String(e+((new Date).getTime()-o)/n*(100-e))+"%")};let l=setInterval(a,5);return{pause(){clearTimeout(s),clearInterval(l),n-=(new Date).getTime()-o},resume(){o=(new Date).getTime(),clearTimeout(s),clearInterval(l),s=setTimeout(e,n),l=setInterval(a,5)},done(){clearTimeout(s),clearInterval(l)}}}(a,s[0],Math.min(r||5e3,5e3)),l.addEventListener("mouseover",(()=>{o&&o.pause()})),l.addEventListener("mouseout",(()=>{o&&o.resume()}))}))}}}function m(e){const{type:t,title:r,message:s}=e;return d((()=>()=>{})),a.createElement(a.Fragment,null,a.createElement("div",{className:u("flax fx-notification","--".concat((t||"info").toLocaleLowerCase()))},t&&function(e){return e&&"INFO"!==e?a.createElement(a.Fragment,null,a.createElement("div",{className:"--icon"},"SUCC"===e&&a.createElement("svg",{xmlns:"http://www.w3.org/2000/svg",fill:"none",viewBox:"0 0 24 24",stroke:"currentColor"},a.createElement("path",{strokeLinecap:"round",strokeLinejoin:"round",strokeWidth:2,d:"M5 13l4 4L19 7"})),"WARN"===e&&a.createElement(a.Fragment,null,a.createElement("svg",{xmlns:"http://www.w3.org/2000/svg",fill:"none",viewBox:"0 0 24 24",stroke:"currentColor"},a.createElement("path",{strokeLinecap:"round",strokeLinejoin:"round",strokeWidth:2,d:"M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"}))),"ERROR"===e&&a.createElement(a.Fragment,null,a.createElement("svg",{xmlns:"http://www.w3.org/2000/svg",fill:"none",viewBox:"0 0 24 24",stroke:"currentColor"},a.createElement("path",{strokeLinecap:"round",strokeLinejoin:"round",strokeWidth:2,d:"M6 18L18 6M6 6l12 12"}))))):null}(t),r&&a.createElement("strong",null,r),s,a.createElement("button",{className:"close"},"Close"),a.createElement("div",{className:"progress"},a.createElement("span",null))))}const h=new r({maxKeys:100}),v=(e,t,r,s,n)=>{if(n){var o,a,l;if(null!==(o=n.response)&&void 0!==o&&o.data)if(r.errReducer)n.response.reduced=r.errReducer(null===(a=n.response)||void 0===a?void 0:a.data,n);else n.response.reduced=null===(l=n.response)||void 0===l?void 0:l.data;t(n)}else e({data:null==s?void 0:s.data,reduced:r.reducer?r.reducer(null==s?void 0:s.data):null==s?void 0:s.data,response:s})},f={},g=(e,t,r,s,n,o)=>{if(o&&e.props.cacheMaxAge&&h.set(o,{data:null==r?void 0:r.data},e.props.cacheMaxAge),!t){const t=(e.props.delay||0)-((new Date).getTime()-n.getTime());return void setTimeout((()=>{v(e.resolve,e.reject,e.props,r,s)}),Math.max(t,0))}f[t].splice(0,f[t].length).forEach((({resolve:e,reject:t,props:o})=>{const a=(o.delay||0)-((new Date).getTime()-n.getTime());setTimeout((()=>{v(e,t,o,r,s)}),Math.max(a,0))}))},y=e=>e?"object"!=typeof e||Array.isArray(e)?e:Object.keys(e).reduce(((t,r)=>("object"==typeof e[r]&&null!==e[r]?e[r].current instanceof HTMLElement?t[r]=e[r].current.value:t[r]=y(e[r]):"bigint"==typeof e[r]?t[r]=String(e[r]):t[r]=e[r],t)),{}):e;export function setDefaultHeaders(e){s.defaults.headers.common=Object.assign(s.defaults.headers.common,e)}export function setBaseUrl(e){s.defaults.baseURL=e}export function setDefaultTransformResponse(e){s.defaults.transformResponse=e}export function request(r){const n=new t(((t,o,a)=>{const l=()=>{n.cancel()},i=s.CancelToken.source(),d=((t,r)=>{const s=e.stringify(r);return t+(s?(t.includes("?")?"&":"?")+s:"")})(r.url,r.query||{}),c="GET"===r.method&&r.throttle?"".concat(r.method," ").concat(d," ").concat(r.delay||0):null,u="GET"===r.method&&r.cacheMaxAge&&r.cacheMaxAge>0?"".concat(r.method," ").concat(r.url," ").concat(r.cacheMaxAge):null,p=u&&h.get(u);p?g({resolve:t,reject:o,cancelled:!1,props:r},null,p,null,new Date,null):(a.shouldReject=!1,a((()=>{c&&1!==f[c].length||i.cancel()})),setTimeout((()=>{if(c&&(f[c]=f[c]||[],f[c].push({resolve:t,reject:o,cancel:l,props:r}),f[c].length>1))return;const e=new Date;s.request({cancelToken:i.token,method:r.method,url:d,headers:r.headers,responseType:r.responseType,data:y("function"==typeof r.data?r.data():r.data)}).then((s=>{g({resolve:t,reject:o,cancelled:n.isCanceled,props:r},c,s,null,e,u)})).catch((s=>{g({resolve:t,reject:o,cancelled:n.isCanceled,props:r},c,null,s,e,null)}))}),25))}));return n}export const notify=(e,t)=>{if(!e)return;if("string"==typeof e&&(e={message:e}),!e.message)return;e.type=e.type||t,"WARN"!==t&&"ERROR"!==t||(e.delay=e.delay||1e4);const{alert:r}=p();r(e)};export function useRequest(e,t){const[r,s]=i(0),[n,o]=i({busy:!1,response:void 0,errorResponse:void 0}),{success:a,done:l,error:d}=t||{},c=[];return{reqId:r,request:t=>{if(n.busy)return!1;o({busy:!0,response:void 0,errorResponse:void 0});const i={...e};null!=t&&t.data&&(i.data=t.data),null!=t&&t.query&&(i.query=null==t?void 0:t.query),null!=t&&t.headers&&(i.headers=null==t?void 0:t.headers);const u=request(i);return u.then((e=>{notify(a&&a(e.reduced,e.response),"SUCC"),notify(l&&l(e.data,null,e.response),"INFO"),s(r+1),o({busy:!1,response:e.reduced,errorResponse:void 0})})).catch((e=>{var t,n,a,i,c;const u="number"==typeof(null===(t=e.response)||void 0===t?void 0:t.status)&&(null===(n=e.response)||void 0===n?void 0:n.status)<500?"WARN":"ERROR";notify(d&&d((null===(a=e.response)||void 0===a?void 0:a.reduced)||e,e),u),notify(l&&l(null===(i=e.response)||void 0===i?void 0:i.data,e,e.response),u),s(r+1),o({busy:!1,response:null===(c=e.response)||void 0===c?void 0:c.reduced,errorResponse:void 0})})),c.push(u),!0},response:n,cancel:()=>{let e;for(;e=c.pop();)e.cancel()}}}export class FxButton extends l{constructor(e){super(e),this.state={busy:!1}}noti(e,t){notify(e,t)}handleClick(){if(this.state.busy)return;this.setState({...this.state,busy:!0});const{success:e,error:t,done:r}=this.props;request({...this.props.api}).then((t=>{this.noti(e&&e(t.reduced,t.response),"SUCC"),this.noti(r&&r(t.data,null,t.response),"INFO"),this.setState({...this.state,busy:!1})})).catch((e=>{var s,n,o,a;const l="number"==typeof(null===(s=e.response)||void 0===s?void 0:s.status)&&(null===(n=e.response)||void 0===n?void 0:n.status)<500?"WARN":"ERROR";this.noti(t&&t(null===(o=e.response)||void 0===o?void 0:o.reduced,e),l),this.noti(r&&r(null===(a=e.response)||void 0===a?void 0:a.data,e,e.response),l),this.setState({...this.state,busy:!1})}))}render(){const e="".concat(this.props.tag||"button");return a.createElement(e,{className:"flax fx-button ".concat(this.state.busy?"--busy":""," ").concat(this.props.className||""),onClick:()=>this.handleClick(),disabled:this.state.busy},this.props.children||this.props.label)}}function E(e,t){return()=>({status:t?"ERROR":"SUCCESS",result:e,error:t})}function x(e){const[t,r]=i(),{api:s,refreshId:n,reloadId:o,error:l,naked:c}=e,u=()=>request(Object.assign({throttle:!1!==s.throttle,refreshId:n},e.api,{reducer:void 0,errReducer:void 0}));if(d((()=>{let t;return o>0&&(t=u(),t.then((s=>{var n;null!==(n=t)&&void 0!==n&&n.isCanceled||(r((()=>E(s,null))),e.releaseBusy(!0))})).catch((s=>{var n;null!==(n=t)&&void 0!==n&&n.isCanceled||(r((()=>E(null,s))),e.releaseBusy(!1))}))),()=>{t&&t.cancel()}}),[o]),d((()=>{let t;return r((()=>(t=u(),function(e,t){let r,s,n="PENDING";return t.then((o=>{t.isCanceled||(({result:s,status:n,error:r}=E(o,null)()),e(!0))})).catch((o=>{t.isCanceled||(({result:s,status:n,error:r}=E(null,o)()),e(!1))})),()=>{if("PENDING"===n)throw t;return{status:n,error:r,result:s}}}(e.releaseBusy,t)))),()=>{t&&t.cancel()}}),[s.method,s.url,n]),!t)return a.createElement(a.Fragment,null);const p=t();if("ERROR"===p.status){const t=()=>{var t,r,s,n;return null!==(t=p.error)&&void 0!==t&&null!==(r=t.response)&&void 0!==r&&r.data?e.api.errReducer?e.api.errReducer(null===(s=p.error)||void 0===s?void 0:s.response.data,p.error):null===(n=p.error)||void 0===n?void 0:n.response.data:null},r=()=>{var e;return a.createElement(a.Fragment,null,l&&l(t(),p.error),!l&&a.createElement("div",null,"Error (",null===(e=p.error)||void 0===e?void 0:e.message,")"))};return a.createElement(a.Fragment,null,c&&r(),!c&&a.createElement("div",{className:"flax fx-guard-error"},r()))}return a.createElement(a.Fragment,null,e.render(null!==(m=p.result)&&void 0!==m&&m.data?e.api.reducer?e.api.reducer(null===(h=p.result)||void 0===h?void 0:h.data):null===(v=p.result)||void 0===v?void 0:v.data:null,e.refreshId>0));var m,h,v}export class FxGuard extends l{constructor(e){super(e),this.state={refreshId:0,reloadId:0,busy:!0,silent:!1,className:void 0}}reload(e,t){this.state.busy||(e?this.setState({...this.state,reloadId:this.state.reloadId+1,busy:!0,silent:!0,className:t}):this.setState({...this.state,refreshId:this.state.refreshId+1,busy:!0,silent:!1,className:void 0}))}releaseBusy(e){this.props.done&&this.props.done(e),this.setState({...this.state,busy:!1,silent:!1,className:void 0})}render(){const e=()=>{const e=()=>a.createElement(a.Fragment,null,this.props.disableLoading&&a.createElement(a.Fragment,null,this.props.render(null,this.state.refreshId>0)),this.props.loading&&this.props.loading(),!this.props.loading&&!this.props.disableLoading&&a.createElement("div",{className:u("flax fx-guard-loader",{"--silent":this.props.disableLoading})},"Loading .."));return a.createElement(a.Fragment,null,a.createElement(c,{fallback:a.createElement(a.Fragment,null,this.props.naked&&e(),!this.props.naked&&a.createElement("div",{className:u("flax fx-guard-loading",{"--silent":this.props.disableLoading})},e()))},a.createElement(x,{releaseBusy:e=>this.releaseBusy(e),refreshId:this.state.refreshId,reloadId:this.state.reloadId,api:this.props.api,render:this.props.render,error:this.props.error,naked:this.props.naked})))};return a.createElement(a.Fragment,null,this.props.naked&&e(),!this.props.naked&&a.createElement("div",{className:u("flax fx-guard",{"--loading":this.state.busy,"--silent":this.state.silent,[this.state.className||"--noname"]:!!this.state.className})},e()))}}
+import {jsx as $eFUnW$jsx, Fragment as $eFUnW$Fragment, jsxs as $eFUnW$jsxs} from "react/jsx-runtime";
+import {Component as $eFUnW$Component, useState as $eFUnW$useState, useEffect as $eFUnW$useEffect, Suspense as $eFUnW$Suspense} from "react";
+import $eFUnW$reactdom, {render as $eFUnW$render} from "react-dom";
+import $eFUnW$axios from "axios";
+import $eFUnW$nodecache from "node-cache";
+import $eFUnW$pcancelable from "p-cancelable";
+import $eFUnW$querystring from "query-string";
+
+function $parcel$export(e, n, v, s) {
+  Object.defineProperty(e, n, {get: v, set: s, enumerable: true, configurable: true});
+}
+var $6425984f2b611ea8$exports = {};
+
+$parcel$export($6425984f2b611ea8$exports, "FxButton", function () { return $6425984f2b611ea8$export$5bd2698c576da1ad; });
+
+
+var $47cb5aadc8d7359b$exports = {};
+
+$parcel$export($47cb5aadc8d7359b$exports, "notify", function () { return $47cb5aadc8d7359b$export$5e14cdade93d6f7b; });
+$parcel$export($47cb5aadc8d7359b$exports, "useRequest", function () { return $47cb5aadc8d7359b$export$7fba1a658e28476a; });
+
+
+
+
+const $b2ea16c8de8c2e00$var$fxNotificationContainerId = 'fx-notification-container';
+function $b2ea16c8de8c2e00$export$a30a0cd06ecf3418() {
+    const container = document.getElementById($b2ea16c8de8c2e00$var$fxNotificationContainerId) || (()=>{
+        const dom = document.createElement('div');
+        dom.id = $b2ea16c8de8c2e00$var$fxNotificationContainerId;
+        dom.classList.add('flax');
+        dom.classList.add('fx-notification-container');
+        document.body.appendChild(dom);
+        return dom;
+    })();
+    return {
+        container: container
+    };
+}
+
+
+function $8e075969efba813d$export$ce4ab0c55987d1ff(...args) {
+    return args.reduce((o, e)=>{
+        if (typeof e === 'string' && e) o.push(e);
+        else if (Array.isArray(e)) o.push($8e075969efba813d$export$ce4ab0c55987d1ff(e));
+        else if (e && typeof e === 'object') Object.keys(e).forEach((k)=>{
+            if (e[k]) o.push(k);
+        });
+        return o;
+    }, []).join(' ');
+}
+
+
+function $993a3abcbfbea7c5$var$Progress(callback, elem, delay) {
+    let timerId = setTimeout(callback, delay);
+    let remaining = delay;
+    let start = new Date().getTime();
+    const anim = ()=>{
+        const prev = (delay - remaining) / delay * 100;
+        if (elem) elem.style.width = String(prev + (new Date().getTime() - start) / remaining * (100 - prev)) + '%';
+    };
+    let animInterval = setInterval(anim, 5);
+    return {
+        pause () {
+            clearTimeout(timerId);
+            clearInterval(animInterval);
+            remaining -= new Date().getTime() - start;
+        },
+        resume () {
+            start = new Date().getTime();
+            clearTimeout(timerId);
+            clearInterval(animInterval);
+            timerId = setTimeout(callback, remaining);
+            animInterval = setInterval(anim, 5);
+        },
+        done () {
+            clearTimeout(timerId);
+            clearInterval(animInterval);
+        }
+    };
+}
+function $993a3abcbfbea7c5$export$9949bd9c713ba425(props1) {
+    const { container: container  } = $b2ea16c8de8c2e00$export$a30a0cd06ecf3418();
+    return {
+        container: container,
+        alert: (attrs)=>{
+            const { delay: delay , ...props } = attrs;
+            const wrapper = document.createElement('div');
+            wrapper.classList.add('fx-notification-wrapper');
+            container.appendChild(wrapper);
+            $eFUnW$render(/*#__PURE__*/ $eFUnW$jsx($993a3abcbfbea7c5$export$9fe22d1de21b5211, {
+                ...props
+            }), wrapper, ()=>{
+                var ref;
+                const closeButton = wrapper.getElementsByTagName('button');
+                const progressBar = wrapper.getElementsByTagName('span');
+                let progress = undefined;
+                const cb = ()=>{
+                    wrapper.classList.add('--hide');
+                    !!progress && progress.done();
+                    setTimeout(()=>{
+                        $eFUnW$reactdom.unmountComponentAtNode(wrapper);
+                        wrapper.remove();
+                    }, 450);
+                };
+                (ref = closeButton[0]) === null || ref === void 0 ? void 0 : ref.addEventListener('click', ()=>{
+                    cb();
+                });
+                progress = $993a3abcbfbea7c5$var$Progress(cb, progressBar[0], Math.min(delay || 5000, 5000));
+                wrapper.addEventListener('mouseover', ()=>{
+                    !!progress && progress.pause();
+                });
+                wrapper.addEventListener('mouseout', ()=>{
+                    !!progress && progress.resume();
+                });
+            });
+        }
+    };
+}
+function $993a3abcbfbea7c5$var$Type(type) {
+    if (!type || type === 'INFO') return null;
+    return /*#__PURE__*/ $eFUnW$jsx($eFUnW$Fragment, {
+        children: /*#__PURE__*/ $eFUnW$jsxs("div", {
+            className: "--icon",
+            children: [
+                type === 'SUCC' && /*#__PURE__*/ $eFUnW$jsx("svg", {
+                    xmlns: "http://www.w3.org/2000/svg",
+                    fill: "none",
+                    viewBox: "0 0 24 24",
+                    stroke: "currentColor",
+                    children: /*#__PURE__*/ $eFUnW$jsx("path", {
+                        strokeLinecap: "round",
+                        strokeLinejoin: "round",
+                        strokeWidth: 2,
+                        d: "M5 13l4 4L19 7"
+                    })
+                }),
+                type === 'WARN' && /*#__PURE__*/ $eFUnW$jsx($eFUnW$Fragment, {
+                    children: /*#__PURE__*/ $eFUnW$jsx("svg", {
+                        xmlns: "http://www.w3.org/2000/svg",
+                        fill: "none",
+                        viewBox: "0 0 24 24",
+                        stroke: "currentColor",
+                        children: /*#__PURE__*/ $eFUnW$jsx("path", {
+                            strokeLinecap: "round",
+                            strokeLinejoin: "round",
+                            strokeWidth: 2,
+                            d: "M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
+                        })
+                    })
+                }),
+                type === 'ERROR' && /*#__PURE__*/ $eFUnW$jsx($eFUnW$Fragment, {
+                    children: /*#__PURE__*/ $eFUnW$jsx("svg", {
+                        xmlns: "http://www.w3.org/2000/svg",
+                        fill: "none",
+                        viewBox: "0 0 24 24",
+                        stroke: "currentColor",
+                        children: /*#__PURE__*/ $eFUnW$jsx("path", {
+                            strokeLinecap: "round",
+                            strokeLinejoin: "round",
+                            strokeWidth: 2,
+                            d: "M6 18L18 6M6 6l12 12"
+                        })
+                    })
+                })
+            ]
+        })
+    });
+//if (type === 'WARN') return <div>W</div>;
+//if (type === 'ERROR') return <div>E</div>;
+}
+function $993a3abcbfbea7c5$export$9fe22d1de21b5211(props) {
+    const { type: type , title: title , message: message  } = props;
+    $eFUnW$useEffect(()=>{
+        // Initialize
+        return ()=>{
+        // Clear
+        };
+    });
+    return /*#__PURE__*/ $eFUnW$jsx($eFUnW$Fragment, {
+        children: /*#__PURE__*/ $eFUnW$jsxs("div", {
+            className: $8e075969efba813d$export$ce4ab0c55987d1ff('flax fx-notification', `--${(type || 'info').toLocaleLowerCase()}`),
+            children: [
+                type && $993a3abcbfbea7c5$var$Type(type),
+                title && /*#__PURE__*/ $eFUnW$jsx("strong", {
+                    children: title
+                }),
+                message,
+                /*#__PURE__*/ $eFUnW$jsx("button", {
+                    className: "close",
+                    children: "Close"
+                }),
+                /*#__PURE__*/ $eFUnW$jsx("div", {
+                    className: "progress",
+                    children: /*#__PURE__*/ $eFUnW$jsx("span", {})
+                })
+            ]
+        })
+    });
+}
+
+
+
+
+
+
+const $9ca9243a2b59a8cd$var$cache = new $eFUnW$nodecache({
+    maxKeys: 100
+});
+const $9ca9243a2b59a8cd$var$resolving = (resolve, reject, props, resp, error)=>{
+    if (error) {
+        var ref;
+        if ((ref = error.response) === null || ref === void 0 ? void 0 : ref.data) {
+            var ref1, ref2;
+            if (props.errReducer) error.response.reduced = props.errReducer((ref1 = error.response) === null || ref1 === void 0 ? void 0 : ref1.data, error);
+            else error.response.reduced = (ref2 = error.response) === null || ref2 === void 0 ? void 0 : ref2.data;
+        }
+        reject(error);
+    } else resolve({
+        data: resp === null || resp === void 0 ? void 0 : resp.data,
+        reduced: props.reducer ? props.reducer(resp === null || resp === void 0 ? void 0 : resp.data) : resp === null || resp === void 0 ? void 0 : resp.data,
+        response: resp
+    });
+};
+const $9ca9243a2b59a8cd$var$resolvers = {};
+const $9ca9243a2b59a8cd$var$resolver = (resolver, key, resp, error, startAt, cacheKey)=>{
+    if (cacheKey && resolver.props.cacheMaxAge) $9ca9243a2b59a8cd$var$cache.set(cacheKey, {
+        data: resp === null || resp === void 0 ? void 0 : resp.data
+    }, resolver.props.cacheMaxAge);
+    if (!key) {
+        const delay = (resolver.props.delay || 0) - (new Date().getTime() - startAt.getTime());
+        setTimeout(()=>{
+            $9ca9243a2b59a8cd$var$resolving(resolver.resolve, resolver.reject, resolver.props, resp, error);
+        }, Math.max(delay, 0));
+        return;
+    }
+    const res = $9ca9243a2b59a8cd$var$resolvers[key].splice(0, $9ca9243a2b59a8cd$var$resolvers[key].length);
+    res.forEach(({ resolve: resolve , reject: reject , props: props  })=>{
+        const delay = (props.delay || 0) - (new Date().getTime() - startAt.getTime());
+        setTimeout(()=>{
+            $9ca9243a2b59a8cd$var$resolving(resolve, reject, props, resp, error);
+        }, Math.max(delay, 0));
+    });
+};
+const $9ca9243a2b59a8cd$var$dataMapper = (data)=>{
+    if (!data) return data;
+    if (typeof data !== 'object') return data;
+    if (Array.isArray(data)) return data;
+    return Object.keys(data).reduce((p, c)=>{
+        if (typeof data[c] === 'object' && data[c] !== null) {
+            if (data[c].current instanceof HTMLElement) p[c] = data[c].current.value;
+            else p[c] = $9ca9243a2b59a8cd$var$dataMapper(data[c]);
+        } else if (typeof data[c] === 'bigint') p[c] = String(data[c]);
+        else p[c] = data[c];
+        return p;
+    }, {});
+};
+function $9ca9243a2b59a8cd$export$8b68539586e424ba(headers) {
+    $eFUnW$axios.defaults.headers.common = Object.assign($eFUnW$axios.defaults.headers.common, headers);
+}
+function $9ca9243a2b59a8cd$export$9c999f676138fa5b(url) {
+    $eFUnW$axios.defaults.baseURL = url;
+}
+function $9ca9243a2b59a8cd$export$3e914cea1d334d06(trs) {
+    $eFUnW$axios.defaults.transformResponse = trs;
+}
+function $9ca9243a2b59a8cd$export$b5fe3f66a567bec0(props) {
+    const cp = new $eFUnW$pcancelable((resolve, reject, onCancel)=>{
+        const cancel = ()=>{
+            cp.cancel();
+        };
+        const ct = $eFUnW$axios.CancelToken.source();
+        const url = ((u, query)=>{
+            const qs = $eFUnW$querystring.stringify(query);
+            return u + (qs ? (u.includes('?') ? '&' : '?') + qs : '');
+        })(props.url, props.query || {});
+        const lazyGroup = props.method === 'GET' && props.throttle ? `${props.method} ${url} ${props.delay || 0}` : null;
+        const cacheKey = props.method === 'GET' && props.cacheMaxAge && props.cacheMaxAge > 0 ? `${props.method} ${props.url} ${props.cacheMaxAge}` : null;
+        const cached = cacheKey && $9ca9243a2b59a8cd$var$cache.get(cacheKey);
+        if (cached) {
+            $9ca9243a2b59a8cd$var$resolver({
+                resolve: resolve,
+                reject: reject,
+                cancelled: false,
+                props: props
+            }, null, cached, null, new Date(), null);
+            return;
+        }
+        onCancel.shouldReject = false;
+        onCancel(()=>{
+            if (!lazyGroup || $9ca9243a2b59a8cd$var$resolvers[lazyGroup].length === 1) ct.cancel();
+        });
+        setTimeout(()=>{
+            if (lazyGroup) {
+                $9ca9243a2b59a8cd$var$resolvers[lazyGroup] = $9ca9243a2b59a8cd$var$resolvers[lazyGroup] || [];
+                $9ca9243a2b59a8cd$var$resolvers[lazyGroup].push({
+                    resolve: resolve,
+                    reject: reject,
+                    cancel: cancel,
+                    props: props
+                });
+                // Duplicated `GET` request,
+                if ($9ca9243a2b59a8cd$var$resolvers[lazyGroup].length > 1) return;
+            }
+            const start = new Date();
+            $eFUnW$axios.request({
+                cancelToken: ct.token,
+                method: props.method,
+                url: url,
+                headers: props.headers,
+                responseType: props.responseType,
+                data: $9ca9243a2b59a8cd$var$dataMapper(typeof props.data === 'function' ? props.data() : props.data)
+            }).then((resp)=>{
+                $9ca9243a2b59a8cd$var$resolver({
+                    resolve: resolve,
+                    reject: reject,
+                    cancelled: cp.isCanceled,
+                    props: props
+                }, lazyGroup, resp, null, start, cacheKey);
+            }).catch((err)=>{
+                $9ca9243a2b59a8cd$var$resolver({
+                    resolve: resolve,
+                    reject: reject,
+                    cancelled: cp.isCanceled,
+                    props: props
+                }, lazyGroup, null, err, start, null);
+            });
+        }, 25);
+    });
+    return cp;
+}
+
+
+const $47cb5aadc8d7359b$export$5e14cdade93d6f7b = (payload, type)=>{
+    if (!payload) return;
+    if (typeof payload === 'string') payload = {
+        message: payload
+    };
+    if (!payload.message) return;
+    payload.type = payload.type || type;
+    if (type === 'WARN' || type === 'ERROR') payload.delay = payload.delay || 10000;
+    const { alert: notiAlert  } = $993a3abcbfbea7c5$export$9949bd9c713ba425({});
+    notiAlert(payload);
+};
+function $47cb5aadc8d7359b$export$7fba1a658e28476a(api, props) {
+    const [reqId, setReqId] = $eFUnW$useState(0);
+    const [resp, setResp] = $eFUnW$useState({
+        busy: false,
+        response: undefined,
+        errorResponse: undefined
+    });
+    const { success: success , done: done , error: error  } = props || {};
+    const queues = [];
+    const requestWrapper = (wrapperParams)=>{
+        if (resp.busy) return false;
+        setResp({
+            busy: true,
+            response: undefined,
+            errorResponse: undefined
+        });
+        const reqParams = {
+            ...api
+        };
+        if (wrapperParams === null || wrapperParams === void 0 ? void 0 : wrapperParams.data) reqParams.data = wrapperParams.data;
+        if (wrapperParams === null || wrapperParams === void 0 ? void 0 : wrapperParams.query) reqParams.query = wrapperParams === null || wrapperParams === void 0 ? void 0 : wrapperParams.query;
+        if (wrapperParams === null || wrapperParams === void 0 ? void 0 : wrapperParams.headers) reqParams.headers = wrapperParams === null || wrapperParams === void 0 ? void 0 : wrapperParams.headers;
+        const rp = $9ca9243a2b59a8cd$export$b5fe3f66a567bec0(reqParams);
+        rp.then((res)=>{
+            $47cb5aadc8d7359b$export$5e14cdade93d6f7b(success && success(res.reduced, res.response), 'SUCC');
+            $47cb5aadc8d7359b$export$5e14cdade93d6f7b(done && done(res.data, null, res.response), 'INFO');
+            setReqId(reqId + 1);
+            setResp({
+                busy: false,
+                response: res.reduced,
+                errorResponse: undefined
+            });
+        }).catch((err)=>{
+            var ref, ref1, ref2, ref3, ref4;
+            const type = typeof ((ref = err.response) === null || ref === void 0 ? void 0 : ref.status) === 'number' && ((ref1 = err.response) === null || ref1 === void 0 ? void 0 : ref1.status) < 500 ? 'WARN' : 'ERROR';
+            $47cb5aadc8d7359b$export$5e14cdade93d6f7b(error && error(((ref2 = err.response) === null || ref2 === void 0 ? void 0 : ref2.reduced) || err, err), type);
+            $47cb5aadc8d7359b$export$5e14cdade93d6f7b(done && done((ref3 = err.response) === null || ref3 === void 0 ? void 0 : ref3.data, err, err.response), type);
+            setReqId(reqId + 1);
+            setResp({
+                busy: false,
+                response: (ref4 = err.response) === null || ref4 === void 0 ? void 0 : ref4.reduced,
+                errorResponse: undefined
+            });
+        });
+        queues.push(rp);
+        return true;
+    };
+    const cancel = ()=>{
+        let rp;
+        while(rp = queues.pop())rp.cancel();
+    };
+    return {
+        reqId: reqId,
+        request: requestWrapper,
+        response: resp,
+        cancel: cancel
+    };
+}
+
+
+
+class $6425984f2b611ea8$export$5bd2698c576da1ad extends $eFUnW$Component {
+    noti(payload, type) {
+        $47cb5aadc8d7359b$export$5e14cdade93d6f7b(payload, type);
+    }
+    handleClick() {
+        if (this.state.busy) return;
+        this.setState({
+            ...this.state,
+            busy: true
+        });
+        const { success: success , error: error , done: done  } = this.props;
+        $9ca9243a2b59a8cd$export$b5fe3f66a567bec0({
+            ...this.props.api
+        }).then((res)=>{
+            this.noti(success && success(res.reduced, res.response), 'SUCC');
+            this.noti(done && done(res.data, null, res.response), 'INFO');
+            this.setState({
+                ...this.state,
+                busy: false
+            });
+        }).catch((err)=>{
+            var ref, ref1, ref2, ref3;
+            const type = typeof ((ref = err.response) === null || ref === void 0 ? void 0 : ref.status) === 'number' && ((ref1 = err.response) === null || ref1 === void 0 ? void 0 : ref1.status) < 500 ? 'WARN' : 'ERROR';
+            this.noti(error && error((ref2 = err.response) === null || ref2 === void 0 ? void 0 : ref2.reduced, err), type);
+            this.noti(done && done((ref3 = err.response) === null || ref3 === void 0 ? void 0 : ref3.data, err, err.response), type);
+            this.setState({
+                ...this.state,
+                busy: false
+            });
+        });
+    }
+    render() {
+        const ButtonTag = `${this.props.tag || 'button'}`;
+        return /*#__PURE__*/ $eFUnW$jsx(ButtonTag, {
+            className: `flax fx-button ${this.state.busy ? '--busy' : ''} ${this.props.className || ''}`,
+            onClick: ()=>this.handleClick()
+            ,
+            disabled: this.state.busy,
+            children: this.props.children || this.props.label
+        });
+    }
+    constructor(props){
+        super(props);
+        this.state = {
+            busy: false
+        };
+    }
+}
+
+
+var $1a59b4fa178071c6$exports = {};
+
+$parcel$export($1a59b4fa178071c6$exports, "FxGuard", function () { return $1a59b4fa178071c6$export$c8bd619db52a143b; });
+
+
+
+
+function $1a59b4fa178071c6$var$lazyResponse(result, error) {
+    return ()=>({
+            status: error ? 'ERROR' : 'SUCCESS',
+            result: result,
+            error: error
+        })
+    ;
+}
+const $1a59b4fa178071c6$var$lazy = function(release, p) {
+    let status = 'PENDING';
+    let error;
+    let result;
+    p.then((res)=>{
+        if (p.isCanceled) return;
+        ({ result: result , status: status , error: error  } = $1a59b4fa178071c6$var$lazyResponse(res, null)());
+        release(true);
+    }).catch((err)=>{
+        if (p.isCanceled) return;
+        ({ result: result , status: status , error: error  } = $1a59b4fa178071c6$var$lazyResponse(null, err)());
+        release(false);
+    });
+    return ()=>{
+        if (status === 'PENDING') throw p;
+        return {
+            status: status,
+            error: error,
+            result: result
+        };
+    };
+};
+function $1a59b4fa178071c6$var$FxGuardInner(props) {
+    const [prepared, setPrepared] = $eFUnW$useState();
+    const { api: api , refreshId: refreshId , reloadId: reloadId , error: error , naked: naked  } = props;
+    const req = ()=>{
+        return $9ca9243a2b59a8cd$export$b5fe3f66a567bec0(Object.assign({
+            throttle: api.throttle === false ? false : true,
+            refreshId: refreshId
+        }, props.api, {
+            reducer: undefined,
+            errReducer: undefined
+        }));
+    };
+    $eFUnW$useEffect(()=>{
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        let rp = undefined;
+        if (reloadId > 0) {
+            rp = req();
+            rp.then((res)=>{
+                if (rp === null || rp === void 0 ? void 0 : rp.isCanceled) return;
+                setPrepared(()=>$1a59b4fa178071c6$var$lazyResponse(res, null)
+                );
+                props.releaseBusy(true);
+            }).catch((err)=>{
+                if (rp === null || rp === void 0 ? void 0 : rp.isCanceled) return;
+                setPrepared(()=>$1a59b4fa178071c6$var$lazyResponse(null, err)
+                );
+                props.releaseBusy(false);
+            });
+        }
+        return ()=>{
+            if (rp) rp.cancel();
+        };
+    }, [
+        reloadId
+    ]);
+    $eFUnW$useEffect(()=>{
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        let rp = undefined;
+        setPrepared(()=>{
+            rp = req();
+            return $1a59b4fa178071c6$var$lazy(props.releaseBusy, rp);
+        });
+        return ()=>{
+            if (rp) rp.cancel();
+        };
+    }, [
+        api.method,
+        api.url,
+        refreshId
+    ]);
+    if (!prepared) return /*#__PURE__*/ $eFUnW$jsx($eFUnW$Fragment, {});
+    const resp = prepared();
+    if (resp.status === 'ERROR') {
+        const rr = ()=>{
+            var ref, ref1, ref2, ref3;
+            if (!((ref = resp.error) === null || ref === void 0 ? void 0 : (ref1 = ref.response) === null || ref1 === void 0 ? void 0 : ref1.data)) return null;
+            return props.api.errReducer ? props.api.errReducer((ref2 = resp.error) === null || ref2 === void 0 ? void 0 : ref2.response.data, resp.error) : (ref3 = resp.error) === null || ref3 === void 0 ? void 0 : ref3.response.data;
+        };
+        const r = ()=>{
+            var ref;
+            /*#__PURE__*/ return $eFUnW$jsxs($eFUnW$Fragment, {
+                children: [
+                    error && error(rr(), resp.error),
+                    !error && /*#__PURE__*/ $eFUnW$jsxs("div", {
+                        children: [
+                            "Error (",
+                            (ref = resp.error) === null || ref === void 0 ? void 0 : ref.message,
+                            ")"
+                        ]
+                    })
+                ]
+            });
+        };
+        return /*#__PURE__*/ $eFUnW$jsxs($eFUnW$Fragment, {
+            children: [
+                naked && r(),
+                !naked && /*#__PURE__*/ $eFUnW$jsx("div", {
+                    className: "flax fx-guard-error",
+                    children: r()
+                })
+            ]
+        });
+    }
+    const rr = ()=>{
+        var ref, ref4, ref5;
+        if (!((ref = resp.result) === null || ref === void 0 ? void 0 : ref.data)) return null;
+        return props.api.reducer ? props.api.reducer((ref4 = resp.result) === null || ref4 === void 0 ? void 0 : ref4.data) : (ref5 = resp.result) === null || ref5 === void 0 ? void 0 : ref5.data;
+    };
+    return /*#__PURE__*/ $eFUnW$jsx($eFUnW$Fragment, {
+        children: props.render(rr(), props.refreshId > 0)
+    });
+}
+class $1a59b4fa178071c6$export$c8bd619db52a143b extends $eFUnW$Component {
+    reload(silent, className) {
+        if (this.state.busy) return;
+        if (silent) {
+            this.setState({
+                ...this.state,
+                reloadId: this.state.reloadId + 1,
+                busy: true,
+                silent: true,
+                className: className
+            });
+            return;
+        }
+        this.setState({
+            ...this.state,
+            refreshId: this.state.refreshId + 1,
+            busy: true,
+            silent: false,
+            className: undefined
+        });
+    }
+    releaseBusy(succeed) {
+        if (this.props.done) this.props.done(succeed);
+        this.setState({
+            ...this.state,
+            busy: false,
+            silent: false,
+            className: undefined
+        });
+    }
+    render() {
+        const r = ()=>{
+            const rl = ()=>/*#__PURE__*/ $eFUnW$jsxs($eFUnW$Fragment, {
+                    children: [
+                        this.props.disableLoading && /*#__PURE__*/ $eFUnW$jsx($eFUnW$Fragment, {
+                            children: this.props.render(null, this.state.refreshId > 0)
+                        }),
+                        this.props.loading && this.props.loading(),
+                        !this.props.loading && !this.props.disableLoading && /*#__PURE__*/ $eFUnW$jsx("div", {
+                            className: $8e075969efba813d$export$ce4ab0c55987d1ff('flax fx-guard-loader', {
+                                '--silent': this.props.disableLoading
+                            }),
+                            children: "Loading .."
+                        })
+                    ]
+                })
+            ;
+            return /*#__PURE__*/ $eFUnW$jsx($eFUnW$Fragment, {
+                children: /*#__PURE__*/ $eFUnW$jsx($eFUnW$Suspense, {
+                    fallback: /*#__PURE__*/ $eFUnW$jsxs($eFUnW$Fragment, {
+                        children: [
+                            this.props.naked && rl(),
+                            !this.props.naked && /*#__PURE__*/ $eFUnW$jsx("div", {
+                                className: $8e075969efba813d$export$ce4ab0c55987d1ff('flax fx-guard-loading', {
+                                    '--silent': this.props.disableLoading
+                                }),
+                                children: rl()
+                            })
+                        ]
+                    }),
+                    children: /*#__PURE__*/ $eFUnW$jsx($1a59b4fa178071c6$var$FxGuardInner, {
+                        releaseBusy: (succeed)=>this.releaseBusy(succeed)
+                        ,
+                        refreshId: this.state.refreshId,
+                        reloadId: this.state.reloadId,
+                        api: this.props.api,
+                        render: this.props.render,
+                        error: this.props.error,
+                        naked: this.props.naked
+                    })
+                })
+            });
+        };
+        return /*#__PURE__*/ $eFUnW$jsxs($eFUnW$Fragment, {
+            children: [
+                this.props.naked && r(),
+                !this.props.naked && /*#__PURE__*/ $eFUnW$jsx("div", {
+                    className: $8e075969efba813d$export$ce4ab0c55987d1ff('flax fx-guard', {
+                        '--loading': this.state.busy,
+                        '--silent': this.state.silent,
+                        [this.state.className || '--noname']: !!this.state.className
+                    }),
+                    children: r()
+                })
+            ]
+        });
+    }
+    constructor(props){
+        super(props);
+        this.state = {
+            refreshId: 0,
+            reloadId: 0,
+            busy: true,
+            silent: false,
+            className: undefined
+        };
+    }
+}
+
+
+
+
+
+
+export {$9ca9243a2b59a8cd$export$8b68539586e424ba as setDefaultHeaders, $9ca9243a2b59a8cd$export$9c999f676138fa5b as setBaseUrl, $9ca9243a2b59a8cd$export$3e914cea1d334d06 as setDefaultTransformResponse, $9ca9243a2b59a8cd$export$b5fe3f66a567bec0 as request, $6425984f2b611ea8$export$5bd2698c576da1ad as FxButton, $1a59b4fa178071c6$export$c8bd619db52a143b as FxGuard, $47cb5aadc8d7359b$export$5e14cdade93d6f7b as notify, $47cb5aadc8d7359b$export$7fba1a658e28476a as useRequest};
 //# sourceMappingURL=index.module.js.map

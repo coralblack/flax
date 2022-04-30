@@ -1,2 +1,268 @@
-.flax.fx-notification-container{background:transparent;position:fixed;top:0;right:0;width:100%;max-width:370px;height:auto;user-select:none;z-index:1}@keyframes expand{0%{transform:translateX(300px);opacity:0}60%{transform:translateX(-30px)}}@keyframes slideUp{to{transform:translateX(300px);max-height:0;opacity:0}40%{transform:translateX(-30px)}}.flax.fx-notification-container .fx-notification-wrapper{position:relative;overflow:hidden;max-height:600px}.flax.fx-notification-container .fx-notification-wrapper.--hide{animation:slideUp .45s ease-in-out;animation-fill-mode:forwards}.flax.fx-notification-container .fx-notification{box-shadow:0 .15rem .4rem #ccc;padding:1.2rem;box-sizing:border-box;border-radius:.15rem;position:relative;overflow:hidden;background:#fff;font-size:.95em;animation:expand .32s ease-in-out;margin:1rem 1rem 0}.flax.fx-notification-container .fx-notification strong{display:block;font-size:1.1em;margin-bottom:.4rem}.flax.fx-notification-container .fx-notification .--icon{position:absolute;top:1.2rem;left:1.2rem;width:1.3em;height:1.3em}.flax.fx-notification-container .fx-notification:before{position:absolute;top:0;left:0;width:5px;height:100%;content:"";background:#2d91ff}.flax.fx-notification-container .fx-notification.--error,.flax.fx-notification-container .fx-notification.--succ,.flax.fx-notification-container .fx-notification.--warn{padding-left:3rem}.flax.fx-notification-container .fx-notification.--succ:before{background:#0fc670}.flax.fx-notification-container .fx-notification.--succ .--icon{color:#0fc670}.flax.fx-notification-container .fx-notification.--warn:before{background:#ffa200}.flax.fx-notification-container .fx-notification.--warn .--icon{color:#ffa200}.flax.fx-notification-container .fx-notification.--error:before{background:red}.flax.fx-notification-container .fx-notification.--error .--icon{color:red}.flax.fx-notification-container .fx-notification button.close{position:absolute;top:0;right:0;text-indent:-9999px;width:28px;height:28px;border:none;background:transparent;opacity:0;transition:opacity .1s ease-in-out;cursor:pointer}.flax.fx-notification-container .fx-notification button.close:after,.flax.fx-notification-container .fx-notification button.close:before{content:"";width:12px;height:2px;border-radius:2px;background:#333;position:absolute;top:50%;left:50%;margin-left:-6px;margin-top:-1px}.flax.fx-notification-container .fx-notification button.close:before{transform:rotate(45deg)}.flax.fx-notification-container .fx-notification button.close:after{transform:rotate(-45deg)}.flax.fx-notification-container .fx-notification:hover button.close{opacity:1}.flax.fx-notification-container .progress{position:absolute;bottom:0;left:5px;right:0;height:5px;background:#f6f6f6;overflow:hidden}.flax.fx-notification-container .progress span{position:absolute;background:#e0e0e0;top:0;left:0;bottom:0}.flax.fx-guard{position:relative;transition:opacity .15s ease-in-out}.flax.fx-guard.--loading{opacity:.6}.flax.fx-guard .fx-guard-loader{position:relative;display:block;min-height:60px;text-indent:-9999px}.flax.fx-guard .fx-guard-loader:after,.flax.fx-guard .fx-guard-loader:before{position:absolute;content:"";top:50%;left:50%;width:50px;height:50px;margin-top:-25px;margin-left:-25px;border-color:transparent #333 #333 transparent;border-style:solid;border-width:3px;border-radius:50%;box-sizing:border-box;animation:rotateOpacity 1s ease-in-out .1s infinite}.flax.fx-guard .fx-guard-loader:before{border-color:transparent #ab1500 #ab1500 transparent;animation-delay:.3s}@keyframes rotateOpacity{0%{transform:rotate(0deg)}to{transform:rotate(1turn)}}
+.flax.fx-notification-container {
+  width: 100%;
+  max-width: 370px;
+  height: auto;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  z-index: 1;
+  background: none;
+  position: fixed;
+  top: 0;
+  right: 0;
+}
+
+@-webkit-keyframes expand {
+  0% {
+    opacity: 0;
+    -webkit-transform: translateX(300px);
+    transform: translateX(300px);
+  }
+
+  60% {
+    -webkit-transform: translateX(-30px);
+    transform: translateX(-30px);
+  }
+}
+
+@keyframes expand {
+  0% {
+    opacity: 0;
+    -webkit-transform: translateX(300px);
+    transform: translateX(300px);
+  }
+
+  60% {
+    -webkit-transform: translateX(-30px);
+    transform: translateX(-30px);
+  }
+}
+
+@-webkit-keyframes slideUp {
+  100% {
+    max-height: 0;
+    opacity: 0;
+    -webkit-transform: translateX(300px);
+    transform: translateX(300px);
+  }
+
+  40% {
+    -webkit-transform: translateX(-30px);
+    transform: translateX(-30px);
+  }
+}
+
+@keyframes slideUp {
+  100% {
+    max-height: 0;
+    opacity: 0;
+    -webkit-transform: translateX(300px);
+    transform: translateX(300px);
+  }
+
+  40% {
+    -webkit-transform: translateX(-30px);
+    transform: translateX(-30px);
+  }
+}
+
+.flax.fx-notification-container .fx-notification-wrapper {
+  max-height: 600px;
+  position: relative;
+  overflow: hidden;
+}
+
+.flax.fx-notification-container .fx-notification-wrapper.--hide {
+  -webkit-animation: slideUp .45s ease-in-out forwards;
+  animation: slideUp .45s ease-in-out forwards;
+}
+
+.flax.fx-notification-container .fx-notification {
+  box-sizing: border-box;
+  background: #fff;
+  border-radius: .15rem;
+  margin: 1rem 1rem 0%;
+  padding: 1.2rem;
+  font-size: .95em;
+  -webkit-animation: expand .32s ease-in-out;
+  animation: expand .32s ease-in-out;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 .15rem .4rem #ccc;
+}
+
+.flax.fx-notification-container .fx-notification strong {
+  margin-bottom: .4rem;
+  font-size: 1.1em;
+  display: block;
+}
+
+.flax.fx-notification-container .fx-notification .--icon {
+  width: 1.3em;
+  height: 1.3em;
+  position: absolute;
+  top: 1.2rem;
+  left: 1.2rem;
+}
+
+.flax.fx-notification-container .fx-notification:before {
+  width: 5px;
+  height: 100%;
+  content: "";
+  background: #2d91ff;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.flax.fx-notification-container .fx-notification.--succ, .flax.fx-notification-container .fx-notification.--warn, .flax.fx-notification-container .fx-notification.--error {
+  padding-left: 3rem;
+}
+
+.flax.fx-notification-container .fx-notification.--succ:before {
+  background: #0fc670;
+}
+
+.flax.fx-notification-container .fx-notification.--succ .--icon {
+  color: #0fc670;
+}
+
+.flax.fx-notification-container .fx-notification.--warn:before {
+  background: #ffa200;
+}
+
+.flax.fx-notification-container .fx-notification.--warn .--icon {
+  color: #ffa200;
+}
+
+.flax.fx-notification-container .fx-notification.--error:before {
+  background: red;
+}
+
+.flax.fx-notification-container .fx-notification.--error .--icon {
+  color: red;
+}
+
+.flax.fx-notification-container .fx-notification button.close {
+  text-indent: -9999px;
+  width: 28px;
+  height: 28px;
+  opacity: 0;
+  cursor: pointer;
+  background: none;
+  border: none;
+  transition: opacity .1s ease-in-out;
+  position: absolute;
+  top: 0;
+  right: 0;
+}
+
+.flax.fx-notification-container .fx-notification button.close:before, .flax.fx-notification-container .fx-notification button.close:after {
+  content: "";
+  width: 12px;
+  height: 2px;
+  background: #333;
+  border-radius: 2px;
+  margin-top: -1px;
+  margin-left: -6px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+}
+
+.flax.fx-notification-container .fx-notification button.close:before {
+  -webkit-transform: rotate(45deg);
+  transform: rotate(45deg);
+}
+
+.flax.fx-notification-container .fx-notification button.close:after {
+  -webkit-transform: rotate(-45deg);
+  transform: rotate(-45deg);
+}
+
+.flax.fx-notification-container .fx-notification:hover button.close {
+  opacity: 1;
+}
+
+.flax.fx-notification-container .progress {
+  height: 5px;
+  background: #f6f6f6;
+  position: absolute;
+  bottom: 0;
+  left: 5px;
+  right: 0;
+  overflow: hidden;
+}
+
+.flax.fx-notification-container .progress span {
+  background: #e0e0e0;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+}
+
+.flax.fx-guard {
+  transition: opacity .15s ease-in-out;
+  position: relative;
+}
+
+.flax.fx-guard.--loading {
+  opacity: .6;
+}
+
+.flax.fx-guard .fx-guard-loader {
+  min-height: 60px;
+  text-indent: -9999px;
+  display: block;
+  position: relative;
+}
+
+.flax.fx-guard .fx-guard-loader:before, .flax.fx-guard .fx-guard-loader:after {
+  content: "";
+  width: 50px;
+  height: 50px;
+  box-sizing: border-box;
+  border: 3px solid #333;
+  border-color: rgba(0, 0, 0, 0) #333 #333 rgba(0, 0, 0, 0);
+  border-radius: 50%;
+  margin-top: -25px;
+  margin-left: -25px;
+  -webkit-animation: rotateOpacity 1s ease-in-out .1s infinite;
+  animation: rotateOpacity 1s ease-in-out .1s infinite;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+}
+
+.flax.fx-guard .fx-guard-loader:before {
+  border-color: rgba(0, 0, 0, 0) #ab1500 #ab1500 rgba(0, 0, 0, 0);
+  -webkit-animation-delay: .3s;
+  animation-delay: .3s;
+}
+
+@-webkit-keyframes rotateOpacity {
+  0% {
+    -webkit-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+
+  100% {
+    -webkit-transform: rotate(1turn);
+    transform: rotate(1turn);
+  }
+}
+
+@keyframes rotateOpacity {
+  0% {
+    -webkit-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+
+  100% {
+    -webkit-transform: rotate(1turn);
+    transform: rotate(1turn);
+  }
+}
+
 /*# sourceMappingURL=index.css.map */
