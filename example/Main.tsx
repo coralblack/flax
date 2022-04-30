@@ -106,7 +106,6 @@ function SamplePost() {
           method: 'POST',
           url: 'https://jsonplaceholder.typicode.com/posts',
           reducer: (res: JsonPlaceHolderPostTodo): {manipulated: number} => {
-            console.log('xxx');
             return {
               manipulated: res.id,
             };
@@ -164,7 +163,6 @@ function SampleReloadable() {
           delay: 300,
         }}
         done={succeed => {
-          console.log('>', succeed);
           setBusy(false);
         }}
         render={data => (
