@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import ReactDOM, {render} from 'react-dom';
 import {useNotificationContainer} from './FxNotificationContainer';
 import {classNames} from '../utils';
@@ -81,34 +81,35 @@ export function useNotification(props: UseNotificationProps): UseNotification {
       const wrapper = document.createElement('div');
       wrapper.classList.add('fx-notification-wrapper');
       container.appendChild(wrapper);
-      render(<FxNotification {...props} />, wrapper);
+      render(<FxNotification {...props} />, wrapper, () => {
+        const closeButton = wrapper.getElementsByTagName('button');
+        const progressBar = wrapper.getElementsByTagName('span');
 
-      const closeButton = wrapper.getElementsByTagName('button');
-      const progressBar = wrapper.getElementsByTagName('span');
-      let progress: ProgressBar | undefined = undefined;
+        let progress: ProgressBar | undefined = undefined;
 
-      const cb = () => {
-        wrapper.classList.add('--hide');
-        !!progress && progress.done();
+        const cb = () => {
+          wrapper.classList.add('--hide');
+          !!progress && progress.done();
 
-        setTimeout(() => {
-          ReactDOM.unmountComponentAtNode(wrapper);
-          wrapper.remove();
-        }, 450);
-      };
+          setTimeout(() => {
+            ReactDOM.unmountComponentAtNode(wrapper);
+            wrapper.remove();
+          }, 450);
+        };
 
-      closeButton[0]?.addEventListener('click', () => {
-        cb();
-      });
+        closeButton[0]?.addEventListener('click', () => {
+          cb();
+        });
 
-      progress = Progress(cb, progressBar[0], Math.min(delay || 5000, 5000));
+        progress = Progress(cb, progressBar[0], Math.min(delay || 5000, 5000));
 
-      wrapper.addEventListener('mouseover', () => {
-        !!progress && progress.pause();
-      });
+        wrapper.addEventListener('mouseover', () => {
+          !!progress && progress.pause();
+        });
 
-      wrapper.addEventListener('mouseout', () => {
-        !!progress && progress.resume();
+        wrapper.addEventListener('mouseout', () => {
+          !!progress && progress.resume();
+        });
       });
     },
   };
