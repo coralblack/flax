@@ -1,2 +1,715 @@
-var e=d(require("query-string")),t=d(require("p-cancelable")),r=d(require("node-cache")),n=d(require("axios")),o=require("react-dom"),a=d(o),{render:u}=o,i=require("react"),c=d(i),{Component:s,useState:l,useEffect:f,Suspense:p}=i;function d(e){return e&&e.__esModule?e.default:e}function y(e){return(y="function"==typeof Symbol&&"symbol"==typeof Symbol.iterator?function(e){return typeof e}:function(e){return e&&"function"==typeof Symbol&&e.constructor===Symbol&&e!==Symbol.prototype?"symbol":typeof e})(e)}function m(){for(var e=arguments.length,t=new Array(e),r=0;r<e;r++)t[r]=arguments[r];return t.reduce((function(e,t){return"string"==typeof t&&t?e.push(t):Array.isArray(t)?e.push(m(t)):t&&"object"===y(t)&&Object.keys(t).forEach((function(r){t[r]&&e.push(r)})),e}),[]).join(" ")}function v(e,t){if(null==e)return{};var r,n,o=function(e,t){if(null==e)return{};var r,n,o={},a=Object.keys(e);for(n=0;n<a.length;n++)r=a[n],t.indexOf(r)>=0||(o[r]=e[r]);return o}(e,t);if(Object.getOwnPropertySymbols){var a=Object.getOwnPropertySymbols(e);for(n=0;n<a.length;n++)r=a[n],t.indexOf(r)>=0||Object.prototype.propertyIsEnumerable.call(e,r)&&(o[r]=e[r])}return o}function b(e){var t,r={container:document.getElementById("fx-notification-container")||((t=document.createElement("div")).id="fx-notification-container",t.classList.add("flax"),t.classList.add("fx-notification-container"),document.body.appendChild(t),t)}.container;return{container:r,alert:function(e){var t=e.delay,n=v(e,["delay"]),o=document.createElement("div");o.classList.add("fx-notification-wrapper"),r.appendChild(o),u(c.createElement(h,n),o);var i=o.getElementsByTagName("button"),s=o.getElementsByTagName("span"),l=void 0,f=function(){o.classList.add("--hide"),l&&l.done(),setTimeout((function(){a.unmountComponentAtNode(o),o.remove()}),450)};i[0].addEventListener("click",(function(){f()})),l=function(e,t,r){var n=setTimeout(e,r),o=r,a=(new Date).getTime(),u=function(){var e=(r-o)/r*100;t.style.width=String(e+((new Date).getTime()-a)/o*(100-e))+"%"},i=setInterval(u,5);return{pause:function(){clearTimeout(n),clearInterval(i),o-=(new Date).getTime()-a},resume:function(){a=(new Date).getTime(),clearTimeout(n),clearInterval(i),n=setTimeout(e,o),i=setInterval(u,5)},done:function(){clearTimeout(n),clearInterval(i)}}}(f,s[0],Math.min(t||5e3,5e3)),o.addEventListener("mouseover",(function(){l.pause()})),o.addEventListener("mouseout",(function(){l.resume()}))}}}function h(e){var t=e.type,r=e.title,n=e.message;return f((function(){return function(){}})),c.createElement(c.Fragment,null,c.createElement("div",{className:m("flax fx-notification","--".concat((t||"info").toLocaleLowerCase()))},t&&function(e){return e&&"INFO"!==e?c.createElement(c.Fragment,null,c.createElement("div",{className:"--icon"},"SUCC"===e&&c.createElement("svg",{xmlns:"http://www.w3.org/2000/svg",fill:"none",viewBox:"0 0 24 24",stroke:"currentColor"},c.createElement("path",{strokeLinecap:"round",strokeLinejoin:"round",strokeWidth:2,d:"M5 13l4 4L19 7"})),"WARN"===e&&c.createElement(c.Fragment,null,c.createElement("svg",{xmlns:"http://www.w3.org/2000/svg",fill:"none",viewBox:"0 0 24 24",stroke:"currentColor"},c.createElement("path",{strokeLinecap:"round",strokeLinejoin:"round",strokeWidth:2,d:"M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"}))),"ERROR"===e&&c.createElement(c.Fragment,null,c.createElement("svg",{xmlns:"http://www.w3.org/2000/svg",fill:"none",viewBox:"0 0 24 24",stroke:"currentColor"},c.createElement("path",{strokeLinecap:"round",strokeLinejoin:"round",strokeWidth:2,d:"M6 18L18 6M6 6l12 12"}))))):null}(t),r&&c.createElement("strong",null,r),n,c.createElement("button",{className:"close"},"Close"),c.createElement("div",{className:"progress"},c.createElement("span",null))))}function g(e){return(g="function"==typeof Symbol&&"symbol"==typeof Symbol.iterator?function(e){return typeof e}:function(e){return e&&"function"==typeof Symbol&&e.constructor===Symbol&&e!==Symbol.prototype?"symbol":typeof e})(e)}var O=new r({maxKeys:100}),j=function(e,t,r,n,o){if(o){var a,u,i;if(null!==(a=o.response)&&void 0!==a&&a.data)if(r.errReducer)o.response.reduced=r.errReducer(null===(u=o.response)||void 0===u?void 0:u.data,o);else o.response.reduced=null===(i=o.response)||void 0===i?void 0:i.data;t(o)}else e({data:null==n?void 0:n.data,reduced:r.reducer?r.reducer(null==n?void 0:n.data):null==n?void 0:n.data,response:n})},w={},E=function(e,t,r,n,o,a){if(a&&e.props.cacheMaxAge&&O.set(a,{data:null==r?void 0:r.data},e.props.cacheMaxAge),t){w[t].splice(0,w[t].length).forEach((function(e){var t=e.resolve,a=e.reject,u=e.props,i=(u.delay||0)-((new Date).getTime()-o.getTime());setTimeout((function(){j(t,a,u,r,n)}),Math.max(i,0))}))}else{var u=(e.props.delay||0)-((new Date).getTime()-o.getTime());setTimeout((function(){j(e.resolve,e.reject,e.props,r,n)}),Math.max(u,0))}},S=function(e){return e?"object"!==g(e)||Array.isArray(e)?e:Object.keys(e).reduce((function(t,r){return"object"===g(e[r])&&null!==e[r]?e[r].current instanceof HTMLElement?t[r]=e[r].current.value:t[r]=S(e[r]):"bigint"==typeof e[r]?t[r]=String(e[r]):t[r]=e[r],t}),{}):e};function x(r){var o=new t((function(t,a,u){var i,c,s,l=function(){o.cancel()},f=n.CancelToken.source(),p=(i=r.url,c=r.query||{},s=e.stringify(c),i+(s?(i.includes("?")?"&":"?")+s:"")),d="GET"===r.method&&r.throttle?"".concat(r.method," ").concat(p," ").concat(r.delay||0):null,y="GET"===r.method&&r.cacheMaxAge&&r.cacheMaxAge>0?"".concat(r.method," ").concat(r.url," ").concat(r.cacheMaxAge):null,m=y&&O.get(y);m?E({resolve:t,reject:a,cancelled:!1,props:r},null,m,null,new Date,null):(u.shouldReject=!1,u((function(){d&&1!==w[d].length||f.cancel()})),setTimeout((function(){if(!(d&&(w[d]=w[d]||[],w[d].push({resolve:t,reject:a,cancel:l,props:r}),w[d].length>1))){var e=new Date;n.request({cancelToken:f.token,method:r.method,url:p,headers:r.headers,responseType:r.responseType,data:S("function"==typeof r.data?r.data():r.data)}).then((function(n){E({resolve:t,reject:a,cancelled:o.isCanceled,props:r},d,n,null,e,y)})).catch((function(n){E({resolve:t,reject:a,cancelled:o.isCanceled,props:r},d,null,n,e,null)}))}}),25))}));return o}function R(e,t){var r=Object.keys(e);if(Object.getOwnPropertySymbols){var n=Object.getOwnPropertySymbols(e);t&&(n=n.filter((function(t){return Object.getOwnPropertyDescriptor(e,t).enumerable}))),r.push.apply(r,n)}return r}function P(e,t,r){return t in e?Object.defineProperty(e,t,{value:r,enumerable:!0,configurable:!0,writable:!0}):e[t]=r,e}function k(e,t){return function(e){if(Array.isArray(e))return e}(e)||function(e,t){if("undefined"==typeof Symbol||!(Symbol.iterator in Object(e)))return;var r=[],n=!0,o=!1,a=void 0;try{for(var u,i=e[Symbol.iterator]();!(n=(u=i.next()).done)&&(r.push(u.value),!t||r.length!==t);n=!0);}catch(e){o=!0,a=e}finally{try{n||null==i.return||i.return()}finally{if(o)throw a}}return r}(e,t)||function(e,t){if(!e)return;if("string"==typeof e)return I(e,t);var r=Object.prototype.toString.call(e).slice(8,-1);"Object"===r&&e.constructor&&(r=e.constructor.name);if("Map"===r||"Set"===r)return Array.from(e);if("Arguments"===r||/^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(r))return I(e,t)}(e,t)||function(){throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.")}()}function I(e,t){(null==t||t>e.length)&&(t=e.length);for(var r=0,n=new Array(t);r<t;r++)n[r]=e[r];return n}exports.setDefaultHeaders=function(e){n.defaults.headers.common=Object.assign(n.defaults.headers.common,e)},exports.setBaseUrl=function(e){n.defaults.baseURL=e},exports.setDefaultTransformResponse=function(e){n.defaults.transformResponse=e},exports.request=x;var T=function(e,t){e&&("string"==typeof e&&(e={message:e}),e.message&&(e.type=e.type||t,"WARN"!==t&&"ERROR"!==t||(e.delay=e.delay||1e4),(0,b().alert)(e)))};function C(e){return(C="function"==typeof Symbol&&"symbol"==typeof Symbol.iterator?function(e){return typeof e}:function(e){return e&&"function"==typeof Symbol&&e.constructor===Symbol&&e!==Symbol.prototype?"symbol":typeof e})(e)}function N(e,t){var r=Object.keys(e);if(Object.getOwnPropertySymbols){var n=Object.getOwnPropertySymbols(e);t&&(n=n.filter((function(t){return Object.getOwnPropertyDescriptor(e,t).enumerable}))),r.push.apply(r,n)}return r}function D(e){for(var t=1;t<arguments.length;t++){var r=null!=arguments[t]?arguments[t]:{};t%2?N(Object(r),!0).forEach((function(t){A(e,t,r[t])})):Object.getOwnPropertyDescriptors?Object.defineProperties(e,Object.getOwnPropertyDescriptors(r)):N(Object(r)).forEach((function(t){Object.defineProperty(e,t,Object.getOwnPropertyDescriptor(r,t))}))}return e}function A(e,t,r){return t in e?Object.defineProperty(e,t,{value:r,enumerable:!0,configurable:!0,writable:!0}):e[t]=r,e}function L(e,t){for(var r=0;r<t.length;r++){var n=t[r];n.enumerable=n.enumerable||!1,n.configurable=!0,"value"in n&&(n.writable=!0),Object.defineProperty(e,n.key,n)}}function F(e,t){return(F=Object.setPrototypeOf||function(e,t){return e.__proto__=t,e})(e,t)}function _(e){var t=function(){if("undefined"==typeof Reflect||!Reflect.construct)return!1;if(Reflect.construct.sham)return!1;if("function"==typeof Proxy)return!0;try{return Date.prototype.toString.call(Reflect.construct(Date,[],(function(){}))),!0}catch(e){return!1}}();return function(){var r,n=M(e);if(t){var o=M(this).constructor;r=Reflect.construct(n,arguments,o)}else r=n.apply(this,arguments);return q(this,r)}}function q(e,t){return!t||"object"!==C(t)&&"function"!=typeof t?function(e){if(void 0===e)throw new ReferenceError("this hasn't been initialised - super() hasn't been called");return e}(e):t}function M(e){return(M=Object.setPrototypeOf?Object.getPrototypeOf:function(e){return e.__proto__||Object.getPrototypeOf(e)})(e)}exports.notify=T,exports.useRequest=function(e,t){var r=k(l(0),2),n=r[0],o=r[1],a=k(l({busy:!1,response:void 0,errorResponse:void 0}),2),u=a[0],i=a[1],c=t||{},s=c.success,f=c.done,p=c.error,d=[];return{reqId:n,request:function(t){if(u.busy)return!1;i({busy:!0,response:void 0,errorResponse:void 0});var r=function(e){for(var t=1;t<arguments.length;t++){var r=null!=arguments[t]?arguments[t]:{};t%2?R(Object(r),!0).forEach((function(t){P(e,t,r[t])})):Object.getOwnPropertyDescriptors?Object.defineProperties(e,Object.getOwnPropertyDescriptors(r)):R(Object(r)).forEach((function(t){Object.defineProperty(e,t,Object.getOwnPropertyDescriptor(r,t))}))}return e}({},e);null!=t&&t.data&&(r.data=t.data),null!=t&&t.query&&(r.query=null==t?void 0:t.query),null!=t&&t.headers&&(r.headers=null==t?void 0:t.headers);var a=x(r);return a.then((function(e){T(s&&s(e.reduced,e.response),"SUCC"),T(f&&f(e.data,null,e.response),"INFO"),o(n+1),i({busy:!1,response:e.reduced,errorResponse:void 0})})).catch((function(e){var t,r,a,u,c,s="number"==typeof(null===(t=e.response)||void 0===t?void 0:t.status)&&(null===(r=e.response)||void 0===r?void 0:r.status)<500?"WARN":"ERROR";T(p&&p((null===(a=e.response)||void 0===a?void 0:a.reduced)||e,e),s),T(f&&f(null===(u=e.response)||void 0===u?void 0:u.data,e,e.response),s),o(n+1),i({busy:!1,response:null===(c=e.response)||void 0===c?void 0:c.reduced,errorResponse:void 0})})),d.push(a),!0},response:u,cancel:function(){for(var e;e=d.pop();)e.cancel()}}};var B=function(e){!function(e,t){if("function"!=typeof t&&null!==t)throw new TypeError("Super expression must either be null or a function");e.prototype=Object.create(t&&t.prototype,{constructor:{value:e,writable:!0,configurable:!0}}),t&&F(e,t)}(a,s);var t,r,n,o=_(a);function a(e){var t;return function(e,t){if(!(e instanceof t))throw new TypeError("Cannot call a class as a function")}(this,a),(t=o.call(this,e)).state={busy:!1},t}return t=a,(r=[{key:"noti",value:function(e,t){T(e,t)}},{key:"handleClick",value:function(){var e=this;if(!this.state.busy){this.setState(D(D({},this.state),{},{busy:!0}));var t=this.props,r=t.success,n=t.error,o=t.done;x(D({},this.props.api)).then((function(t){e.noti(r&&r(t.reduced,t.response),"SUCC"),e.noti(o&&o(t.data,null,t.response),"INFO"),e.setState(D(D({},e.state),{},{busy:!1}))})).catch((function(t){var r,a,u,i,c="number"==typeof(null===(r=t.response)||void 0===r?void 0:r.status)&&(null===(a=t.response)||void 0===a?void 0:a.status)<500?"WARN":"ERROR";e.noti(n&&n(null===(u=t.response)||void 0===u?void 0:u.reduced,t),c),e.noti(o&&o(null===(i=t.response)||void 0===i?void 0:i.data,t,t.response),c),e.setState(D(D({},e.state),{},{busy:!1}))}))}}},{key:"render",value:function(){var e=this,t="".concat(this.props.tag||"button");return c.createElement(t,{className:"flax fx-button ".concat(this.state.busy?"--busy":""," ").concat(this.props.className||""),onClick:function(){return e.handleClick()},disabled:this.state.busy},this.props.children||this.props.label)}}])&&L(t.prototype,r),n&&L(t,n),a}();function U(e){return(U="function"==typeof Symbol&&"symbol"==typeof Symbol.iterator?function(e){return typeof e}:function(e){return e&&"function"==typeof Symbol&&e.constructor===Symbol&&e!==Symbol.prototype?"symbol":typeof e})(e)}function W(e,t){var r=Object.keys(e);if(Object.getOwnPropertySymbols){var n=Object.getOwnPropertySymbols(e);t&&(n=n.filter((function(t){return Object.getOwnPropertyDescriptor(e,t).enumerable}))),r.push.apply(r,n)}return r}function G(e){for(var t=1;t<arguments.length;t++){var r=null!=arguments[t]?arguments[t]:{};t%2?W(Object(r),!0).forEach((function(t){H(e,t,r[t])})):Object.getOwnPropertyDescriptors?Object.defineProperties(e,Object.getOwnPropertyDescriptors(r)):W(Object(r)).forEach((function(t){Object.defineProperty(e,t,Object.getOwnPropertyDescriptor(r,t))}))}return e}function H(e,t,r){return t in e?Object.defineProperty(e,t,{value:r,enumerable:!0,configurable:!0,writable:!0}):e[t]=r,e}function $(e,t){for(var r=0;r<t.length;r++){var n=t[r];n.enumerable=n.enumerable||!1,n.configurable=!0,"value"in n&&(n.writable=!0),Object.defineProperty(e,n.key,n)}}function z(e,t){return(z=Object.setPrototypeOf||function(e,t){return e.__proto__=t,e})(e,t)}function K(e){var t=function(){if("undefined"==typeof Reflect||!Reflect.construct)return!1;if(Reflect.construct.sham)return!1;if("function"==typeof Proxy)return!0;try{return Date.prototype.toString.call(Reflect.construct(Date,[],(function(){}))),!0}catch(e){return!1}}();return function(){var r,n=Q(e);if(t){var o=Q(this).constructor;r=Reflect.construct(n,arguments,o)}else r=n.apply(this,arguments);return J(this,r)}}function J(e,t){return!t||"object"!==U(t)&&"function"!=typeof t?function(e){if(void 0===e)throw new ReferenceError("this hasn't been initialised - super() hasn't been called");return e}(e):t}function Q(e){return(Q=Object.setPrototypeOf?Object.getPrototypeOf:function(e){return e.__proto__||Object.getPrototypeOf(e)})(e)}function V(e,t){return function(e){if(Array.isArray(e))return e}(e)||function(e,t){if("undefined"==typeof Symbol||!(Symbol.iterator in Object(e)))return;var r=[],n=!0,o=!1,a=void 0;try{for(var u,i=e[Symbol.iterator]();!(n=(u=i.next()).done)&&(r.push(u.value),!t||r.length!==t);n=!0);}catch(e){o=!0,a=e}finally{try{n||null==i.return||i.return()}finally{if(o)throw a}}return r}(e,t)||function(e,t){if(!e)return;if("string"==typeof e)return X(e,t);var r=Object.prototype.toString.call(e).slice(8,-1);"Object"===r&&e.constructor&&(r=e.constructor.name);if("Map"===r||"Set"===r)return Array.from(e);if("Arguments"===r||/^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(r))return X(e,t)}(e,t)||function(){throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.")}()}function X(e,t){(null==t||t>e.length)&&(t=e.length);for(var r=0,n=new Array(t);r<t;r++)n[r]=e[r];return n}function Y(e,t){return function(){return{status:t?"ERROR":"SUCCESS",result:e,error:t}}}exports.FxButton=B;function Z(e){var t=V(l(),2),r=t[0],n=t[1],o=e.api,a=e.refreshId,u=e.reloadId,i=e.error,s=e.naked,p=function(){return x(Object.assign({throttle:!1!==o.throttle,refreshId:a},e.api,{reducer:void 0,errReducer:void 0}))};if(f((function(){var t=void 0;return u>0&&(t=p()).then((function(r){var o;null!==(o=t)&&void 0!==o&&o.isCanceled||(n((function(){return Y(r,null)})),e.releaseBusy(!0))})).catch((function(r){var o;null!==(o=t)&&void 0!==o&&o.isCanceled||(n((function(){return Y(null,r)})),e.releaseBusy(!1))})),function(){t&&t.cancel()}}),[u]),f((function(){var t=void 0;return n((function(){return t=p(),function(e,t){var r,n,o="PENDING";return t.then((function(a){if(!t.isCanceled){var u=Y(a,null)();n=u.result,o=u.status,r=u.error,e(!0)}})).catch((function(a){if(!t.isCanceled){var u=Y(null,a)();n=u.result,o=u.status,r=u.error,e(!1)}})),function(){if("PENDING"===o)throw t;return{status:o,error:r,result:n}}}(e.releaseBusy,t)})),function(){t&&t.cancel()}}),[o.method,o.url,a]),!r)return c.createElement(c.Fragment,null);var d=r();if("ERROR"===d.status){var y=function(){var t,r,n,o,a;return c.createElement(c.Fragment,null,i&&i(null!==(r=d.error)&&void 0!==r&&null!==(n=r.response)&&void 0!==n&&n.data?e.api.errReducer?e.api.errReducer(null===(o=d.error)||void 0===o?void 0:o.response.data,d.error):null===(a=d.error)||void 0===a?void 0:a.response.data:null,d.error),!i&&c.createElement("div",null,"Error (",null===(t=d.error)||void 0===t?void 0:t.message,")"))};return c.createElement(c.Fragment,null,s&&y(),!s&&c.createElement("div",{className:"flax fx-guard-error"},y()))}var m,v,b;return c.createElement(c.Fragment,null,e.render(null!==(m=d.result)&&void 0!==m&&m.data?e.api.reducer?e.api.reducer(null===(v=d.result)||void 0===v?void 0:v.data):null===(b=d.result)||void 0===b?void 0:b.data:null,e.refreshId>0))}var ee=function(e){!function(e,t){if("function"!=typeof t&&null!==t)throw new TypeError("Super expression must either be null or a function");e.prototype=Object.create(t&&t.prototype,{constructor:{value:e,writable:!0,configurable:!0}}),t&&z(e,t)}(a,s);var t,r,n,o=K(a);function a(e){var t;return function(e,t){if(!(e instanceof t))throw new TypeError("Cannot call a class as a function")}(this,a),(t=o.call(this,e)).state={refreshId:0,reloadId:0,busy:!0,silent:!1,className:void 0},t}return t=a,(r=[{key:"reload",value:function(e,t){this.state.busy||(e?this.setState(G(G({},this.state),{},{reloadId:this.state.reloadId+1,busy:!0,silent:!0,className:t})):this.setState(G(G({},this.state),{},{refreshId:this.state.refreshId+1,busy:!0,silent:!1,className:void 0})))}},{key:"releaseBusy",value:function(e){this.props.done&&this.props.done(e),this.setState(G(G({},this.state),{},{busy:!1,silent:!1,className:void 0}))}},{key:"render",value:function(){var e=this,t=function(){var t=function(){return c.createElement(c.Fragment,null,e.props.disableLoading&&c.createElement(c.Fragment,null,e.props.render(null,e.state.refreshId>0)),e.props.loading&&e.props.loading(),!e.props.loading&&!e.props.disableLoading&&c.createElement("div",{className:m("flax fx-guard-loader",{"--silent":e.props.disableLoading})},"Loading .."))};return c.createElement(c.Fragment,null,c.createElement(p,{fallback:c.createElement(c.Fragment,null,e.props.naked&&t(),!e.props.naked&&c.createElement("div",{className:m("flax fx-guard-loading",{"--silent":e.props.disableLoading})},t()))},c.createElement(Z,{releaseBusy:function(t){return e.releaseBusy(t)},refreshId:e.state.refreshId,reloadId:e.state.reloadId,api:e.props.api,render:e.props.render,error:e.props.error,naked:e.props.naked})))};return c.createElement(c.Fragment,null,this.props.naked&&t(),!this.props.naked&&c.createElement("div",{className:m("flax fx-guard",H({"--loading":this.state.busy,"--silent":this.state.silent},this.state.className||"--noname",!!this.state.className))},t()))}}])&&$(t.prototype,r),n&&$(t,n),a}();exports.FxGuard=ee;
+var $b3GGa$reactjsxruntime = require("react/jsx-runtime");
+var $b3GGa$react = require("react");
+var $b3GGa$reactdom = require("react-dom");
+var $b3GGa$axios = require("axios");
+var $b3GGa$nodecache = require("node-cache");
+var $b3GGa$pcancelable = require("p-cancelable");
+var $b3GGa$querystring = require("query-string");
+
+function $parcel$export(e, n, v, s) {
+  Object.defineProperty(e, n, {get: v, set: s, enumerable: true, configurable: true});
+}
+function $parcel$exportWildcard(dest, source) {
+  Object.keys(source).forEach(function(key) {
+    if (key === 'default' || key === '__esModule' || dest.hasOwnProperty(key)) {
+      return;
+    }
+
+    Object.defineProperty(dest, key, {
+      enumerable: true,
+      get: function get() {
+        return source[key];
+      }
+    });
+  });
+
+  return dest;
+}
+function $parcel$interopDefault(a) {
+  return a && a.__esModule ? a.default : a;
+}
+
+$parcel$export(module.exports, "setDefaultHeaders", () => $c00de8795dae1ba1$export$8b68539586e424ba);
+$parcel$export(module.exports, "setBaseUrl", () => $c00de8795dae1ba1$export$9c999f676138fa5b);
+$parcel$export(module.exports, "setDefaultTransformResponse", () => $c00de8795dae1ba1$export$3e914cea1d334d06);
+$parcel$export(module.exports, "request", () => $c00de8795dae1ba1$export$b5fe3f66a567bec0);
+var $a692b204eca0c5ab$exports = {};
+
+$parcel$export($a692b204eca0c5ab$exports, "FxButton", () => $a692b204eca0c5ab$export$5bd2698c576da1ad);
+
+
+var $6a935b8376a2bda8$exports = {};
+
+$parcel$export($6a935b8376a2bda8$exports, "notify", () => $6a935b8376a2bda8$export$5e14cdade93d6f7b);
+$parcel$export($6a935b8376a2bda8$exports, "useRequest", () => $6a935b8376a2bda8$export$7fba1a658e28476a);
+
+
+
+
+const $bcad8e25e3e01532$var$fxNotificationContainerId = 'fx-notification-container';
+function $bcad8e25e3e01532$export$a30a0cd06ecf3418() {
+    const container = document.getElementById($bcad8e25e3e01532$var$fxNotificationContainerId) || (()=>{
+        const dom = document.createElement('div');
+        dom.id = $bcad8e25e3e01532$var$fxNotificationContainerId;
+        dom.classList.add('flax');
+        dom.classList.add('fx-notification-container');
+        document.body.appendChild(dom);
+        return dom;
+    })();
+    return {
+        container: container
+    };
+}
+
+
+function $a1f5455ea698e095$export$ce4ab0c55987d1ff(...args) {
+    return args.reduce((o, e)=>{
+        if (typeof e === 'string' && e) o.push(e);
+        else if (Array.isArray(e)) o.push($a1f5455ea698e095$export$ce4ab0c55987d1ff(e));
+        else if (e && typeof e === 'object') Object.keys(e).forEach((k)=>{
+            if (e[k]) o.push(k);
+        });
+        return o;
+    }, []).join(' ');
+}
+
+
+function $10331fc2e8a12a04$var$Progress(callback, elem, delay) {
+    let timerId = setTimeout(callback, delay);
+    let remaining = delay;
+    let start = new Date().getTime();
+    const anim = ()=>{
+        const prev = (delay - remaining) / delay * 100;
+        if (elem) elem.style.width = String(prev + (new Date().getTime() - start) / remaining * (100 - prev)) + '%';
+    };
+    let animInterval = setInterval(anim, 5);
+    return {
+        pause () {
+            clearTimeout(timerId);
+            clearInterval(animInterval);
+            remaining -= new Date().getTime() - start;
+        },
+        resume () {
+            start = new Date().getTime();
+            clearTimeout(timerId);
+            clearInterval(animInterval);
+            timerId = setTimeout(callback, remaining);
+            animInterval = setInterval(anim, 5);
+        },
+        done () {
+            clearTimeout(timerId);
+            clearInterval(animInterval);
+        }
+    };
+}
+function $10331fc2e8a12a04$export$9949bd9c713ba425(props1) {
+    const { container: container  } = $bcad8e25e3e01532$export$a30a0cd06ecf3418();
+    return {
+        container: container,
+        alert: (attrs)=>{
+            const { delay: delay , ...props } = attrs;
+            const wrapper = document.createElement('div');
+            wrapper.classList.add('fx-notification-wrapper');
+            container.appendChild(wrapper);
+            $b3GGa$reactdom.render(/*#__PURE__*/ $b3GGa$reactjsxruntime.jsx($10331fc2e8a12a04$export$9fe22d1de21b5211, {
+                ...props
+            }), wrapper, ()=>{
+                var ref;
+                const closeButton = wrapper.getElementsByTagName('button');
+                const progressBar = wrapper.getElementsByTagName('span');
+                let progress = undefined;
+                const cb = ()=>{
+                    wrapper.classList.add('--hide');
+                    !!progress && progress.done();
+                    setTimeout(()=>{
+                        ($parcel$interopDefault($b3GGa$reactdom)).unmountComponentAtNode(wrapper);
+                        wrapper.remove();
+                    }, 450);
+                };
+                (ref = closeButton[0]) === null || ref === void 0 ? void 0 : ref.addEventListener('click', ()=>{
+                    cb();
+                });
+                progress = $10331fc2e8a12a04$var$Progress(cb, progressBar[0], Math.min(delay || 5000, 5000));
+                wrapper.addEventListener('mouseover', ()=>{
+                    !!progress && progress.pause();
+                });
+                wrapper.addEventListener('mouseout', ()=>{
+                    !!progress && progress.resume();
+                });
+            });
+        }
+    };
+}
+function $10331fc2e8a12a04$var$Type(type) {
+    if (!type || type === 'INFO') return null;
+    return /*#__PURE__*/ $b3GGa$reactjsxruntime.jsx($b3GGa$reactjsxruntime.Fragment, {
+        children: /*#__PURE__*/ $b3GGa$reactjsxruntime.jsxs("div", {
+            className: "--icon",
+            children: [
+                type === 'SUCC' && /*#__PURE__*/ $b3GGa$reactjsxruntime.jsx("svg", {
+                    xmlns: "http://www.w3.org/2000/svg",
+                    fill: "none",
+                    viewBox: "0 0 24 24",
+                    stroke: "currentColor",
+                    children: /*#__PURE__*/ $b3GGa$reactjsxruntime.jsx("path", {
+                        strokeLinecap: "round",
+                        strokeLinejoin: "round",
+                        strokeWidth: 2,
+                        d: "M5 13l4 4L19 7"
+                    })
+                }),
+                type === 'WARN' && /*#__PURE__*/ $b3GGa$reactjsxruntime.jsx($b3GGa$reactjsxruntime.Fragment, {
+                    children: /*#__PURE__*/ $b3GGa$reactjsxruntime.jsx("svg", {
+                        xmlns: "http://www.w3.org/2000/svg",
+                        fill: "none",
+                        viewBox: "0 0 24 24",
+                        stroke: "currentColor",
+                        children: /*#__PURE__*/ $b3GGa$reactjsxruntime.jsx("path", {
+                            strokeLinecap: "round",
+                            strokeLinejoin: "round",
+                            strokeWidth: 2,
+                            d: "M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
+                        })
+                    })
+                }),
+                type === 'ERROR' && /*#__PURE__*/ $b3GGa$reactjsxruntime.jsx($b3GGa$reactjsxruntime.Fragment, {
+                    children: /*#__PURE__*/ $b3GGa$reactjsxruntime.jsx("svg", {
+                        xmlns: "http://www.w3.org/2000/svg",
+                        fill: "none",
+                        viewBox: "0 0 24 24",
+                        stroke: "currentColor",
+                        children: /*#__PURE__*/ $b3GGa$reactjsxruntime.jsx("path", {
+                            strokeLinecap: "round",
+                            strokeLinejoin: "round",
+                            strokeWidth: 2,
+                            d: "M6 18L18 6M6 6l12 12"
+                        })
+                    })
+                })
+            ]
+        })
+    });
+//if (type === 'WARN') return <div>W</div>;
+//if (type === 'ERROR') return <div>E</div>;
+}
+function $10331fc2e8a12a04$export$9fe22d1de21b5211(props) {
+    const { type: type , title: title , message: message  } = props;
+    $b3GGa$react.useEffect(()=>{
+        // Initialize
+        return ()=>{
+        // Clear
+        };
+    });
+    return /*#__PURE__*/ $b3GGa$reactjsxruntime.jsx($b3GGa$reactjsxruntime.Fragment, {
+        children: /*#__PURE__*/ $b3GGa$reactjsxruntime.jsxs("div", {
+            className: $a1f5455ea698e095$export$ce4ab0c55987d1ff('flax fx-notification', `--${(type || 'info').toLocaleLowerCase()}`),
+            children: [
+                type && $10331fc2e8a12a04$var$Type(type),
+                title && /*#__PURE__*/ $b3GGa$reactjsxruntime.jsx("strong", {
+                    children: title
+                }),
+                message,
+                /*#__PURE__*/ $b3GGa$reactjsxruntime.jsx("button", {
+                    className: "close",
+                    children: "Close"
+                }),
+                /*#__PURE__*/ $b3GGa$reactjsxruntime.jsx("div", {
+                    className: "progress",
+                    children: /*#__PURE__*/ $b3GGa$reactjsxruntime.jsx("span", {})
+                })
+            ]
+        })
+    });
+}
+
+
+
+
+
+
+const $c00de8795dae1ba1$var$cache = new ($parcel$interopDefault($b3GGa$nodecache))({
+    maxKeys: 100
+});
+const $c00de8795dae1ba1$var$resolving = (resolve, reject, props, resp, error)=>{
+    if (error) {
+        var ref;
+        if ((ref = error.response) === null || ref === void 0 ? void 0 : ref.data) {
+            var ref1, ref2;
+            if (props.errReducer) error.response.reduced = props.errReducer((ref1 = error.response) === null || ref1 === void 0 ? void 0 : ref1.data, error);
+            else error.response.reduced = (ref2 = error.response) === null || ref2 === void 0 ? void 0 : ref2.data;
+        }
+        reject(error);
+    } else resolve({
+        data: resp === null || resp === void 0 ? void 0 : resp.data,
+        reduced: props.reducer ? props.reducer(resp === null || resp === void 0 ? void 0 : resp.data) : resp === null || resp === void 0 ? void 0 : resp.data,
+        response: resp
+    });
+};
+const $c00de8795dae1ba1$var$resolvers = {};
+const $c00de8795dae1ba1$var$resolver = (resolver, key, resp, error, startAt, cacheKey)=>{
+    if (cacheKey && resolver.props.cacheMaxAge) $c00de8795dae1ba1$var$cache.set(cacheKey, {
+        data: resp === null || resp === void 0 ? void 0 : resp.data
+    }, resolver.props.cacheMaxAge);
+    if (!key) {
+        const delay = (resolver.props.delay || 0) - (new Date().getTime() - startAt.getTime());
+        setTimeout(()=>{
+            $c00de8795dae1ba1$var$resolving(resolver.resolve, resolver.reject, resolver.props, resp, error);
+        }, Math.max(delay, 0));
+        return;
+    }
+    const res = $c00de8795dae1ba1$var$resolvers[key].splice(0, $c00de8795dae1ba1$var$resolvers[key].length);
+    res.forEach(({ resolve: resolve , reject: reject , props: props  })=>{
+        const delay = (props.delay || 0) - (new Date().getTime() - startAt.getTime());
+        setTimeout(()=>{
+            $c00de8795dae1ba1$var$resolving(resolve, reject, props, resp, error);
+        }, Math.max(delay, 0));
+    });
+};
+const $c00de8795dae1ba1$var$dataMapper = (data)=>{
+    if (!data) return data;
+    if (typeof data !== 'object') return data;
+    if (Array.isArray(data)) return data;
+    return Object.keys(data).reduce((p, c)=>{
+        if (typeof data[c] === 'object' && data[c] !== null) {
+            if (data[c].current instanceof HTMLElement) p[c] = data[c].current.value;
+            else p[c] = $c00de8795dae1ba1$var$dataMapper(data[c]);
+        } else if (typeof data[c] === 'bigint') p[c] = String(data[c]);
+        else p[c] = data[c];
+        return p;
+    }, {});
+};
+function $c00de8795dae1ba1$export$8b68539586e424ba(headers) {
+    ($parcel$interopDefault($b3GGa$axios)).defaults.headers.common = Object.assign(($parcel$interopDefault($b3GGa$axios)).defaults.headers.common, headers);
+}
+function $c00de8795dae1ba1$export$9c999f676138fa5b(url) {
+    ($parcel$interopDefault($b3GGa$axios)).defaults.baseURL = url;
+}
+function $c00de8795dae1ba1$export$3e914cea1d334d06(trs) {
+    ($parcel$interopDefault($b3GGa$axios)).defaults.transformResponse = trs;
+}
+function $c00de8795dae1ba1$export$b5fe3f66a567bec0(props) {
+    const cp = new ($parcel$interopDefault($b3GGa$pcancelable))((resolve, reject, onCancel)=>{
+        const cancel = ()=>{
+            cp.cancel();
+        };
+        const ct = ($parcel$interopDefault($b3GGa$axios)).CancelToken.source();
+        const url = ((u, query)=>{
+            const qs = ($parcel$interopDefault($b3GGa$querystring)).stringify(query);
+            return u + (qs ? (u.includes('?') ? '&' : '?') + qs : '');
+        })(props.url, props.query || {});
+        const lazyGroup = props.method === 'GET' && props.throttle ? `${props.method} ${url} ${props.delay || 0}` : null;
+        const cacheKey = props.method === 'GET' && props.cacheMaxAge && props.cacheMaxAge > 0 ? `${props.method} ${props.url} ${props.cacheMaxAge}` : null;
+        const cached = cacheKey && $c00de8795dae1ba1$var$cache.get(cacheKey);
+        if (cached) {
+            $c00de8795dae1ba1$var$resolver({
+                resolve: resolve,
+                reject: reject,
+                cancelled: false,
+                props: props
+            }, null, cached, null, new Date(), null);
+            return;
+        }
+        onCancel.shouldReject = false;
+        onCancel(()=>{
+            if (!lazyGroup || $c00de8795dae1ba1$var$resolvers[lazyGroup].length === 1) ct.cancel();
+        });
+        setTimeout(()=>{
+            if (lazyGroup) {
+                $c00de8795dae1ba1$var$resolvers[lazyGroup] = $c00de8795dae1ba1$var$resolvers[lazyGroup] || [];
+                $c00de8795dae1ba1$var$resolvers[lazyGroup].push({
+                    resolve: resolve,
+                    reject: reject,
+                    cancel: cancel,
+                    props: props
+                });
+                // Duplicated `GET` request,
+                if ($c00de8795dae1ba1$var$resolvers[lazyGroup].length > 1) return;
+            }
+            const start = new Date();
+            ($parcel$interopDefault($b3GGa$axios)).request({
+                cancelToken: ct.token,
+                method: props.method,
+                url: url,
+                headers: props.headers,
+                responseType: props.responseType,
+                data: $c00de8795dae1ba1$var$dataMapper(typeof props.data === 'function' ? props.data() : props.data)
+            }).then((resp)=>{
+                $c00de8795dae1ba1$var$resolver({
+                    resolve: resolve,
+                    reject: reject,
+                    cancelled: cp.isCanceled,
+                    props: props
+                }, lazyGroup, resp, null, start, cacheKey);
+            }).catch((err)=>{
+                $c00de8795dae1ba1$var$resolver({
+                    resolve: resolve,
+                    reject: reject,
+                    cancelled: cp.isCanceled,
+                    props: props
+                }, lazyGroup, null, err, start, null);
+            });
+        }, 25);
+    });
+    return cp;
+}
+
+
+const $6a935b8376a2bda8$export$5e14cdade93d6f7b = (payload, type)=>{
+    if (!payload) return;
+    if (typeof payload === 'string') payload = {
+        message: payload
+    };
+    if (!payload.message) return;
+    payload.type = payload.type || type;
+    if (type === 'WARN' || type === 'ERROR') payload.delay = payload.delay || 10000;
+    const { alert: notiAlert  } = $10331fc2e8a12a04$export$9949bd9c713ba425({});
+    notiAlert(payload);
+};
+function $6a935b8376a2bda8$export$7fba1a658e28476a(api, props) {
+    const [reqId, setReqId] = $b3GGa$react.useState(0);
+    const [resp, setResp] = $b3GGa$react.useState({
+        busy: false,
+        response: undefined,
+        errorResponse: undefined
+    });
+    const { success: success , done: done , error: error  } = props || {};
+    const queues = [];
+    const requestWrapper = (wrapperParams)=>{
+        if (resp.busy) return false;
+        setResp({
+            busy: true,
+            response: undefined,
+            errorResponse: undefined
+        });
+        const reqParams = {
+            ...api
+        };
+        if (wrapperParams === null || wrapperParams === void 0 ? void 0 : wrapperParams.data) reqParams.data = wrapperParams.data;
+        if (wrapperParams === null || wrapperParams === void 0 ? void 0 : wrapperParams.query) reqParams.query = wrapperParams === null || wrapperParams === void 0 ? void 0 : wrapperParams.query;
+        if (wrapperParams === null || wrapperParams === void 0 ? void 0 : wrapperParams.headers) reqParams.headers = wrapperParams === null || wrapperParams === void 0 ? void 0 : wrapperParams.headers;
+        const rp = $c00de8795dae1ba1$export$b5fe3f66a567bec0(reqParams);
+        rp.then((res)=>{
+            $6a935b8376a2bda8$export$5e14cdade93d6f7b(success && success(res.reduced, res.response), 'SUCC');
+            $6a935b8376a2bda8$export$5e14cdade93d6f7b(done && done(res.data, null, res.response), 'INFO');
+            setReqId(reqId + 1);
+            setResp({
+                busy: false,
+                response: res.reduced,
+                errorResponse: undefined
+            });
+        }).catch((err)=>{
+            var ref, ref1, ref2, ref3, ref4;
+            const type = typeof ((ref = err.response) === null || ref === void 0 ? void 0 : ref.status) === 'number' && ((ref1 = err.response) === null || ref1 === void 0 ? void 0 : ref1.status) < 500 ? 'WARN' : 'ERROR';
+            $6a935b8376a2bda8$export$5e14cdade93d6f7b(error && error(((ref2 = err.response) === null || ref2 === void 0 ? void 0 : ref2.reduced) || err, err), type);
+            $6a935b8376a2bda8$export$5e14cdade93d6f7b(done && done((ref3 = err.response) === null || ref3 === void 0 ? void 0 : ref3.data, err, err.response), type);
+            setReqId(reqId + 1);
+            setResp({
+                busy: false,
+                response: (ref4 = err.response) === null || ref4 === void 0 ? void 0 : ref4.reduced,
+                errorResponse: undefined
+            });
+        });
+        queues.push(rp);
+        return true;
+    };
+    const cancel = ()=>{
+        let rp;
+        while(rp = queues.pop())rp.cancel();
+    };
+    return {
+        reqId: reqId,
+        request: requestWrapper,
+        response: resp,
+        cancel: cancel
+    };
+}
+
+
+
+class $a692b204eca0c5ab$export$5bd2698c576da1ad extends $b3GGa$react.Component {
+    noti(payload, type) {
+        $6a935b8376a2bda8$export$5e14cdade93d6f7b(payload, type);
+    }
+    handleClick() {
+        if (this.state.busy) return;
+        this.setState({
+            ...this.state,
+            busy: true
+        });
+        const { success: success , error: error , done: done  } = this.props;
+        $c00de8795dae1ba1$export$b5fe3f66a567bec0({
+            ...this.props.api
+        }).then((res)=>{
+            this.noti(success && success(res.reduced, res.response), 'SUCC');
+            this.noti(done && done(res.data, null, res.response), 'INFO');
+            this.setState({
+                ...this.state,
+                busy: false
+            });
+        }).catch((err)=>{
+            var ref, ref1, ref2, ref3;
+            const type = typeof ((ref = err.response) === null || ref === void 0 ? void 0 : ref.status) === 'number' && ((ref1 = err.response) === null || ref1 === void 0 ? void 0 : ref1.status) < 500 ? 'WARN' : 'ERROR';
+            this.noti(error && error((ref2 = err.response) === null || ref2 === void 0 ? void 0 : ref2.reduced, err), type);
+            this.noti(done && done((ref3 = err.response) === null || ref3 === void 0 ? void 0 : ref3.data, err, err.response), type);
+            this.setState({
+                ...this.state,
+                busy: false
+            });
+        });
+    }
+    render() {
+        const ButtonTag = `${this.props.tag || 'button'}`;
+        return /*#__PURE__*/ $b3GGa$reactjsxruntime.jsx(ButtonTag, {
+            className: `flax fx-button ${this.state.busy ? '--busy' : ''} ${this.props.className || ''}`,
+            onClick: ()=>this.handleClick()
+            ,
+            disabled: this.state.busy,
+            children: this.props.children || this.props.label
+        });
+    }
+    constructor(props){
+        super(props);
+        this.state = {
+            busy: false
+        };
+    }
+}
+
+
+var $217c3b975c4ab349$exports = {};
+
+$parcel$export($217c3b975c4ab349$exports, "FxGuard", () => $217c3b975c4ab349$export$c8bd619db52a143b);
+
+
+
+
+function $217c3b975c4ab349$var$lazyResponse(result, error) {
+    return ()=>({
+            status: error ? 'ERROR' : 'SUCCESS',
+            result: result,
+            error: error
+        })
+    ;
+}
+const $217c3b975c4ab349$var$lazy = function(release, p) {
+    let status = 'PENDING';
+    let error;
+    let result;
+    p.then((res)=>{
+        if (p.isCanceled) return;
+        ({ result: result , status: status , error: error  } = $217c3b975c4ab349$var$lazyResponse(res, null)());
+        release(true);
+    }).catch((err)=>{
+        if (p.isCanceled) return;
+        ({ result: result , status: status , error: error  } = $217c3b975c4ab349$var$lazyResponse(null, err)());
+        release(false);
+    });
+    return ()=>{
+        if (status === 'PENDING') throw p;
+        return {
+            status: status,
+            error: error,
+            result: result
+        };
+    };
+};
+function $217c3b975c4ab349$var$FxGuardInner(props) {
+    const [prepared, setPrepared] = $b3GGa$react.useState();
+    const { api: api , refreshId: refreshId , reloadId: reloadId , error: error , naked: naked  } = props;
+    const req = ()=>{
+        return $c00de8795dae1ba1$export$b5fe3f66a567bec0(Object.assign({
+            throttle: api.throttle === false ? false : true,
+            refreshId: refreshId
+        }, props.api, {
+            reducer: undefined,
+            errReducer: undefined
+        }));
+    };
+    $b3GGa$react.useEffect(()=>{
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        let rp = undefined;
+        if (reloadId > 0) {
+            rp = req();
+            rp.then((res)=>{
+                if (rp === null || rp === void 0 ? void 0 : rp.isCanceled) return;
+                setPrepared(()=>$217c3b975c4ab349$var$lazyResponse(res, null)
+                );
+                props.releaseBusy(true);
+            }).catch((err)=>{
+                if (rp === null || rp === void 0 ? void 0 : rp.isCanceled) return;
+                setPrepared(()=>$217c3b975c4ab349$var$lazyResponse(null, err)
+                );
+                props.releaseBusy(false);
+            });
+        }
+        return ()=>{
+            if (rp) rp.cancel();
+        };
+    }, [
+        reloadId
+    ]);
+    $b3GGa$react.useEffect(()=>{
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        let rp = undefined;
+        setPrepared(()=>{
+            rp = req();
+            return $217c3b975c4ab349$var$lazy(props.releaseBusy, rp);
+        });
+        return ()=>{
+            if (rp) rp.cancel();
+        };
+    }, [
+        api.method,
+        api.url,
+        refreshId
+    ]);
+    if (!prepared) return /*#__PURE__*/ $b3GGa$reactjsxruntime.jsx($b3GGa$reactjsxruntime.Fragment, {});
+    const resp = prepared();
+    if (resp.status === 'ERROR') {
+        const rr = ()=>{
+            var ref, ref1, ref2, ref3;
+            if (!((ref = resp.error) === null || ref === void 0 ? void 0 : (ref1 = ref.response) === null || ref1 === void 0 ? void 0 : ref1.data)) return null;
+            return props.api.errReducer ? props.api.errReducer((ref2 = resp.error) === null || ref2 === void 0 ? void 0 : ref2.response.data, resp.error) : (ref3 = resp.error) === null || ref3 === void 0 ? void 0 : ref3.response.data;
+        };
+        const r = ()=>{
+            var ref;
+            /*#__PURE__*/ return $b3GGa$reactjsxruntime.jsxs($b3GGa$reactjsxruntime.Fragment, {
+                children: [
+                    error && error(rr(), resp.error),
+                    !error && /*#__PURE__*/ $b3GGa$reactjsxruntime.jsxs("div", {
+                        children: [
+                            "Error (",
+                            (ref = resp.error) === null || ref === void 0 ? void 0 : ref.message,
+                            ")"
+                        ]
+                    })
+                ]
+            });
+        };
+        return /*#__PURE__*/ $b3GGa$reactjsxruntime.jsxs($b3GGa$reactjsxruntime.Fragment, {
+            children: [
+                naked && r(),
+                !naked && /*#__PURE__*/ $b3GGa$reactjsxruntime.jsx("div", {
+                    className: "flax fx-guard-error",
+                    children: r()
+                })
+            ]
+        });
+    }
+    const rr = ()=>{
+        var ref, ref4, ref5;
+        if (!((ref = resp.result) === null || ref === void 0 ? void 0 : ref.data)) return null;
+        return props.api.reducer ? props.api.reducer((ref4 = resp.result) === null || ref4 === void 0 ? void 0 : ref4.data) : (ref5 = resp.result) === null || ref5 === void 0 ? void 0 : ref5.data;
+    };
+    return /*#__PURE__*/ $b3GGa$reactjsxruntime.jsx($b3GGa$reactjsxruntime.Fragment, {
+        children: props.render(rr(), props.refreshId > 0)
+    });
+}
+class $217c3b975c4ab349$export$c8bd619db52a143b extends $b3GGa$react.Component {
+    reload(silent, className) {
+        if (this.state.busy) return;
+        if (silent) {
+            this.setState({
+                ...this.state,
+                reloadId: this.state.reloadId + 1,
+                busy: true,
+                silent: true,
+                className: className
+            });
+            return;
+        }
+        this.setState({
+            ...this.state,
+            refreshId: this.state.refreshId + 1,
+            busy: true,
+            silent: false,
+            className: undefined
+        });
+    }
+    releaseBusy(succeed) {
+        if (this.props.done) this.props.done(succeed);
+        this.setState({
+            ...this.state,
+            busy: false,
+            silent: false,
+            className: undefined
+        });
+    }
+    render() {
+        const r = ()=>{
+            const rl = ()=>/*#__PURE__*/ $b3GGa$reactjsxruntime.jsxs($b3GGa$reactjsxruntime.Fragment, {
+                    children: [
+                        this.props.disableLoading && /*#__PURE__*/ $b3GGa$reactjsxruntime.jsx($b3GGa$reactjsxruntime.Fragment, {
+                            children: this.props.render(null, this.state.refreshId > 0)
+                        }),
+                        this.props.loading && this.props.loading(),
+                        !this.props.loading && !this.props.disableLoading && /*#__PURE__*/ $b3GGa$reactjsxruntime.jsx("div", {
+                            className: $a1f5455ea698e095$export$ce4ab0c55987d1ff('flax fx-guard-loader', {
+                                '--silent': this.props.disableLoading
+                            }),
+                            children: "Loading .."
+                        })
+                    ]
+                })
+            ;
+            return /*#__PURE__*/ $b3GGa$reactjsxruntime.jsx($b3GGa$reactjsxruntime.Fragment, {
+                children: /*#__PURE__*/ $b3GGa$reactjsxruntime.jsx($b3GGa$react.Suspense, {
+                    fallback: /*#__PURE__*/ $b3GGa$reactjsxruntime.jsxs($b3GGa$reactjsxruntime.Fragment, {
+                        children: [
+                            this.props.naked && rl(),
+                            !this.props.naked && /*#__PURE__*/ $b3GGa$reactjsxruntime.jsx("div", {
+                                className: $a1f5455ea698e095$export$ce4ab0c55987d1ff('flax fx-guard-loading', {
+                                    '--silent': this.props.disableLoading
+                                }),
+                                children: rl()
+                            })
+                        ]
+                    }),
+                    children: /*#__PURE__*/ $b3GGa$reactjsxruntime.jsx($217c3b975c4ab349$var$FxGuardInner, {
+                        releaseBusy: (succeed)=>this.releaseBusy(succeed)
+                        ,
+                        refreshId: this.state.refreshId,
+                        reloadId: this.state.reloadId,
+                        api: this.props.api,
+                        render: this.props.render,
+                        error: this.props.error,
+                        naked: this.props.naked
+                    })
+                })
+            });
+        };
+        return /*#__PURE__*/ $b3GGa$reactjsxruntime.jsxs($b3GGa$reactjsxruntime.Fragment, {
+            children: [
+                this.props.naked && r(),
+                !this.props.naked && /*#__PURE__*/ $b3GGa$reactjsxruntime.jsx("div", {
+                    className: $a1f5455ea698e095$export$ce4ab0c55987d1ff('flax fx-guard', {
+                        '--loading': this.state.busy,
+                        '--silent': this.state.silent,
+                        [this.state.className || '--noname']: !!this.state.className
+                    }),
+                    children: r()
+                })
+            ]
+        });
+    }
+    constructor(props){
+        super(props);
+        this.state = {
+            refreshId: 0,
+            reloadId: 0,
+            busy: true,
+            silent: false,
+            className: undefined
+        };
+    }
+}
+
+
+
+
+$parcel$exportWildcard(module.exports, $a692b204eca0c5ab$exports);
+$parcel$exportWildcard(module.exports, $217c3b975c4ab349$exports);
+$parcel$exportWildcard(module.exports, $6a935b8376a2bda8$exports);
+
+
 //# sourceMappingURL=index.js.map

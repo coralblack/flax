@@ -1,6 +1,6 @@
 {
   "name": "@coralblack/flax",
-  "version": "0.1.11",
+  "version": "0.1.12",
   "description": "API Req-Res Guard for React",
   "main": "dist/index.js",
   "module": "dist/index.module.js",
@@ -13,37 +13,46 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "parcel serve example/index.html --open",
-    "prebuild": "rm -rf dist/*",
-    "build": "npm run build:css && npm run build:lib",
+    "prebuild": "rm -rf dist/* && npm install --save @swc/helpers",
     "postbuild": "mv .styles dist/styles",
+    "build": "npm run build:css && npm run build:lib",
     "build:lib": "parcel build src/index.ts --no-cache",
     "build:css": "parcel build src/styles/index.ts --no-cache && mkdir -p .styles && mv dist/index.css* .styles && rm -rf dist",
     "lint": "gts check",
     "lint:fix": "gts fix"
   },
   "dependencies": {
-    "axios": "^0.21.1",
-    "eslint-config-prettier": "^8.3.0",
+    "@swc/helpers": "^0.3.9",
+    "axios": "^0.27.2",
     "node-cache": "^5.1.2",
     "p-cancelable": "^3.0.0",
-    "query-string": "^7.0.1"
+    "query-string": "^7.1.1"
+  },
+  "peerDependencies": {
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2"
   },
   "devDependencies": {
+    "@parcel/packager-ts": "^2.5.0",
+    "@parcel/transformer-sass": "^2.5.0",
+    "@parcel/transformer-typescript-types": "^2.5.0",
     "@types/node": "^14.14.16",
-    "@types/react": "^17.0.19",
-    "@types/react-dom": "^17.0.9",
-    "@types/react-router-dom": "^5.1.8",
-    "eslint-plugin-import": "^2.24.1",
-    "eslint-plugin-react": "^7.24.0",
+    "@types/react": "^17.0.44",
+    "@types/react-dom": "^17.0.16",
+    "@types/react-router-dom": "^5.3.3",
+    "buffer": "^6.0.3",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-plugin-import": "^2.26.0",
+    "eslint-plugin-react": "^7.29.4",
+    "events": "^3.3.0",
     "gts": "^3.1.0",
-    "husky": "^7.0.1",
-    "lint-staged": "^11.1.2",
-    "parcel": "^2.0.0-nightly.416",
-    "react": "^17.0.2",
-    "react-dom": "^17.0.2",
-    "react-router-dom": "^5.2.0",
-    "sass": "^1.38.0",
-    "typescript": "^4.3.5"
+    "husky": "^7.0.4",
+    "lint-staged": "^12.4.1",
+    "parcel": "^2.0.0",
+    "process": "^0.11.10",
+    "react-router-dom": "^5.3.1",
+    "sass": "^1.51.0",
+    "typescript": "^4.6.4"
   },
   "repository": {
     "type": "git",
