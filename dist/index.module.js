@@ -244,10 +244,11 @@ const $9ca9243a2b59a8cd$var$resolver = (resolver, key, resp, error, startAt, cac
 const $9ca9243a2b59a8cd$var$dataMapper = (data)=>{
     if (!data) return data;
     if (typeof data !== 'object') return data;
-    if (Array.isArray(data)) return data;
     return Object.keys(data).reduce((p, c)=>{
         if (typeof data[c] === 'object' && data[c] !== null) {
             if (data[c].current instanceof HTMLElement) p[c] = data[c].current.value;
+            else if (Array.isArray(data[c])) p[c] = data[c].map((e)=>$9ca9243a2b59a8cd$var$dataMapper(e)
+            );
             else p[c] = $9ca9243a2b59a8cd$var$dataMapper(data[c]);
         } else if (typeof data[c] === 'bigint') p[c] = String(data[c]);
         else p[c] = data[c];
