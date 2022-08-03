@@ -1,6 +1,6 @@
 {
   "name": "@coralblack/flax",
-  "version": "0.1.12",
+  "version": "0.1.13",
   "description": "API Req-Res Guard for React",
   "main": "dist/index.js",
   "module": "dist/index.module.js",
@@ -22,7 +22,7 @@
     "lint:fix": "gts fix"
   },
   "dependencies": {
-    "@swc/helpers": "^0.3.9",
+    "@swc/helpers": "^0.3.17",
     "axios": "^0.27.2",
     "node-cache": "^5.1.2",
     "p-cancelable": "^3.0.0",

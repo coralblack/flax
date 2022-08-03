@@ -277,10 +277,12 @@ var $38dc5e4263dc53c4$var$resolver = function(resolver, key, resp, error, startA
 var $38dc5e4263dc53c4$var$dataMapper = function(data) {
     if (!data) return data;
     if (typeof data !== 'object') return data;
-    if (Array.isArray(data)) return data;
     return Object.keys(data).reduce(function(p, c) {
         if (typeof data[c] === 'object' && data[c] !== null) {
             if (data[c].current instanceof HTMLElement) p[c] = data[c].current.value;
+            else if (Array.isArray(data[c])) p[c] = data[c].map(function(e) {
+                return $38dc5e4263dc53c4$var$dataMapper(e);
+            });
             else p[c] = $38dc5e4263dc53c4$var$dataMapper(data[c]);
         } else if ($faGca$swchelpers.typeOf(data[c]) === 'bigint') p[c] = String(data[c]);
         else p[c] = data[c];
