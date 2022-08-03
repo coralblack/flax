@@ -268,10 +268,11 @@ const $c00de8795dae1ba1$var$resolver = (resolver, key, resp, error, startAt, cac
 const $c00de8795dae1ba1$var$dataMapper = (data)=>{
     if (!data) return data;
     if (typeof data !== 'object') return data;
-    if (Array.isArray(data)) return data;
     return Object.keys(data).reduce((p, c)=>{
         if (typeof data[c] === 'object' && data[c] !== null) {
             if (data[c].current instanceof HTMLElement) p[c] = data[c].current.value;
+            else if (Array.isArray(data[c])) p[c] = data[c].map((e)=>$c00de8795dae1ba1$var$dataMapper(e)
+            );
             else p[c] = $c00de8795dae1ba1$var$dataMapper(data[c]);
         } else if (typeof data[c] === 'bigint') p[c] = String(data[c]);
         else p[c] = data[c];
