@@ -145,6 +145,7 @@ const resolver = (
 
 const dataMapper = (data: DataType | string | null | undefined) => {
   if (!data) return data;
+  if (typeof data === 'bigint') return String(data);
   if (typeof data !== 'object') return data;
 
   return Object.keys(data).reduce<{[key: string]: any}>((p, c) => {
