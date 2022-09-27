@@ -243,6 +243,7 @@ const $9ca9243a2b59a8cd$var$resolver = (resolver, key, resp, error, startAt, cac
 };
 const $9ca9243a2b59a8cd$var$dataMapper = (data)=>{
     if (!data) return data;
+    if (typeof data === 'bigint') return String(data);
     if (typeof data !== 'object') return data;
     return Object.keys(data).reduce((p, c)=>{
         if (typeof data[c] === 'object' && data[c] !== null) {

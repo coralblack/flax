@@ -267,6 +267,7 @@ const $c00de8795dae1ba1$var$resolver = (resolver, key, resp, error, startAt, cac
 };
 const $c00de8795dae1ba1$var$dataMapper = (data)=>{
     if (!data) return data;
+    if (typeof data === 'bigint') return String(data);
     if (typeof data !== 'object') return data;
     return Object.keys(data).reduce((p, c)=>{
         if (typeof data[c] === 'object' && data[c] !== null) {
