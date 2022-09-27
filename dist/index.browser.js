@@ -276,6 +276,7 @@ var $38dc5e4263dc53c4$var$resolver = function(resolver, key, resp, error, startA
 };
 var $38dc5e4263dc53c4$var$dataMapper = function(data) {
     if (!data) return data;
+    if ((typeof data === "undefined" ? "undefined" : $faGca$swchelpers.typeOf(data)) === 'bigint') return String(data);
     if (typeof data !== 'object') return data;
     return Object.keys(data).reduce(function(p, c) {
         if (typeof data[c] === 'object' && data[c] !== null) {
