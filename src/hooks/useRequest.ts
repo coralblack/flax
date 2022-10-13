@@ -60,8 +60,11 @@ export function useRequest<TR = any, TE = any, TRR = TR, TER = TE>(
     data?: Data;
     query?: Queries;
     headers?: Headers;
+    opts?: {
+      ignoreBusy?: boolean;
+    };
   }): boolean => {
-    if (resp.busy) return false;
+    if (resp.busy && !wrapperParams?.opts?.ignoreBusy) return false;
 
     setResp({
       busy: true,

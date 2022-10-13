@@ -377,7 +377,8 @@ function $6a935b8376a2bda8$export$7fba1a658e28476a(api, props) {
     const { success: success , done: done , error: error  } = props || {};
     const queues = [];
     const requestWrapper = (wrapperParams)=>{
-        if (resp.busy) return false;
+        var ref5;
+        if (resp.busy && !(wrapperParams === null || wrapperParams === void 0 ? void 0 : (ref5 = wrapperParams.opts) === null || ref5 === void 0 ? void 0 : ref5.ignoreBusy)) return false;
         setResp({
             busy: true,
             response: undefined,

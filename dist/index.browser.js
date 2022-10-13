@@ -378,7 +378,7 @@ var $ee8dff3b62e8c94e$export$5e14cdade93d6f7b = function(payload, type) {
     notiAlert(payload);
 };
 function $ee8dff3b62e8c94e$export$7fba1a658e28476a(api, props) {
-    var ref7 = $faGca$swchelpers.slicedToArray($faGca$react.useState(0), 2), reqId = ref7[0], setReqId = ref7[1];
+    var ref3 = $faGca$swchelpers.slicedToArray($faGca$react.useState(0), 2), reqId = ref3[0], setReqId = ref3[1];
     var ref1 = $faGca$swchelpers.slicedToArray($faGca$react.useState({
         busy: false,
         response: undefined,
@@ -387,7 +387,8 @@ function $ee8dff3b62e8c94e$export$7fba1a658e28476a(api, props) {
     var ref2 = props || {}, success = ref2.success, done = ref2.done, error = ref2.error;
     var queues = [];
     var requestWrapper = function(wrapperParams) {
-        if (resp.busy) return false;
+        var ref8;
+        if (resp.busy && !(wrapperParams === null || wrapperParams === void 0 ? void 0 : (ref8 = wrapperParams.opts) === null || ref8 === void 0 ? void 0 : ref8.ignoreBusy)) return false;
         setResp({
             busy: true,
             response: undefined,
@@ -408,14 +409,14 @@ function $ee8dff3b62e8c94e$export$7fba1a658e28476a(api, props) {
                 errorResponse: undefined
             });
         }).catch(function(err) {
-            var ref, ref3, ref4, ref5, ref6;
-            var type = typeof ((ref = err.response) === null || ref === void 0 ? void 0 : ref.status) === 'number' && ((ref3 = err.response) === null || ref3 === void 0 ? void 0 : ref3.status) < 500 ? 'WARN' : 'ERROR';
-            $ee8dff3b62e8c94e$export$5e14cdade93d6f7b(error && error(((ref4 = err.response) === null || ref4 === void 0 ? void 0 : ref4.reduced) || err, err), type);
-            $ee8dff3b62e8c94e$export$5e14cdade93d6f7b(done && done((ref5 = err.response) === null || ref5 === void 0 ? void 0 : ref5.data, err, err.response), type);
+            var ref, ref4, ref5, ref6, ref7;
+            var type = typeof ((ref = err.response) === null || ref === void 0 ? void 0 : ref.status) === 'number' && ((ref4 = err.response) === null || ref4 === void 0 ? void 0 : ref4.status) < 500 ? 'WARN' : 'ERROR';
+            $ee8dff3b62e8c94e$export$5e14cdade93d6f7b(error && error(((ref5 = err.response) === null || ref5 === void 0 ? void 0 : ref5.reduced) || err, err), type);
+            $ee8dff3b62e8c94e$export$5e14cdade93d6f7b(done && done((ref6 = err.response) === null || ref6 === void 0 ? void 0 : ref6.data, err, err.response), type);
             setReqId(reqId + 1);
             setResp({
                 busy: false,
-                response: (ref6 = err.response) === null || ref6 === void 0 ? void 0 : ref6.reduced,
+                response: (ref7 = err.response) === null || ref7 === void 0 ? void 0 : ref7.reduced,
                 errorResponse: undefined
             });
         });

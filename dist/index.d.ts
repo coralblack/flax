@@ -75,6 +75,9 @@ export function useRequest<TR = any, TE = any, TRR = TR, TER = TE>(api: FxApiReq
         data?: Data | undefined;
         query?: Queries | undefined;
         headers?: Headers | undefined;
+        opts?: {
+            ignoreBusy?: boolean | undefined;
+        } | undefined;
     } | undefined) => boolean;
     response: {
         busy: boolean;
