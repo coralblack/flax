@@ -236,7 +236,8 @@ function $3ad89611426542f7$export$9fe22d1de21b5211(props) {
 
 
 var $38dc5e4263dc53c4$var$cache = new ($parcel$interopDefault($faGca$nodecache))({
-    maxKeys: 100
+    maxKeys: -1,
+    stdTTL: 3600
 });
 var $38dc5e4263dc53c4$var$resolving = function(resolve, reject, props, resp, error) {
     if (error) {

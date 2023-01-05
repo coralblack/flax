@@ -228,7 +228,8 @@ function $10331fc2e8a12a04$export$9fe22d1de21b5211(props) {
 
 
 const $c00de8795dae1ba1$var$cache = new ($parcel$interopDefault($b3GGa$nodecache))({
-    maxKeys: 100
+    maxKeys: -1,
+    stdTTL: 3600
 });
 const $c00de8795dae1ba1$var$resolving = (resolve, reject, props, resp, error)=>{
     if (error) {
