@@ -6,7 +6,7 @@ import queryString from 'query-string';
 import {MutableRefObject} from 'react';
 import {FxNotificationToast} from './components/FxNotification';
 
-const cache = new NodeCache({maxKeys: 100});
+const cache = new NodeCache({maxKeys: -1, stdTTL: 3600});
 
 export type Notifiable = FxNotificationToast | any;
 export type DoneDelegate<T> = (
@@ -118,6 +118,8 @@ const resolver = (
   cacheKey: string | null
 ) => {
   if (cacheKey && resolver.props.cacheMaxAge) {
+    const keys = cache.keys();
+
     cache.set(cacheKey, {data: resp?.data}, resolver.props.cacheMaxAge);
   }
 
