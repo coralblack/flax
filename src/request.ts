@@ -118,8 +118,6 @@ const resolver = (
   cacheKey: string | null
 ) => {
   if (cacheKey && resolver.props.cacheMaxAge) {
-    const keys = cache.keys();
-
     cache.set(cacheKey, {data: resp?.data}, resolver.props.cacheMaxAge);
   }
 
