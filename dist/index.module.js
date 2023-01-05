@@ -204,7 +204,8 @@ function $993a3abcbfbea7c5$export$9fe22d1de21b5211(props) {
 
 
 const $9ca9243a2b59a8cd$var$cache = new $eFUnW$nodecache({
-    maxKeys: 100
+    maxKeys: -1,
+    stdTTL: 3600
 });
 const $9ca9243a2b59a8cd$var$resolving = (resolve, reject, props, resp, error)=>{
     if (error) {
